@@ -1,0 +1,90 @@
+{
+  "stage": "raw_data_audit_only",
+  "audit_time_utc": "2026-09-01T18:51:36.916109+00:00",
+  "source": {
+    "filename": "hotel_bookings.csv",
+    "bytes": 16855599,
+    "decimal_MB": 16.855599,
+    "MiB": 16.07475185394287,
+    "rows": 119390,
+    "columns": 32,
+    "sha256": "7c2ae42a7353905ea136e5c2287f17c92c5435826598bfbb8491c6f0c7b1fc06"
+  },
+  "coverage": {
+    "arrival_start": "2015-07-01",
+    "arrival_end": "2017-08-31",
+    "invalid_arrival_dates": 0,
+    "invalid_status_dates": 0
+  },
+  "runtime": {
+    "python": "3.12.13",
+    "pandas": "2.2.3",
+    "numpy": "2.3.5",
+    "matplotlib": "3.10.8"
+  },
+  "hotel_counts": {
+    "City Hotel": 79330,
+    "Resort Hotel": 40060
+  },
+  "target_counts": {
+    "0": 75166,
+    "1": 44224
+  },
+  "cancellation_percent": 37.041628277075134,
+  "missingness": {
+    "company": {
+      "count": 112593,
+      "percent": 94.30689337465449
+    },
+    "agent": {
+      "count": 16340,
+      "percent": 13.686238378423655
+    },
+    "country": {
+      "count": 488,
+      "percent": 0.40874445095904177
+    },
+    "children": {
+      "count": 4,
+      "percent": 0.003350364352123293
+    }
+  },
+  "duplicates": {
+    "additional_exact_copies": 31994,
+    "additional_copy_percent": 26.797889270458164,
+    "all_rows_in_repeated_groups": 40165,
+    "distinct_full_rows": 87396
+  },
+  "guest_checks": {
+    "zero_complete_guest_total": 180,
+    "unknown_guest_total": 4,
+    "zero_adults": 403,
+    "zero_adults_but_known_positive_total": 223,
+    "negative_guest_count_rows": 0,
+    "zero_night_stays": 715,
+    "zero_guest_and_zero_night_overlap": 70
+  },
+  "adr": {
+    "min": -6.38,
+    "median": 94.575,
+    "max": 5400.0,
+    "q1": 69.29,
+    "q3": 126.0,
+    "diagnostic_iqr_lower": -15.774999999999991,
+    "diagnostic_iqr_upper": 211.065,
+    "iqr_flagged": 3793,
+    "negative": 1,
+    "zero": 1959,
+    "above_1000": 1,
+    "negative_not_flagged_by_iqr": 1
+  },
+  "undefined_categories": {
+    "market_segment": 2,
+    "distribution_channel": 5,
+    "meal": 1169
+  },
+  "status_matches_target": true,
+  "candidate_predictor_count": 29,
+  "cleaning_applied": false,
+  "modeling_started": false
+}

@@ -2,7 +2,7 @@
 
 **CSE437: Data Science | Group 15**
 
-**Status: initial project structure.** The notebooks and report are placeholders; data analysis and model training have not been implemented.
+**Status: initial raw-data audit completed.** Notebook 01 contains executed quality checks and saved outputs. Development-only EDA, cleaning, final splits, model training, and the final report remain pending.
 
 ## Project
 
@@ -69,11 +69,11 @@ python -m pip install -r requirements.txt
 python -m jupyterlab
 ```
 
-The CSV has not been added to this repository. Record its source, licence, and acquisition instructions before adding data. Preserve original data and use repository-relative paths.
+The uploaded CSV has been audited but is not yet committed here. Obtain it from the source in [data/README.md](data/README.md) and place the original at `data/raw/hotel_bookings.csv` to reproduce the audit. Preserve original data and use repository-relative paths.
 
 ## Notebook order
 
-These files are starter outlines, not completed analyses:
+Notebook 01 contains the completed raw-data audit; its development-only relationship analysis is still pending. Notebooks 02-05 remain starter outlines:
 
 1. [Data audit and EDA](notebooks/01_data_audit_and_eda.ipynb)
 2. [Preprocessing](notebooks/02_preprocessing.ipynb)
@@ -83,14 +83,24 @@ These files are starter outlines, not completed analyses:
 
 As implementation progresses, document the evaluation design, keep learned transformations within training folds, save notebook outputs, and record the exact working dependency versions.
 
+## Initial audit findings
+
+The supplied `hotel_bookings.csv` has **119,390 rows and 32 columns**. Key findings include **31,994 additional exact full-row copies**, **180 known zero-total-guest bookings**, and ADR values from **-6.38 to 5,400**. Parsed null shares are **94.31% for company** and **13.69% for agent**. No cleaning has been applied.
+
+See [the audit report](report/data_audit.md), [measured audit record](data/audit_summary.json), and [quality figure](figures/01_data_quality_audit.png).
+
+The audit's 10 code cells were executed sequentially with real outputs in a fresh Python process using IPython. A separate fresh-kernel Jupyter run remains a final verification task.
+
 ## Remaining setup
 
 - [x] Add approved group members, problem statement, and unchanged research questions.
-- [ ] Document and add the dataset as permitted by its source terms.
+- [x] Audit the supplied CSV and record source identity, dimensions, and quality findings.
+- [ ] Confirm exact source terms and add the raw dataset to the repository.
 - [ ] Record collaborators' actual contributions as work is completed.
 - [ ] Implement the notebooks and verify a fresh-environment run.
 - [ ] Complete the report and export the final PDF.
 
 ## Assistance
 
-OpenAI ChatGPT/Codex assisted with this repository scaffold and transcription of the user-approved project details. No analysis results are claimed by these starter files.
+OpenAI ChatGPT/Codex assisted with repository scaffolding, transcription of user-approved project details, and the initial data-audit code, execution, figures, and interpretation. The audit reports computed data-quality findings; predictive model results have not been produced.
+
