@@ -95,7 +95,7 @@ The audit's 10 code cells were executed sequentially with real outputs in a fres
 
 Step 5 retained **119,210 bookings with 29 candidate predictors**, excluded **180 known-zero-guest records**, and separated the target from the predictors. Both reservation-status columns are absent from predictors. Retained values are unchanged; anomalies are flagged, duplicates are grouped, and no transformations or evaluation splits are fitted.
 
-The row-level processed files were generated and verified locally; their public upload awaits explicit permission. Code, aggregate results, and output hashes are published here.
+The four verified row-level processed files are published in `data/processed/`, alongside the code, aggregate results, and output hashes. They are ready for Step 6; imputation, encoding, scaling, and evaluation splits remain pending.
 
 See the [Step 5 decision report](report/step5_eligibility.md), [executed Notebook 02](notebooks/02_preprocessing.ipynb), and [processed data instructions](data/processed/README.md). To regenerate from the original CSV:
 

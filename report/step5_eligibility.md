@@ -60,10 +60,10 @@ arrival date, permitting whole-date splits without dividing these groups.
 - [Measured summary and hashes](../data/processed/step5_summary.json)
 - [Boundary and leakage-invariance tests](../tests/test_eligibility.py)
 
-The four row-level output files have been generated and verified locally.
-Their public upload awaits explicit permission after automatic approval review
-blocked disclosure of the booking records. This repository contains the code,
-executed aggregate results, decisions, and file hashes needed to reproduce them.
+The four verified row-level output files are committed in `data/processed/`.
+Their hashes match the recorded Step 5 outputs. This repository contains the
+code, executed aggregate results, decisions, and file hashes needed to reproduce
+them. These outputs are ready for the evaluation-split work in Step 6.
 
 Run from the repository root after supplying the original CSV:
 

@@ -2,11 +2,10 @@
 
 Step 5 implementation (Faraaz) is complete. Next: Step 6, freeze the evaluation partitions.
 
-**Publication status:** the four row-level data files listed below were generated
-and verified locally. They are not committed to this public repository pending
-explicit permission to publish the booking records. The aggregate summary,
-hashes, code, and notebook outputs are available here. Run the command below
-to regenerate the four data files from the original CSV.
+**Publication status:** all four verified row-level data files are committed
+in this repository, with the aggregate summary, hashes, code, and notebook
+outputs. Load these files directly for Step 6, or use the command below to
+regenerate them from the original CSV.
 
 These files contain the eligible cohort **before** imputation, encoding,
 scaling, feature selection, or train/test splitting. They are not a final
@@ -33,7 +32,7 @@ python -m src.eligibility
 Or run `notebooks/02_preprocessing.ipynb` from top to bottom. Both require the
 unchanged original `data/raw/hotel_bookings.csv`; see `../README.md`.
 
-After generating the files, load the compressed outputs with:
+Load the committed compressed outputs with:
 
 ```python
 from pathlib import Path
