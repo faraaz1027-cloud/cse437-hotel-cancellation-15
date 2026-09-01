@@ -8,7 +8,24 @@ Repository: https://github.com/faraaz1027-cloud/cse437-hotel-cancellation-15
 
 ## Project details
 
-To be added after the public project details are confirmed. This placeholder contains no uploaded course-document text or student identifiers.
+### Group members
+
+| Member | Student ID |
+| --- | --- |
+| Faraaz Jamil Chowdhury | 24241205 |
+| Ihfaz Rashid Sadat | 23301499 |
+
+### Problem statement
+
+Hotel booking cancellations can cause loss of money and make room planning difficult for hotels. The goal of this project is to study the factors that affect booking cancellations and build a machine-learning model that can predict whether a hotel booking will be canceled.
+
+### Research questions
+
+1. Which booking and customer-related factors have the biggest effect on hotel cancellations?
+2. How accurately can machine-learning models predict whether a hotel booking will be canceled?
+3. Which machine-learning model gives the best result after data preprocessing, feature selection, dimensionality reduction, and hyperparameter tuning?
+
+The problem statement and question wording above are reproduced unchanged from the user-approved project brief.
 
 ## Analysis and results
 
@@ -22,7 +39,7 @@ Record each contributor's actual work when completed.
 
 Add verified dataset, method, software, and adapted-code references.
 
-OpenAI ChatGPT/Codex assisted with initial repository scaffolding. Extend this disclosure to reflect subsequent assistance actually used.
+OpenAI ChatGPT/Codex assisted with initial repository scaffolding and transcription of the user-approved project details. Extend this disclosure to reflect subsequent assistance actually used.
 
 ## Final export
 

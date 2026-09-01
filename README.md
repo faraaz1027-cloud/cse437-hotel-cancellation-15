@@ -6,7 +6,24 @@
 
 ## Project
 
-This repository is being prepared for a hotel-booking cancellation data science project. The team details, project brief, research questions, and dataset metadata will be added after their public inclusion is confirmed.
+### Group members
+
+| Member | Student ID |
+| --- | --- |
+| Faraaz Jamil Chowdhury | 24241205 |
+| Ihfaz Rashid Sadat | 23301499 |
+
+### Problem statement
+
+Hotel booking cancellations can cause loss of money and make room planning difficult for hotels. The goal of this project is to study the factors that affect booking cancellations and build a machine-learning model that can predict whether a hotel booking will be canceled.
+
+### Research questions
+
+1. Which booking and customer-related factors have the biggest effect on hotel cancellations?
+2. How accurately can machine-learning models predict whether a hotel booking will be canceled?
+3. Which machine-learning model gives the best result after data preprocessing, feature selection, dimensionality reduction, and hyperparameter tuning?
+
+The problem statement and question wording above are reproduced unchanged from the user-approved project brief.
 
 ## Files and folders
 
@@ -68,7 +85,7 @@ As implementation progresses, document the evaluation design, keep learned trans
 
 ## Remaining setup
 
-- [ ] Add confirmed public project details and research questions.
+- [x] Add approved group members, problem statement, and unchanged research questions.
 - [ ] Document and add the dataset as permitted by its source terms.
 - [ ] Record collaborators' actual contributions as work is completed.
 - [ ] Implement the notebooks and verify a fresh-environment run.
@@ -76,4 +93,4 @@ As implementation progresses, document the evaluation design, keep learned trans
 
 ## Assistance
 
-OpenAI ChatGPT/Codex assisted with this repository scaffold. No analysis results are claimed by these starter files.
+OpenAI ChatGPT/Codex assisted with this repository scaffold and transcription of the user-approved project details. No analysis results are claimed by these starter files.
