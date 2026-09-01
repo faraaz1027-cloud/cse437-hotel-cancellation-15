@@ -2,15 +2,14 @@
 
 **Responsible: Faraaz. Completed: Step 6. Next: Step 7, fitted preprocessing.**
 
-**Publication:** the row-level assignment file has been generated and verified
-locally. Its public upload awaits explicit permission after automatic approval
-review. The code, aggregate plan, and hashes are published. Generate the exact
-assignments from the already committed Step 5 data with `python -m src.splitting`
-before running the loading example below.
+**Publication:** the verified row-level assignment file is committed here with
+the code, aggregate plan, and hashes. Load it directly using the example below.
+To reproduce and check the same assignments from the committed Step 5 data,
+run `python -m src.splitting`.
 
 | File | Purpose |
 | --- | --- |
-| `step6_assignments.csv.gz` | Generated output; one assignment per Step 5 row, preserving row order; public upload pending |
+| `step6_assignments.csv.gz` | Verified, committed assignments; one per Step 5 row, preserving row order |
 | `step6_split_plan.json` | Fixed dates, counts, metrics, validation protocol, and input/output hashes |
 
 ## Final split

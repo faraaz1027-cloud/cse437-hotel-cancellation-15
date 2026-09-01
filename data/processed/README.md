@@ -1,6 +1,6 @@
 # Step 5 outputs
 
-Step 5 implementation is complete. Step 6 is also complete; its frozen plan and assignment-generation instructions are in [../splits/](../splits/README.md). The row-level split upload awaits permission. Next: Step 7, fitted preprocessing (Faraaz).
+Steps 5 and 6 are complete. The verified split assignments, frozen plan, and loading instructions are in [../splits/](../splits/README.md). Next: Step 7, fitted preprocessing (Faraaz).
 
 **Publication status:** all four verified row-level data files are committed
 in this repository, with the aggregate summary, hashes, code, and notebook

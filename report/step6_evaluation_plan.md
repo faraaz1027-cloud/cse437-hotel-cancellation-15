@@ -97,8 +97,8 @@ final submission verification task.
 
 ## Artifacts and commands
 
-- Split assignments (`step6_assignments.csv.gz`) — generated and verified;
-  public upload awaits explicit permission after automatic approval review.
+- [Verified split assignments](../data/splits/step6_assignments.csv.gz) — committed;
+  the file checksum matches the frozen evaluation plan.
 - [Fixed plan and hashes](../data/splits/step6_split_plan.json)
 - [Executed Notebook 02](../notebooks/02_preprocessing.ipynb)
 - [Split tests](../tests/test_splitting.py)

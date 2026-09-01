@@ -108,7 +108,7 @@ python -m unittest discover -s tests -v
 
 The frozen chronological split uses **95,415 development bookings** (2015-07-01 through 2017-04-22) and **23,795 final test bookings** (2017-04-23 through 2017-08-31). Three expanding forward validation folds stay within development data. Whole dates and duplicate groups remain together; test rows never enter CV.
 
-The row-level split file has been generated and verified locally; its public upload awaits explicit permission. The published split code reproduces the exact assignments from the already committed Step 5 files. The aggregate plan, checksums, and timeline are published.
+The verified row-level split file is published at `data/splits/step6_assignments.csv.gz`. Its checksum matches the frozen evaluation plan. The split code reproduces the same assignments from the committed Step 5 files; the aggregate plan, checksums, and timeline are also published.
 
 See the [Step 6 report](report/step6_evaluation_plan.md), [split files and loading example](data/splits/README.md), and [evaluation timeline](figures/02_evaluation_timeline.png). The primary metric is mean cancellation-class F1 across the three validation folds. Features, preprocessing, model settings, and any threshold must be selected using development data only. Final test evaluation is reserved for Step 13.
 
