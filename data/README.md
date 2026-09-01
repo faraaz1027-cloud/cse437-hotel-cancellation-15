@@ -1,6 +1,6 @@
 # Dataset information
 
-**Status:** the supplied hotel CSV has been audited. The raw CSV is not yet committed in this repository; download/place it as described below to rerun the notebook.
+**Status:** the supplied hotel CSV has been audited and Step 5 eligibility/direct leakage removal is complete. The raw CSV is not yet committed in this repository; download/place it as described below to regenerate the results.
 
 ## Source and acquisition
 
@@ -32,7 +32,7 @@ The file is below 50 MB. Adding the raw data remains a submission task. The sour
 - [Machine-readable audit record](audit_summary.json)
 - [Quality figure](../figures/01_data_quality_audit.png)
 
-The audit has not removed rows, imputed values, or produced a cleaned dataset. Save subsequent cleaning outputs in `data/processed/` and document how they were generated.
+The original audit is unchanged. Step 5 now produces a separate cohort of **119,210 rows**, removes the two reservation-status fields from predictors, and exports 29 candidate predictors separately from the target and metadata. No retained values are imputed or otherwise changed. See [processed outputs](processed/README.md), [Step 5 summary](processed/step5_summary.json), and [the decision report](../report/step5_eligibility.md).
 
 ## Source documentation
 
@@ -49,4 +49,3 @@ The publication describes extraction from hotel Property Management System SQL d
 - Prevent overlap between retained duplicate groups in evaluation partitions.
 - Fit learned preprocessing only inside training folds.
 - The separate NYC files are outside this hotel's cancellation-prediction dataset.
-

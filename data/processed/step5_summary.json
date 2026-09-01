@@ -1,0 +1,102 @@
+{
+  "step": 5,
+  "status": "completed",
+  "responsible_member": "Faraaz",
+  "next_step": 6,
+  "policy_version": "1.0",
+  "input_rows": 119390,
+  "input_columns": 32,
+  "excluded_known_zero_guest_rows": 180,
+  "retained_rows": 119210,
+  "candidate_predictor_count": 29,
+  "target": "is_canceled",
+  "excluded_leakage_columns": [
+    "reservation_status",
+    "reservation_status_date"
+  ],
+  "candidate_predictors": [
+    "hotel",
+    "lead_time",
+    "arrival_date_year",
+    "arrival_date_month",
+    "arrival_date_week_number",
+    "arrival_date_day_of_month",
+    "stays_in_weekend_nights",
+    "stays_in_week_nights",
+    "adults",
+    "children",
+    "babies",
+    "meal",
+    "country",
+    "market_segment",
+    "distribution_channel",
+    "is_repeated_guest",
+    "previous_cancellations",
+    "previous_bookings_not_canceled",
+    "reserved_room_type",
+    "assigned_room_type",
+    "booking_changes",
+    "deposit_type",
+    "agent",
+    "company",
+    "days_in_waiting_list",
+    "customer_type",
+    "adr",
+    "required_car_parking_spaces",
+    "total_of_special_requests"
+  ],
+  "original_exact_duplicate_copies_retained": 31980,
+  "candidate_duplicate_groups": 86707,
+  "candidate_duplicate_extra_copies": 32503,
+  "candidate_rows_in_repeated_groups": 40730,
+  "candidate_groups_with_conflicting_labels": 265,
+  "retained_flags": {
+    "unknown_guest_total": 4,
+    "zero_adults_positive_guests": 223,
+    "zero_total_nights": 645,
+    "negative_adr": 1,
+    "zero_adr": 1810,
+    "adr_above_1000_review_only": 1
+  },
+  "retained_target_counts": {
+    "0": 75011,
+    "1": 44199
+  },
+  "eligibility_uses_target_or_status": false,
+  "source_values_changed": 0,
+  "fitted_transformations": 0,
+  "evaluation_split_created": false,
+  "prediction_time_feature_availability_review_pending": true,
+  "source_sha256": "7c2ae42a7353905ea136e5c2287f17c92c5435826598bfbb8491c6f0c7b1fc06",
+  "runtime": {
+    "python": "3.12.13",
+    "pandas": "2.2.3",
+    "numpy": "2.3.5"
+  },
+  "outputs": {
+    "step5_candidates.csv.gz": {
+      "rows": 119210,
+      "columns": 29,
+      "bytes": 1001550,
+      "sha256": "1721717023e4f27371e37c8e05fefccda4fbf2ef89f1e60b3fc1a026ebb7bbb9"
+    },
+    "step5_target.csv.gz": {
+      "rows": 119210,
+      "columns": 1,
+      "bytes": 5087,
+      "sha256": "84fef5775f76c456fe531c6f262a70b16853f4bdafc6c83c42b5fa010694eabb"
+    },
+    "step5_metadata.csv.gz": {
+      "rows": 119210,
+      "columns": 10,
+      "bytes": 625643,
+      "sha256": "24655f99f16d70acde3295c270438bdc096d5d94f5b572d649a8a9bb1927e9db"
+    },
+    "step5_exclusions.csv": {
+      "rows": 180,
+      "columns": 2,
+      "bytes": 5495,
+      "sha256": "83676fdb741d37f3fc2157f2b6b6a274b2f95f93c73c82e58ca59ab98d97061f"
+    }
+  }
+}

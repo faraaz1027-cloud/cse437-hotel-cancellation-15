@@ -2,7 +2,7 @@
 
 **CSE437: Data Science | Group 15**
 
-**Status: initial raw-data audit completed.** Notebook 01 contains executed quality checks and saved outputs. Development-only EDA, cleaning, final splits, model training, and the final report remain pending.
+**Status: Step 5 completed — eligibility and direct leakage removal.** Responsible: **Faraaz**. **Next: Step 6 — freeze the evaluation split.** Notebook 01 contains the raw audit; Notebook 02 contains executed Step 5 preparation. Fitted preprocessing, development-only EDA, final splits, modeling, and the final report remain pending.
 
 ## Project
 
@@ -73,7 +73,7 @@ The uploaded CSV has been audited but is not yet committed here. Obtain it from 
 
 ## Notebook order
 
-Notebook 01 contains the completed raw-data audit; its development-only relationship analysis is still pending. Notebooks 02-05 remain starter outlines:
+Notebook 01 contains the completed raw-data audit; its development-only relationship analysis is still pending. Notebook 02 implements Step 5; its later split/preprocessing work is pending. Notebooks 03-05 remain starter outlines:
 
 1. [Data audit and EDA](notebooks/01_data_audit_and_eda.ipynb)
 2. [Preprocessing](notebooks/02_preprocessing.ipynb)
@@ -85,16 +85,34 @@ As implementation progresses, document the evaluation design, keep learned trans
 
 ## Initial audit findings
 
-The supplied `hotel_bookings.csv` has **119,390 rows and 32 columns**. Key findings include **31,994 additional exact full-row copies**, **180 known zero-total-guest bookings**, and ADR values from **-6.38 to 5,400**. Parsed null shares are **94.31% for company** and **13.69% for agent**. No cleaning has been applied.
+The supplied `hotel_bookings.csv` has **119,390 rows and 32 columns**. Key findings include **31,994 additional exact full-row copies**, **180 known zero-total-guest bookings**, and ADR values from **-6.38 to 5,400**. Parsed null shares are **94.31% for company** and **13.69% for agent**. These figures describe the original source. Step 5 has subsequently produced a separate eligible cohort; the raw file remains unchanged.
 
 See [the audit report](report/data_audit.md), [measured audit record](data/audit_summary.json), and [quality figure](figures/01_data_quality_audit.png).
 
 The audit's 10 code cells were executed sequentially with real outputs in a fresh Python process using IPython. A separate fresh-kernel Jupyter run remains a final verification task.
 
+## Step 5 results and next step
+
+Step 5 retained **119,210 bookings with 29 candidate predictors**, excluded **180 known-zero-guest records**, and separated the target from the predictors. Both reservation-status columns are absent from predictors. Retained values are unchanged; anomalies are flagged, duplicates are grouped, and no transformations or evaluation splits are fitted.
+
+The row-level processed files were generated and verified locally; their public upload awaits explicit permission. Code, aggregate results, and output hashes are published here.
+
+See the [Step 5 decision report](report/step5_eligibility.md), [executed Notebook 02](notebooks/02_preprocessing.ipynb), and [processed data instructions](data/processed/README.md). To regenerate from the original CSV:
+
+```bash
+python -m src.eligibility
+python -m unittest discover -s tests -v
+```
+
+**Next: Step 6 (Faraaz)** freezes the evaluation partitions and checks duplicate-group separation. Faraaz owns Steps 1–8; Sadat owns Steps 9–15. Assigned ownership is not a record of work already performed. Both members must review their work and record actual contributions.
+
+The 29 fields remain candidate features; prediction-time availability and the final feature set still require review. A fresh separate Jupyter-kernel run remains part of final submission verification.
+
 ## Remaining setup
 
 - [x] Add approved group members, problem statement, and unchanged research questions.
 - [x] Audit the supplied CSV and record source identity, dimensions, and quality findings.
+- [x] Complete Step 5 eligibility, direct leakage removal, grouping, and reproducible output generation.
 - [ ] Confirm exact source terms and add the raw dataset to the repository.
 - [ ] Record collaborators' actual contributions as work is completed.
 - [ ] Implement the notebooks and verify a fresh-environment run.
@@ -102,5 +120,4 @@ The audit's 10 code cells were executed sequentially with real outputs in a fres
 
 ## Assistance
 
-OpenAI ChatGPT/Codex assisted with repository scaffolding, transcription of user-approved project details, and the initial data-audit code, execution, figures, and interpretation. The audit reports computed data-quality findings; predictive model results have not been produced.
-
+OpenAI ChatGPT/Codex assisted with repository scaffolding, transcription of user-approved project details, the initial data-audit code, execution, figures, and interpretation, and Step 5 policy documentation, implementation, execution, and verification. The audit reports computed data-quality findings; predictive model results have not been produced.
