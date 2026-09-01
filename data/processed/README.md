@@ -1,14 +1,15 @@
 # Step 5 outputs
 
-Step 5 implementation (Faraaz) is complete. Next: Step 6, freeze the evaluation partitions.
+Step 5 implementation is complete. Step 6 is also complete; its frozen plan and assignment-generation instructions are in [../splits/](../splits/README.md). The row-level split upload awaits permission. Next: Step 7, fitted preprocessing (Faraaz).
 
 **Publication status:** all four verified row-level data files are committed
 in this repository, with the aggregate summary, hashes, code, and notebook
-outputs. Load these files directly for Step 6, or use the command below to
-regenerate them from the original CSV.
+outputs. Use these files with the fixed Step 6 assignments, or use the command
+below to regenerate them from the original CSV.
 
 These files contain the eligible cohort **before** imputation, encoding,
-scaling, feature selection, or train/test splitting. They are not a final
+scaling, or feature selection. Step 6 partition membership is stored separately
+in `data/splits/`; these Step 5 files retain their original row order. They are not a final
 model-ready dataset. Gzip is lossless compression; pandas reads it directly.
 
 | File | Contents |
@@ -52,8 +53,8 @@ Candidate availability at the intended prediction time still needs review.
 
 Duplicate groups are defined by the 29 candidate columns, excluding target
 and outcome-status fields, with missing values grouped consistently. A group's
-members all have the same arrival date. Step 6 must enforce group separation
-at every split and avoid splitting a calendar date. Do not use group IDs,
+members all have the same arrival date. Step 6 verifies group separation at
+every split and preserves whole calendar dates. Do not use group IDs,
 row IDs, dates from metadata, or review flags as predictors by accident.
 
 Decisions and limitations: [Step 5 report](../../report/step5_eligibility.md).
