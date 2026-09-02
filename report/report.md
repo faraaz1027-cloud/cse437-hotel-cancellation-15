@@ -1,6 +1,6 @@
 # Hotel Booking Cancellation Project
 
-**CSE437: Data Science | Group 15**
+**CSE437: Data Science | Section 05 | Summer 2026 | Group 15**
 
 | Member | Student ID |
 | --- | --- |
@@ -25,7 +25,7 @@ Hotel booking cancellations can cause loss of money and make room planning diffi
 
 The project uses Jesse Mostipak's [Hotel Booking Demand dataset](https://www.kaggle.com/datasets/jessemostipak/hotel-booking-demand), documented by Antonio et al. [1]. The supplied CSV combines city/resort hotel reservations: 119,390 rows, 32 columns, and 16,855,599 bytes (16.86 MB). Recorded arrivals span 2015-07-01 to 2017-08-31. The original publication describes extraction from hotel property-management databases.
 
-The original bytes are preserved; the file checksum is in [data/README.md](../data/README.md). Exact download date, source version, and Kaggle licence still require confirmation. The raw CSV must still be committed for final submission.
+The original bytes are preserved; the file checksum is in [data/README.md](../data/README.md). The user confirmed that the original download date and acquired source version are **unknown**; they must not be invented. Exact Kaggle licence verification and raw CSV publication remain submission tasks.
 
 ### 1.3 Target and analytic population
 
@@ -272,9 +272,35 @@ The frozen selected-feature Logistic Regression (`C=1`, balanced class weights,
 threshold 0.5) was fitted on 95,415 development rows and evaluated once on
 23,795 later bookings. No test score altered the pipeline.
 
-| F1 | Accuracy | Precision | Recall | ROC-AUC | TN | FP | FN | TP |
-| ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| **0.750592** | 0.760874 | 0.654187 | 0.880321 | 0.875977 | 9,543 | 4,526 | 1,164 | 8,562 |
+The following baseline and Random Forest rows were added with user approval
+in Step 15, **after** the Step 13 Logistic Regression outcome was known.
+This is a reporting supplement, not a simultaneous preregistered three-model
+test. Both added models fit only the same 95,415 development rows. Random
+Forest uses the Step 12 development-selected `rf_12` settings: 100 trees,
+unlimited depth, minimum leaf size 10, balanced class weights, `sqrt` feature
+sampling and seed 42. All models use threshold 0.5. The saved Logistic
+Regression predictions are reused, verified and not overwritten.
+
+| Model | F1 | Accuracy | Precision | Recall | ROC-AUC |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Training-majority baseline | 0.000000 | 0.591259 | 0.000000 | 0.000000 | 0.500000 |
+| Logistic Regression (selected in Step 12) | **0.750592** | 0.760874 | 0.654187 | 0.880321 | 0.875977 |
+| Random Forest (reporting supplement) | 0.723115 | 0.789325 | 0.781239 | 0.673041 | 0.878190 |
+
+The baseline predicts no cancellations; its precision is set to zero by the
+documented undefined-metric convention. Logistic Regression remains the
+development-selected final model: it has higher test F1 and recall, while
+Random Forest has higher precision, accuracy and slightly higher ROC-AUC.
+No family, feature, hyperparameter or threshold is reselected from this table.
+
+| Model | TN | FP | FN | TP | Brier score (lower is better) |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Training-majority baseline | 14,069 | 0 | 9,726 | 0 | 0.408741 |
+| Logistic Regression | 9,543 | 4,526 | 1,164 | 8,562 | 0.160007 |
+| Random Forest | 12,236 | 1,833 | 3,180 | 6,546 | 0.145476 |
+
+See the [Step 15 protocol, metrics and prediction evidence](../data/results/step15/README.md).
+Brier scores are probability-error diagnostics, not a claim of calibration.
 
 ![Final test performance](../figures/09_final_test_performance.png)
 
@@ -410,6 +436,6 @@ Faraaz owns Steps 1–8 and draft Sections 1–3; Sadat owns Steps 9–15 and la
 
 [1] Antonio, N., de Almeida, A., and Nunes, L. (2019). Hotel booking demand datasets. *Data in Brief*, 22, 41–49. https://doi.org/10.1016/j.dib.2018.11.126
 
-[2] Jesse Mostipak. Hotel Booking Demand. Kaggle. https://www.kaggle.com/datasets/jessemostipak/hotel-booking-demand . Exact version, download date, and licence pending verification.
+[2] Jesse Mostipak. Hotel Booking Demand. Kaggle. https://www.kaggle.com/datasets/jessemostipak/hotel-booking-demand . Original acquired version and download date unknown (user confirmed); exact licence verification remains open.
 
 OpenAI ChatGPT/Codex assisted with scaffolding, user-approved transcription, code, testing, execution, figures, interpretation, and this draft. No predictive results have been fabricated. Notebook 01 preserves ten earlier IPython-executed audit cells and adds five Python-executed EDA cells with actual captured outputs. Notebook 03 preserves five Step 9 cells and appends five actually Python-executed Step 10 cells. Notebook 04 preserves six actually Python-executed Step 11 cells and adds five actually Python-executed Step 12 cells. Notebook 05 contains six actually Python-executed evidence-analysis cells for Step 13. Full fresh-kernel notebook execution and canonical format validation remain final gates. Produce report.pdf after completing and checking the report.

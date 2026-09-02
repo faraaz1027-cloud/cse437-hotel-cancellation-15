@@ -2,7 +2,7 @@
 
 **CSE437: Data Science | Group 15**
 
-**Status: Step 14 completed — evidence-backed answers to the three unchanged research questions.** Responsible: **Sadat**. **Next: Step 15 — final report, reproducibility and submission, led by Sadat with both members reviewing.** Final Logistic Regression F1 is 0.750592 on 23,795 held-out bookings. Report Sections 1–8 now include the question answers and limitations; final assembly and submission checks remain pending.
+**Status: Step 15 in progress — approved baseline/Random Forest test comparison completed.** Responsible: **Sadat, with both members reviewing.** Section **05**, **Summer 2026**. Final Logistic Regression F1 remains 0.750592 on 23,795 held-out bookings. Next: finish the remaining Step 15 report/PDF, reproducibility, provenance/publication and contribution checks; then submit. There is no Step 16.
 
 Resume checkpoint: [PROJECT_STATUS.md](PROJECT_STATUS.md) records completed work, remaining checks, and the next action.
 
@@ -299,6 +299,25 @@ unchanged. No new model fitting or official test evaluation is performed.
 compliant report/PDF, raw-data/provenance requirements, clean-environment and
 fresh-kernel checks, references and genuine contribution records.
 
+## Step 15 reporting supplement
+
+The user approved adding the development-selected Random Forest and majority
+baseline to the final test comparison after Step 13 results were already known.
+This timing is disclosed; it is not a simultaneous preregistered test or a new
+model-selection exercise. Logistic Regression remains the selected final model.
+
+| Model | Test F1 | Accuracy | Precision | Recall | ROC-AUC |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Training-majority baseline | 0.000000 | 0.591259 | 0.000000 | 0.000000 | 0.500000 |
+| Logistic Regression (selected) | 0.750592 | 0.760874 | 0.654187 | 0.880321 | 0.875977 |
+| Random Forest | 0.723115 | 0.789325 | 0.781239 | 0.673041 | 0.878190 |
+
+Both added models fit development data only, with frozen settings and threshold
+0.5. All Step 13 model/result hashes remain unchanged. The current suite passes
+58 tests. See [supplement evidence](data/results/step15/README.md) and updated
+[report Section 7.1](report/report.md). Original acquisition date/version are
+recorded as unknown, not invented. No claim of full Step 15 completion is made.
+
 ## Remaining setup
 
 - [x] Add approved group members, problem statement, and unchanged research questions.
@@ -313,6 +332,7 @@ fresh-kernel checks, references and genuine contribution records.
 - [x] Complete Step 12 exhaustive tuning, all candidate/fold results, frozen settings, Notebook 04 outputs and report Section 6.
 - [x] Complete Step 13 final test evaluation, saved model, predictions, error analysis, Notebook 05 outputs and report Section 7.
 - [x] Complete Step 14 answers to all three unchanged questions, evidence links, limitations and Step 15 handoff.
+- [x] Add the approved Step 15 held-out baseline/Random Forest comparison, with timing disclosure and unchanged selected model.
 - [ ] Confirm exact source terms and add the raw dataset to the repository.
 - [ ] Record collaborators' actual contributions as work is completed.
 - [ ] Verify all implemented notebooks in a fresh environment and fresh Jupyter kernels.
@@ -320,4 +340,4 @@ fresh-kernel checks, references and genuine contribution records.
 
 ## Assistance
 
-OpenAI ChatGPT/Codex assisted with repository scaffolding, transcription of user-approved project details, audit/EDA, Steps 5–10 preprocessing and feature work, Steps 11–13 implementation, execution, tests, modeling/tuning/final evaluation and notebook outputs, and Step 14 evidence checking and research-question synthesis. Final submission work remains pending. Assigned ownership does not establish personal contributions; members must review and record their actual work.
+OpenAI ChatGPT/Codex assisted with repository scaffolding, transcription of user-approved project details, audit/EDA, Steps 5–10 preprocessing and feature work, Steps 11–13 implementation, execution, tests, modeling/tuning/final evaluation and notebook outputs, Step 14 evidence checking and research-question synthesis, and the user-approved Step 15 reporting comparison. Final submission work remains pending. Assigned ownership does not establish personal contributions; members must review and record their actual work.

@@ -1,6 +1,14 @@
 # Handoff from Faraaz's stages to Sadat
 
-**CSE437 Group 15. Step 14 complete; Step 15 is next. Owner: Sadat, with both members reviewing.**
+**CSE437 Group 15, Section 05, Summer 2026. Step 15 in progress. Owner: Sadat, with both members reviewing.**
+
+The approved Step 15 test-comparison supplement is complete. Test F1:
+baseline 0, frozen Logistic Regression 0.750592, development-selected Random
+Forest 0.723115. No selected model, threshold or Step 13 artifact changed.
+The comparison was authorized after the original test result and is explicitly
+reporting-only. See `data/results/step15/README.md` and the current gates in
+`PROJECT_STATUS.md`. The original download date/version are unknown, as the
+user confirmed. Next: finish Step 15 submission checks; no Step 16.
 
 This is an implementation handoff prepared with ChatGPT/Codex assistance.
 Faraaz must review/explain the earlier stages and report actual contributions;

@@ -2,7 +2,7 @@
 
 ## Current position
 
-**Step 14 is complete. Resume at Step 15 — Sadat, with both members reviewing.** Sadat is the assigned owner of Steps 9–15; review and actual contributions remain for the members to record. Step 14 is documentation-only and does not modify frozen research artifacts.
+**Step 15 is in progress — approved test-comparison supplement complete. Owner: Sadat, with both members reviewing.** Section 05, Summer 2026. Step 14 was documentation-only; Step 15 now adds baseline/Random Forest reporting after the original selected-model evaluation. No frozen selection or Step 13 artifact is changed. Actual member contributions remain unconfirmed.
 
 Repository: https://github.com/faraaz1027-cloud/cse437-hotel-cancellation-15
 
@@ -36,14 +36,14 @@ documents or verbatim faculty feedback as part of resuming.
 | 12 | Hyperparameter tuning | Sadat | Complete; 20 settings, 60 fits, frozen selection, Notebook 04 outputs and Section 6 |
 | 13 | Final test evaluation and error analysis | Sadat | Complete; fitted pipeline, final metrics, predictions, errors, figures, Notebook 05 and Section 7 |
 | 14 | Answer the unchanged three questions | Sadat | Complete; evidence-backed answers, source links, limitations and report Sections 7.3–8 |
-| 15 | Report, reproducibility, and submission | Sadat + both reviewers | **Next — submission gates still open** |
+| 15 | Report, reproducibility, and submission | Sadat + both reviewers | **In progress — approved three-model test table complete; other submission gates open** |
 
 ## What has been verified
 
 The entries below are stage-specific checkpoints. Statements that the final
 test was untouched apply to Steps 5–12; Step 13 subsequently evaluated the
 frozen selected model once. Earlier test counts are historical, not the latest
-suite size (53 tests).
+suite size (58 tests).
 
 - Original source: 119,390 rows and 32 columns; original bytes preserved.
 - Eligible cohort: 119,210 rows; 180 known-zero-guest records excluded.
@@ -149,9 +149,19 @@ suite size (53 tests).
 
 ## Resume Step 15
 
+The user-approved test-comparison supplement is complete: baseline F1 0,
+Logistic Regression F1 0.750591742, Random Forest F1 0.723115162. Forest uses
+the development-selected `rf_12` settings, not newly tuned settings. The
+selection and all Step 13 model/output hashes remain unchanged. Original
+download date and acquired version are confirmed unknown; do not invent them.
+Notebook 05 includes an executed supplementary evidence check (ordinary Python
+execution, not a fresh Jupyter-kernel certification). The current 58-test suite
+passes. See `data/results/step15/README.md`. No Step 16 is planned; submission
+follows completion of the remaining gates below.
+
 1. Read report Sections 1–8 and the Step 14 answers. Preserve the exact
    problem/questions and the frozen model, predictions and split.
-2. Resolve raw-data provenance, licence/version/download details honestly,
+2. Retain unknown original date/version honestly, verify exact source licence,
    and add the unchanged sub-50-MB original CSV under `data/raw/`.
 3. Verify a clean dependency install, canonical notebook format, and all five
    notebooks top-to-bottom in fresh Jupyter kernels with outputs saved.

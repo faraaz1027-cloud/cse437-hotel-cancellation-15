@@ -6,7 +6,7 @@
 
 Source: [Hotel Booking Demand by Jesse Mostipak on Kaggle](https://www.kaggle.com/datasets/jessemostipak/hotel-booking-demand).
 
-Download the dataset, extract `hotel_bookings.csv`, and place the untouched file at `data/raw/hotel_bookings.csv`. Keep original source files unchanged. Record the source version, download date, and exact licence terms.
+Download the dataset, extract `hotel_bookings.csv`, and place the untouched file at `data/raw/hotel_bookings.csv`. Keep original source files unchanged. For a new download, record its date/version separately: these do not establish when the original supplied file was acquired. The original acquisition date and acquired source version are unknown, as confirmed by the user. Verify exact licence terms before raw-data publication.
 
 ## Verified file record
 
@@ -20,7 +20,8 @@ Download the dataset, extract `hotel_bookings.csv`, and place the untouched file
 | City / resort bookings | 79,330 / 40,060 |
 | Target | is_canceled |
 | Not canceled / canceled | 75,166 / 44,224 |
-| Source version / actual download date | Not supplied; record from the original download |
+| Original acquired source version | Unknown — user confirmed |
+| Original download date | Unknown — user confirmed |
 | Exact Kaggle dataset licence | Pending confirmation at the source |
 
 The file is below 50 MB. Adding the raw data remains a submission task. The source download link above supports obtaining the input in the meantime.

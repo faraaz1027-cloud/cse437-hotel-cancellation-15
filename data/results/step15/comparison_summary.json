@@ -1,0 +1,50 @@
+{
+  "step": 15,
+  "status": "comparison supplement complete; overall Step 15 remains open",
+  "responsible_member": "Sadat; both members review",
+  "development_rows_fitted": 95415,
+  "test_rows_evaluated": 23795,
+  "selected_model": "logistic_regression",
+  "model_reselected_from_test": false,
+  "threshold_changed": false,
+  "frozen_step13_artifacts_unchanged": true,
+  "forest_unchanged_after_prediction": true,
+  "test_timing": "Authorized after Step 13 Logistic Regression test results were known; not a preregistered simultaneous three-model test.",
+  "baseline_rule": "Development majority is class 0; every test cancellation probability is 0.",
+  "input_sha256": {
+    "step5_candidates.csv.gz": "1721717023e4f27371e37c8e05fefccda4fbf2ef89f1e60b3fc1a026ebb7bbb9",
+    "step5_metadata.csv.gz": "24655f99f16d70acde3295c270438bdc096d5d94f5b572d649a8a9bb1927e9db",
+    "step6_assignments.csv.gz": "57b4e8bcf947059dbb3ae34e39c49306b96aa86a4ad74898966e931b63a998e1",
+    "step6_split_plan.json": "7bb32486064b85568dbaf81d821cd02ec30e6b7d5bd87837c5bbc2e99600550e",
+    "step5_target.csv.gz": "84fef5775f76c456fe531c6f262a70b16853f4bdafc6c83c42b5fa010694eabb"
+  },
+  "protected_sha256": {
+    "data/results/step13/evaluation_protocol.json": "cb9bd9b3f4e66d2092901533f08c9e1d9081222a0f4d5526c41bb99c55603df5",
+    "data/results/step13/final_metrics.csv": "51e622d79193c0c031d68bb6d88195aad11110f7c6d41f58e7a500a860db4896",
+    "data/results/step13/subgroup_metrics.csv": "b73af78729d91f3c293d9c703ba325dad6a7aa5b5771f4a6aa98bd903bd8c3ab",
+    "data/results/step13/probability_diagnostics.csv": "ce8e14042f8cab63d263e763461116e977dbb3a1c854e1df8c5f21bf6a339e20",
+    "data/results/step13/error_examples.csv": "45051eef307e9c632f7bdd197065d6659e64d3f3f8d3e061b18eaefab421e3e3",
+    "data/results/step13/feature_coefficients.csv": "357a986c11190361d50adf3848fafb989cb3a75940b914c3fb244a63fb977bb4",
+    "models/final_logistic_regression.joblib": "498112adf28d66f22f84f76101187c7a94eefeda62b7a92b45f1f9152790e097",
+    "figures/09_final_test_performance.png": "3f7badb9f7c82f1a42649a8b889d3d77bfa73a2bbabaee2657c551600b38c7a9",
+    "figures/10_final_error_analysis.png": "774149f7920c35cdac5d673dd33c98b0386dd8cfe937b376c8c6ba30d1c1cd03",
+    "data/results/step13/test_predictions_01.csv.gz": "31cfe50cca13e1216afbd158a9f7119bee1c5afa99734e9e877cc3c778abd78c",
+    "data/results/step13/test_predictions_02.csv.gz": "febcc3739a2a47852eb0e213061dc02b8cfccf8695bc72f69d66102be754636b",
+    "data/results/step13/test_predictions_03.csv.gz": "7b6b54f8361043661f089600a85dad3e13ef76789a3d34dadc3299152171ce4b",
+    "data/results/step13/test_predictions_04.csv.gz": "e64629cce51e65c346fd8a1ec150ff8c33b9b76476286adc5ccbb3c92aacd8fb",
+    "data/results/step13/evaluation_summary.json": "5588c1f9ec56d78a4cd3ea9836bbe7b8377ed0db26bf5299de478a4e8993ee1b",
+    "data/results/step12/final_selection.json": "e495222d6050492784b334110973b219dce2d3e9deaf516d311878462c6e47b6"
+  },
+  "runtime": {
+    "python": "3.12.13",
+    "numpy": "2.3.5",
+    "pandas": "2.2.3",
+    "scikit_learn": "1.8.0",
+    "joblib": "1.5.3"
+  },
+  "output_sha256": {
+    "data/results/step15/comparison_protocol.json": "1dc51bb31e081e4cc8ad187857107f807b5e037e2bce0d59548ba657bbe613d0",
+    "data/results/step15/test_comparison.csv": "ec45e08e7d66ab64450392e97b8b09ea078262ba615139c7c5e6aca75c10a275",
+    "data/results/step15/random_forest_test_probabilities.csv.gz": "b4c48e2d65c688cd7493c6f5776b0b1fcf46a8bb57216b3e97c3ff52c5870cae"
+  }
+}
