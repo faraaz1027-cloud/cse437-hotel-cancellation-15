@@ -9,7 +9,7 @@
 
 Repository: https://github.com/faraaz1027-cloud/cse437-hotel-cancellation-15
 
-**Working report:** Sections 1–6 are drafted from verified Steps 1–12, including model comparison and hyperparameter tuning. Held-out results and the final PDF remain pending. Finalize to the supplied template within 10 pages.
+**Working report:** Sections 1–7 are drafted from verified Steps 1–13, including the frozen held-out evaluation and error analysis. Research-question answers, final synthesis and the PDF remain pending. Finalize to the supplied template within 10 pages.
 
 ## Summary
 
@@ -266,11 +266,51 @@ See [the tuning report](step12_hyperparameter_tuning.md) and
 
 ## 7. Results, Visualization, and Error Analysis
 
-Pending: final test table/figures, at least two actual wrong predictions, and answers to all three approved questions. EDA is not final model evaluation.
+### 7.1 Held-out performance
+
+The frozen selected-feature Logistic Regression (`C=1`, balanced class weights,
+threshold 0.5) was fitted on 95,415 development rows and evaluated once on
+23,795 later bookings. No test score altered the pipeline.
+
+| F1 | Accuracy | Precision | Recall | ROC-AUC | TN | FP | FN | TP |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| **0.750592** | 0.760874 | 0.654187 | 0.880321 | 0.875977 | 9,543 | 4,526 | 1,164 | 8,562 |
+
+![Final test performance](../figures/09_final_test_performance.png)
+
+The test cancellation rate is 40.87%. High recall and lower precision reflect
+the balanced-weight model's emphasis on detecting cancellations; false positives
+outnumber false negatives. Test F1 exceeds the 0.732102 development mean, but
+one later period is not evidence of improvement or a confidence interval.
+
+### 7.2 Error analysis
+
+City Hotel error rate is 25.59%, compared with 20.24% for Resort Hotel. Online
+TA has 31.95% error and contains 3,653 false positives. Short lead-time F1 is
+weak (0.3344 for 0–7 days; 0.5882 for 8–30), whereas 366+ days has F1 0.9481.
+No Deposit contains almost every error; 2,290 of 2,291 Non Refund bookings
+cancel, giving near-perfect separation. These post-test groups are descriptive,
+not reasons to change the model.
+
+![Final probability and hotel errors](../figures/10_final_error_analysis.png)
+
+Fixed-bin observed rates lie below mean predicted probabilities, so outputs are
+not presented as calibrated probabilities. A confident false positive (source
+14,182) received probability 0.999603; a confident false negative (source
+94,387) received 0.006030. Twenty distinct examples show confident and
+near-threshold FP/FN cases. Full subgroup metrics, coefficients and examples
+are in [Step 13 evidence](../data/results/step13/README.md) and the
+[detailed evaluation](step13_final_evaluation.md).
+
+The strongest positive coefficient is Non Refund; several large coefficients
+are agent categories. Coefficients on encoded/scaled inputs are associations,
+not causal or uniformly comparable importance. Repeated profiles, source timing,
+temporal mix and small subgroups limit interpretation. All 53 tests pass; the
+fitted pipeline is saved. Notebook 05 has six executed evidence-analysis cells.
 
 ## 8. Limitations and Next Steps
 
-Current limitations include source timing, repeated-record weighting, small groups, temporal variation, training–validation gaps, reuse of development folds for selection, and incomplete source provenance. Extend after final evaluation; the finite grid and development-selection optimism also limit the conclusions.
+Current limitations include source timing, repeated-record weighting, small groups, temporal variation, reused development folds, a single period-specific holdout, uncalibrated weighted probabilities, a finite grid and incomplete source provenance. Extend in the final synthesis without changing the frozen model.
 
 ## 9. Contributions
 
@@ -282,4 +322,4 @@ Faraaz owns Steps 1–8 and draft Sections 1–3; Sadat owns Steps 9–15 and la
 
 [2] Jesse Mostipak. Hotel Booking Demand. Kaggle. https://www.kaggle.com/datasets/jessemostipak/hotel-booking-demand . Exact version, download date, and licence pending verification.
 
-OpenAI ChatGPT/Codex assisted with scaffolding, user-approved transcription, code, testing, execution, figures, interpretation, and this draft. No predictive results have been fabricated. Notebook 01 preserves ten earlier IPython-executed audit cells and adds five Python-executed EDA cells with actual captured outputs. Notebook 03 preserves five Step 9 cells and appends five actually Python-executed Step 10 cells. Notebook 04 preserves six actually Python-executed Step 11 cells and adds five actually Python-executed Step 12 cells. Full fresh-kernel notebook execution and canonical format validation remain final gates. Produce report.pdf after completing and checking the report.
+OpenAI ChatGPT/Codex assisted with scaffolding, user-approved transcription, code, testing, execution, figures, interpretation, and this draft. No predictive results have been fabricated. Notebook 01 preserves ten earlier IPython-executed audit cells and adds five Python-executed EDA cells with actual captured outputs. Notebook 03 preserves five Step 9 cells and appends five actually Python-executed Step 10 cells. Notebook 04 preserves six actually Python-executed Step 11 cells and adds five actually Python-executed Step 12 cells. Notebook 05 contains six actually Python-executed evidence-analysis cells for Step 13. Full fresh-kernel notebook execution and canonical format validation remain final gates. Produce report.pdf after completing and checking the report.

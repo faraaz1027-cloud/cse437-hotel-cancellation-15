@@ -1,0 +1,21 @@
+example_reason,source_row_id,arrival_date,hotel,lead_time,lead_time_band,deposit_type,market_segment,customer_type,previous_cancellations,total_of_special_requests,actual,predicted,cancellation_probability,error_type
+most_confident_FP,14182,2017-06-09,Resort Hotel,80,31–90,No Deposit,Direct,Transient,1,0,0,1,0.9996033465868677,FP
+most_confident_FP,117788,2017-08-04,City Hotel,211,181–365,No Deposit,Online TA,Transient,0,0,0,1,0.992440218240025,FP
+most_confident_FP,119068,2017-08-28,City Hotel,311,181–365,No Deposit,Online TA,Transient,0,0,0,1,0.9900075520631546,FP
+most_confident_FP,38993,2017-08-01,Resort Hotel,161,91–180,No Deposit,Offline TA/TO,Transient,0,0,0,1,0.989914012040137,FP
+most_confident_FP,115995,2017-07-10,City Hotel,148,91–180,No Deposit,Online TA,Transient,0,0,0,1,0.9882139299825987,FP
+closest_to_threshold_FP,115118,2017-06-30,City Hotel,66,31–90,No Deposit,Online TA,Transient,0,2,0,1,0.5003070948186994,FP
+closest_to_threshold_FP,119321,2017-08-30,City Hotel,181,181–365,No Deposit,Online TA,Transient,0,2,0,1,0.5003975501986275,FP
+closest_to_threshold_FP,111509,2017-05-10,City Hotel,2,0–7,No Deposit,Corporate,Transient,0,0,0,1,0.5004059038101143,FP
+closest_to_threshold_FP,114680,2017-06-25,City Hotel,51,31–90,No Deposit,Online TA,Transient,0,1,0,1,0.5004531789467607,FP
+closest_to_threshold_FP,115780,2017-07-09,City Hotel,28,8–30,No Deposit,Online TA,Transient,0,1,0,1,0.5008929120161748,FP
+most_confident_FN,94387,2017-05-13,City Hotel,1,0–7,No Deposit,Complementary,Transient-Party,4,3,1,0,0.00602980383379499,FN
+most_confident_FN,94388,2017-05-13,City Hotel,1,0–7,No Deposit,Complementary,Transient-Party,4,3,1,0,0.00602980383379499,FN
+most_confident_FN,11749,2017-05-28,Resort Hotel,11,8–30,No Deposit,Direct,Transient,0,4,1,0,0.007734087310963727,FN
+most_confident_FN,108459,2017-07-16,City Hotel,31,31–90,No Deposit,Direct,Transient,0,2,1,0,0.009291176567214997,FN
+most_confident_FN,67811,2017-05-08,City Hotel,0,0–7,No Deposit,Corporate,Transient,0,0,1,0,0.009719474270512079,FN
+closest_to_threshold_FN,67057,2017-04-28,City Hotel,29,8–30,No Deposit,Online TA,Transient,0,1,1,0,0.4999081503627946,FN
+closest_to_threshold_FN,13171,2017-08-03,Resort Hotel,22,8–30,No Deposit,Direct,Transient,0,2,1,0,0.49973333350090665,FN
+closest_to_threshold_FN,67213,2017-04-29,City Hotel,30,8–30,No Deposit,Online TA,Transient,0,1,1,0,0.4996402329564496,FN
+closest_to_threshold_FN,67207,2017-04-29,City Hotel,30,8–30,No Deposit,Online TA,Transient,0,1,1,0,0.4995161585047696,FN
+closest_to_threshold_FN,13390,2017-08-13,Resort Hotel,52,31–90,No Deposit,Online TA,Transient,0,2,1,0,0.4993257677307371,FN

@@ -1,6 +1,6 @@
 # Handoff from Faraaz's stages to Sadat
 
-**CSE437 Group 15. Step 12 complete; Step 13 is next. Owner: Sadat.**
+**CSE437 Group 15. Step 13 complete; Step 14 is next. Owner: Sadat.**
 
 This is an implementation handoff prepared with ChatGPT/Codex assistance.
 Faraaz must review/explain the earlier stages and report actual contributions;
@@ -16,7 +16,7 @@ the document does not claim he personally wrote AI-prepared code.
    inside the model pipeline so training-fold medians/scalers/vocabularies
    cannot see validation data. CV indices are relative to the development subset.
 4. Read Notebook 01's development EDA, Notebook 03's executed Steps 9–10, and
-   report Sections 1–6. Notebook 04 contains Step 11 comparison and Step 12 tuning.
+   report Sections 1–7. Notebook 04 contains comparison/tuning; Notebook 05 contains final evaluation.
 
 ## Step 9: implemented derived-feature candidates
 
@@ -65,7 +65,7 @@ warrant regularization experiments. Higher forest ROC-AUC does not override
 the agreed F1 selection metric. See [the Step 11 report](report/step11_model_comparison.md)
 and [measured evidence](data/results/step11/README.md).
 
-## Step 12 completed; next is Step 13
+## Step 12 tuning reference
 
 Both families have been tuned through an exhaustive 20-setting, 60-fit grid.
 Selected-feature Logistic Regression is the development-selected model: **C=1.0, class_weight=balanced**,
@@ -75,12 +75,17 @@ All 47 tests pass; all 60 fits complete
 with no failures or convergence warnings. No final test rows were transformed
 or scored and no full-development refit has occurred.
 
-Read [the tuning report](report/step12_hyperparameter_tuning.md) and
-`data/results/step12/final_selection.json`. Use `build_frozen_pipeline` from
-`src/tuning.py` to construct the selected **unfitted** pipeline. Step 13 fits it
-on development only, then evaluates the untouched test with these frozen choices.
-Save the fitted model, test metrics/confusion matrix, real wrong predictions,
-Notebook 05 outputs and report Section 7. Do not retune from test performance.
+## Step 13 completed; next is Step 14
+
+The frozen Logistic Regression pipeline was fitted on development and evaluated
+once on the final test: F1 **0.750592**, accuracy 0.760874, precision 0.654187,
+recall 0.880321 and ROC-AUC 0.875977. Confusion counts are TN 9,543, FP 4,526,
+FN 1,164 and TP 8,562. No test result changed the model or threshold.
+
+Read [the Step 13 report](report/step13_final_evaluation.md), [Notebook 05](notebooks/05_evaluation_and_error_analysis.ipynb)
+and [the complete evidence](data/results/step13/README.md). Step 14 answers the
+three exact research questions using verified EDA, development comparisons and
+held-out results. Do not make new test-driven modeling choices.
 
 ## Findings to carry into model analysis
 
@@ -105,12 +110,11 @@ precision, recall, and ROC-AUC. Preserve seed 42 for stochastic components.
 Only after choosing the full pipeline may it be refitted on all development
 rows and evaluated on the final test in Step 13.
 
-Step 11 comparisons and Step 12 tuning are complete; final held-out
-results remain pending. All 47 tests pass. Notebook 01
+Steps 11–13 modeling, tuning and final held-out analysis are complete. All 53 tests pass. Notebook 01
 has ten preserved executed audit cells plus five newly executed EDA cells;
 Notebook 02 has thirteen executed cells; Notebook 03 has ten executed Python
 cells with saved outputs (five Step 9 and five Step 10); Notebook 04 preserves six Step 11 cells and adds five Step 12
-executed Python cells. Full fresh-kernel runs, canonical
+executed Python cells; Notebook 05 adds six executed evidence-analysis cells. Full fresh-kernel runs, canonical
 notebook validation, clean-install dependencies, raw CSV/provenance completion,
 and the final 10-page Markdown/PDF report remain submission tasks.
 

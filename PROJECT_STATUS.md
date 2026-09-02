@@ -2,7 +2,7 @@
 
 ## Current position
 
-**Step 12 is complete. Resume at Step 13 — Sadat.** Sadat is the assigned owner of Steps 9–12; review and actual contributions remain for the members to record.
+**Step 13 is complete. Resume at Step 14 — Sadat.** Sadat is the assigned owner of Steps 9–13; review and actual contributions remain for the members to record.
 
 Repository: https://github.com/faraaz1027-cloud/cse437-hotel-cancellation-15
 
@@ -34,8 +34,8 @@ documents or verbatim faculty feedback as part of resuming.
 | 10 | Feature selection and dimensionality reduction | Sadat | Complete; F-score selection, centered numeric PCA, four-way reference comparison, retained lists/components and decision |
 | 11 | Baseline and two model families | Sadat | Complete; five candidates, 15 fits, Notebook 04 outputs, metrics, figure and Section 5 |
 | 12 | Hyperparameter tuning | Sadat | Complete; 20 settings, 60 fits, frozen selection, Notebook 04 outputs and Section 6 |
-| 13 | Final test evaluation and error analysis | Sadat | **Next — not started** |
-| 14 | Answer the unchanged three questions | Sadat | Pending |
+| 13 | Final test evaluation and error analysis | Sadat | Complete; fitted pipeline, final metrics, predictions, errors, figures, Notebook 05 and Section 7 |
+| 14 | Answer the unchanged three questions | Sadat | **Next — not started** |
 | 15 | Report, reproducibility, and submission | Sadat + both reviewers | Pending |
 
 ## What has been verified
@@ -118,33 +118,43 @@ documents or verbatim faculty feedback as part of resuming.
 - Notebook 04 now has 11 code cells: six preserved Step 11 outputs and five new
   sequentially Python-executed Step 12 outputs. Full fresh-kernel checks remain.
 
-## Resume Step 13
+- Step 13 fits the frozen selected-feature Logistic Regression (`C=1`, balanced
+  weights, threshold 0.5) on 95,415 development rows and evaluates 23,795 test
+  rows once. No model/threshold reselection follows test access.
+- Final metrics: F1 0.750592, accuracy 0.760874, precision 0.654187, recall
+  0.880321, ROC-AUC 0.875977; TN 9,543, FP 4,526, FN 1,164, TP 8,562.
+- Twenty distinct errors, five subgroup dimensions, fixed probability bins and
+  all 406 coefficients are published. The fitted pipeline is saved under models/.
+- All 53 tests pass. Notebook 05 has six actually executed analysis/verification
+  cells. Full fresh-Jupyter and canonical validation remain final gates.
 
-1. Read the Step 12 report, Notebook 04 and `final_selection.json`. Verify
-   upstream data/split and selected-setting hashes. Preserve the original brief.
-2. Construct the selected pipeline with `build_frozen_pipeline` from `src/tuning.py`.
-   It must initially be unfitted. Do not retune model/representation/threshold.
-3. Fit that complete pipeline on development rows only. Then transform and score
-   the held-out test with the frozen probability threshold, once choices are fixed.
-4. Report final cancellation F1, accuracy, precision, recall and ROC-AUC, plus
-   confusion counts. Distinguish final test performance from reused CV scores.
-5. Analyze actual false positives/false negatives, including at least two concrete
-   wrong predictions. Examine sensible subgroups and temporal differences without
-   using them to change the selected model. Explain uncertainty and data limits.
-6. Save the fitted pipeline, actual Notebook 05 outputs, plots and report Section 7.
-   Record final test access/evaluation clearly. Step 14 answers the unchanged
-   research questions; Step 15 finalizes the report/reproducibility/submission.
+## Resume Step 14
 
-The winner is the best evaluated setting in a bounded grid, not necessarily
-globally optimal. Report the held-out result plainly even if lower; do not
-switch model families or optimize thresholds after viewing test outcomes.
+1. Read report Sections 1–7 and the detailed Step 8, 10, 11, 12 and 13 evidence.
+   Preserve the exact problem and question wording in README.md.
+2. Answer Question 1 with descriptive associations and carefully qualified model
+   coefficients. Separate association/prediction from causality.
+3. Answer Question 2 with final held-out F1, accuracy, precision, recall and
+   ROC-AUC. Explain the false-positive/false-negative tradeoff and period scope.
+4. Answer Question 3 using the development comparisons: selected Logistic
+   Regression beats tested forest candidates; balanced weighting improves F1.
+   State “best evaluated under this protocol,” not universally best.
+5. Integrate error patterns and limitations: deposit dominance, short lead-time,
+   Online TA, probability overprediction, repetitions and source timing.
+6. Write concise evidence-backed answers into report Section 7/8 without tuning,
+   recalibration or new test-driven choices. Step 15 handles final formatting,
+   contributions, provenance, clean runs and PDF export.
+
+The final result is period-specific. Do not switch model families, optimize
+thresholds or calibrate from the held-out outcome. Report associations and
+coefficients cautiously and preserve the frozen evidence.
 
 ## Files to open
 
 - [Executed Notebook 02](notebooks/02_preprocessing.ipynb)
 - [Notebook 01: raw audit and development EDA](notebooks/01_data_audit_and_eda.ipynb)
 - [Step 8 tables, figures, and reproduction](data/eda/README.md)
-- [Report Sections 1–6 draft](report/report.md)
+- [Report Sections 1–7 draft](report/report.md)
 - [Notebook 03: derived features](notebooks/03_feature_engineering.ipynb)
 - [Step 9 report](report/step9_feature_engineering.md)
 - [Step 9 evidence and schemas](data/processed/step9/README.md)
@@ -156,6 +166,10 @@ switch model families or optimize thresholds after viewing test outcomes.
 - [Step 12 tuning report](report/step12_hyperparameter_tuning.md)
 - [Step 12 evidence and frozen settings](data/results/step12/README.md)
 - [Tuning and unfitted handoff factory](src/tuning.py)
+- [Notebook 05: final evaluation](notebooks/05_evaluation_and_error_analysis.ipynb)
+- [Step 13 evaluation report](report/step13_final_evaluation.md)
+- [Step 13 metrics, predictions and errors](data/results/step13/README.md)
+- [Final evaluation implementation](src/final_evaluation.py)
 - [Fresh model-pipeline factory](src/modeling.py)
 - [Cloneable representation wrapper](src/representation.py)
 - [Sadat's handoff](HANDOFF_TO_SADAT.md)
@@ -174,6 +188,7 @@ python -m src.feature_audit
 python -m src.representation_audit
 python -m src.model_comparison
 python -m src.tuning
+python -m src.final_evaluation
 python -m unittest discover -s tests -v
 ```
 
@@ -186,18 +201,18 @@ requires the original `data/raw/hotel_bookings.csv` for its Step 5 cells.
   Its exact SHA-256 and source link are in data/README.md. Record the actual
   source version/download date and exact licence; do not invent missing details.
 - Validate a clean dependency install and separate fresh Jupyter-kernel runs;
-  the earlier IPython and Steps 8–12 Python execution checks do not establish
+  the earlier IPython and Steps 8–13 Python execution checks do not establish
   that final gate. Canonical notebook format validation is also pending.
 - Keep notebooks numbered 01–05 with saved outputs and relative paths.
 - Preserve frozen data/split hashes and the original CSE437 document.
 - Complete report/report.md and report/report.pdf to the supplied template,
-  at most 10 pages. Current report/report.md drafts Sections 1–6; later results,
+  at most 10 pages. Current report/report.md drafts Sections 1–7; question answers,
   final summary, contribution records, and PDF assembly remain pending.
 - Record genuine member contributions, verified references, and AI assistance.
 - Submit the one public GitHub repository link when the full project is ready.
 
 ## Suggested message to resume
 
-“Continue my CSE437 Group 15 project from Step 13. Read PROJECT_STATUS.md and
+“Continue my CSE437 Group 15 project from Step 14. Read PROJECT_STATUS.md and
 HANDOFF_TO_SADAT.md in https://github.com/faraaz1027-cloud/cse437-hotel-cancellation-15
-first. Sadat owns Step 13; preserve the original proposal and frozen evaluation split.”
+first. Sadat owns Step 14; preserve the original proposal and frozen evaluation split.”

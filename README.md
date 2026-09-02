@@ -2,7 +2,7 @@
 
 **CSE437: Data Science | Group 15**
 
-**Status: Step 12 completed — hyperparameter tuning for both model families.** Responsible: **Sadat**. **Next: Step 13 — final test evaluation and error analysis, owned by Sadat.** The selected model is Logistic Regression (mean development F1 0.732102). Notebook 04 contains Steps 11–12 outputs; report Sections 1–6 are drafted. Final test performance and final report assembly remain pending.
+**Status: Step 13 completed — frozen final test evaluation and error analysis.** Responsible: **Sadat**. **Next: Step 14 — answer the three unchanged research questions, owned by Sadat.** Final Logistic Regression F1 is 0.750592 on 23,795 held-out bookings. Notebook 05 contains the evaluation evidence; report Sections 1–7 are drafted. Final synthesis and report assembly remain pending.
 
 Resume checkpoint: [PROJECT_STATUS.md](PROJECT_STATUS.md) records completed work, remaining checks, and the next action.
 
@@ -35,11 +35,12 @@ The problem statement and question wording above are reproduced unchanged from t
 | `data/processed/` | Documented outputs of data preparation |
 | `data/results/step11/` | Untuned model-comparison evidence |
 | `data/results/step12/` | Tuning grids, all search results and frozen selected settings |
+| `data/results/step13/` | Final metrics, predictions, subgroup diagnostics and error examples |
 | `data/README.md` | Dataset acquisition and provenance |
 | `notebooks/` | Numbered analysis notebooks |
 | `models/` | Saved models and fitted pipelines |
 | `figures/` | Exported figures |
-| `report/report.md` | Sections 1–6 drafted; final test results and assembly pending |
+| `report/report.md` | Sections 1–7 drafted; question answers and assembly pending |
 | `requirements.txt` | Starter Python dependencies |
 
 Empty `.gitkeep` files preserve folders in Git.
@@ -77,7 +78,7 @@ The uploaded CSV has been audited but is not yet committed here. Obtain it from 
 
 ## Notebook order
 
-Notebook 01 contains the raw-data audit and development EDA. Notebook 02 implements Steps 5–7. Notebook 03 implements Step 9 derived features and Step 10 selection/reduction. Notebook 04 implements Step 11 modeling and Step 12 tuning. Notebook 05 remains a starter outline:
+Notebook 01 contains the raw-data audit and development EDA. Notebook 02 implements Steps 5–7. Notebook 03 implements Step 9 derived features and Step 10 selection/reduction. Notebook 04 implements Step 11 modeling and Step 12 tuning. Notebook 05 implements Step 13 final evaluation and error analysis:
 
 1. [Data audit and EDA](notebooks/01_data_audit_and_eda.ipynb)
 2. [Preprocessing](notebooks/02_preprocessing.ipynb)
@@ -237,7 +238,40 @@ python -m src.tuning
 python -m unittest discover -s tests -v
 ```
 
-**Next: Step 13 — Sadat.** Review `final_selection.json`, construct the unfitted pipeline with `build_frozen_pipeline`, fit on development only, and evaluate the untouched test once. Save the fitted model and error analysis. Do not select settings or change the model from final test scores.
+## Step 13 final evaluation and error analysis
+
+The frozen selected-feature Logistic Regression (`C=1`, balanced class weights,
+threshold 0.5) was fitted on all 95,415 development rows and evaluated once on
+23,795 later-arrival test bookings.
+
+| F1 | Accuracy | Precision | Recall | ROC-AUC |
+| ---: | ---: | ---: | ---: | ---: |
+| **0.750592** | 0.760874 | 0.654187 | 0.880321 | 0.875977 |
+
+Confusion counts are TN 9,543, FP 4,526, FN 1,164 and TP 8,562. The model
+detects most cancellations but overpredicts them, so its high recall comes with
+lower precision. City Hotel and Online TA contain many errors; short lead-time
+bookings have substantially lower F1. Fixed-bin predicted probabilities exceed
+observed rates, so they are not claimed to be calibrated. No test result changed
+the model or threshold.
+
+See [Notebook 05](notebooks/05_evaluation_and_error_analysis.ipynb), [the detailed
+evaluation](report/step13_final_evaluation.md), [all evidence and error examples](data/results/step13/README.md),
+[final performance](figures/09_final_test_performance.png), and [error diagnostics](figures/10_final_error_analysis.png).
+
+```bash
+python -m src.final_evaluation
+python -m unittest discover -s tests -v
+```
+
+All **53 tests pass**. The complete fitted pipeline is saved at
+`models/final_logistic_regression.joblib`. Notebook 05 has six executed
+evidence-analysis cells. Full fresh-Jupyter, canonical format and clean-install
+verification remain final submission gates.
+
+**Next: Step 14 — Sadat.** Answer the three approved research questions from the
+verified EDA, model comparison, tuning and final test evidence. Do not change
+the model, threshold, dataset, target, problem statement or questions.
 
 ## Remaining setup
 
@@ -251,6 +285,7 @@ python -m unittest discover -s tests -v
 - [x] Complete Step 10 supervised selection, centered numeric PCA, reference-model comparison and justified current representation.
 - [x] Complete Step 11 majority baseline, two model families, full/selected controls, Notebook 04 outputs and report Section 5.
 - [x] Complete Step 12 exhaustive tuning, all candidate/fold results, frozen settings, Notebook 04 outputs and report Section 6.
+- [x] Complete Step 13 final test evaluation, saved model, predictions, error analysis, Notebook 05 outputs and report Section 7.
 - [ ] Confirm exact source terms and add the raw dataset to the repository.
 - [ ] Record collaborators' actual contributions as work is completed.
 - [ ] Implement the notebooks and verify a fresh-environment run.
@@ -258,4 +293,4 @@ python -m unittest discover -s tests -v
 
 ## Assistance
 
-OpenAI ChatGPT/Codex assisted with repository scaffolding, transcription of user-approved project details, audit/EDA, Steps 5–10 preprocessing and feature work, and Steps 11–12 implementation, execution, tests, model comparison/tuning, notebook outputs and documentation. Development comparisons and tuning are available; final held-out results remain pending.
+OpenAI ChatGPT/Codex assisted with repository scaffolding, transcription of user-approved project details, audit/EDA, Steps 5–10 preprocessing and feature work, and Steps 11–13 implementation, execution, tests, modeling/tuning/final evaluation, notebook outputs and documentation. Held-out results are available; research-question synthesis and final submission work remain pending.
