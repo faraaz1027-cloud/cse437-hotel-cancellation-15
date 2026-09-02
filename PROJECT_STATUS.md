@@ -2,7 +2,7 @@
 
 ## Current position
 
-**Step 13 is complete. Resume at Step 14 — Sadat.** Sadat is the assigned owner of Steps 9–13; review and actual contributions remain for the members to record.
+**Step 14 is complete. Resume at Step 15 — Sadat, with both members reviewing.** Sadat is the assigned owner of Steps 9–15; review and actual contributions remain for the members to record. Step 14 is documentation-only and does not modify frozen research artifacts.
 
 Repository: https://github.com/faraaz1027-cloud/cse437-hotel-cancellation-15
 
@@ -35,10 +35,15 @@ documents or verbatim faculty feedback as part of resuming.
 | 11 | Baseline and two model families | Sadat | Complete; five candidates, 15 fits, Notebook 04 outputs, metrics, figure and Section 5 |
 | 12 | Hyperparameter tuning | Sadat | Complete; 20 settings, 60 fits, frozen selection, Notebook 04 outputs and Section 6 |
 | 13 | Final test evaluation and error analysis | Sadat | Complete; fitted pipeline, final metrics, predictions, errors, figures, Notebook 05 and Section 7 |
-| 14 | Answer the unchanged three questions | Sadat | **Next — not started** |
-| 15 | Report, reproducibility, and submission | Sadat + both reviewers | Pending |
+| 14 | Answer the unchanged three questions | Sadat | Complete; evidence-backed answers, source links, limitations and report Sections 7.3–8 |
+| 15 | Report, reproducibility, and submission | Sadat + both reviewers | **Next — submission gates still open** |
 
 ## What has been verified
+
+The entries below are stage-specific checkpoints. Statements that the final
+test was untouched apply to Steps 5–12; Step 13 subsequently evaluated the
+frozen selected model once. Earlier test counts are historical, not the latest
+suite size (53 tests).
 
 - Original source: 119,390 rows and 32 columns; original bytes preserved.
 - Eligible cohort: 119,210 rows; 180 known-zero-guest records excluded.
@@ -71,9 +76,9 @@ documents or verbatim faculty feedback as part of resuming.
   previous raw-audit cells retain their earlier outputs. JSON structure checks
   passed. The current runtime lacks Jupyter/nbformat, so neither a full fresh-
   kernel run nor canonical nbformat validation was performed for Step 8.
-- Step 10 now has development validation results from a fixed logistic-regression
-  reference (12 fits). The Step 11 baseline/two-family comparison is now complete; final
-  held-out evaluation remains pending.
+- Step 10 has development validation results from a fixed logistic-regression
+  reference (12 fits). Step 11 completes the baseline/two-family comparison;
+  Step 13 subsequently completes the final held-out evaluation.
 - Step 9 adds eight derived fields and replaces categorical month names with
   a fixed cyclic pair: 24 retained source fields plus eight derived = 32 fields.
   The Step 7 factory remains unchanged. The Step 9 fold widths are 332/421/490;
@@ -128,22 +133,37 @@ documents or verbatim faculty feedback as part of resuming.
 - All 53 tests pass. Notebook 05 has six actually executed analysis/verification
   cells. Full fresh-Jupyter and canonical validation remain final gates.
 
-## Resume Step 14
+## Step 14 completed synthesis
 
-1. Read report Sections 1–7 and the detailed Step 8, 10, 11, 12 and 13 evidence.
-   Preserve the exact problem and question wording in README.md.
-2. Answer Question 1 with descriptive associations and carefully qualified model
-   coefficients. Separate association/prediction from causality.
-3. Answer Question 2 with final held-out F1, accuracy, precision, recall and
-   ROC-AUC. Explain the false-positive/false-negative tradeoff and period scope.
-4. Answer Question 3 using the development comparisons: selected Logistic
-   Regression beats tested forest candidates; balanced weighting improves F1.
-   State “best evaluated under this protocol,” not universally best.
-5. Integrate error patterns and limitations: deposit dominance, short lead-time,
-   Online TA, probability overprediction, repetitions and source timing.
-6. Write concise evidence-backed answers into report Section 7/8 without tuning,
-   recalibration or new test-driven choices. Step 15 handles final formatting,
-   contributions, provenance, clean runs and PDF export.
+- All three exact approved questions are answered in report Sections 7.3–8
+  and `report/step14_research_answers.md`, with source-table links.
+- Question 1 distinguishes deposit/lead-time associations and non-monotonic,
+  repetition-sensitive prior history from causal effects or global importance.
+- Question 2 reports the frozen held-out metrics, confusion counts, subgroup
+  weaknesses, probability overprediction and period-specific scope.
+- Question 3 traces the selection/PCA, model-family and tuning comparisons to
+  selected-feature balanced Logistic Regression as best evaluated by F1.
+- No new fitting, predictions, calibration, threshold choice or test-driven
+  model change occurs. The original document and all non-documentation
+  artifacts remain unchanged from the verified Step 13 checkpoint.
+
+## Resume Step 15
+
+1. Read report Sections 1–8 and the Step 14 answers. Preserve the exact
+   problem/questions and the frozen model, predictions and split.
+2. Resolve raw-data provenance, licence/version/download details honestly,
+   and add the unchanged sub-50-MB original CSV under `data/raw/`.
+3. Verify a clean dependency install, canonical notebook format, and all five
+   notebooks top-to-bottom in fresh Jupyter kernels with outputs saved.
+   Reproduction checks do not authorize a new model choice from test results.
+4. Finalize the 150–200-word summary and compress/format the report to the
+   supplied 10-page template; produce and visually verify `report/report.pdf`
+   against `report/report.md`. Verify references and figure links.
+5. Have Faraaz review Sections 1–3 and Sadat review Sections 4–8/assembly.
+   Both record genuine contributions, commit links and AI assistance; do not
+   claim assigned work was personally performed without member confirmation.
+6. Verify the public repository contents and reproducibility instructions,
+   then submit only its link once all gates are actually complete.
 
 The final result is period-specific. Do not switch model families, optimize
 thresholds or calibrate from the held-out outcome. Report associations and
@@ -154,7 +174,8 @@ coefficients cautiously and preserve the frozen evidence.
 - [Executed Notebook 02](notebooks/02_preprocessing.ipynb)
 - [Notebook 01: raw audit and development EDA](notebooks/01_data_audit_and_eda.ipynb)
 - [Step 8 tables, figures, and reproduction](data/eda/README.md)
-- [Report Sections 1–7 draft](report/report.md)
+- [Report Sections 1–8 draft and question answers](report/report.md)
+- [Step 14 research-question synthesis and evidence links](report/step14_research_answers.md)
 - [Notebook 03: derived features](notebooks/03_feature_engineering.ipynb)
 - [Step 9 report](report/step9_feature_engineering.md)
 - [Step 9 evidence and schemas](data/processed/step9/README.md)
@@ -206,13 +227,14 @@ requires the original `data/raw/hotel_bookings.csv` for its Step 5 cells.
 - Keep notebooks numbered 01–05 with saved outputs and relative paths.
 - Preserve frozen data/split hashes and the original CSE437 document.
 - Complete report/report.md and report/report.pdf to the supplied template,
-  at most 10 pages. Current report/report.md drafts Sections 1–7; question answers,
-  final summary, contribution records, and PDF assembly remain pending.
+  at most 10 pages. Current report/report.md drafts Sections 1–8 and all question
+  answers; final summary, contribution records, and PDF assembly remain pending.
 - Record genuine member contributions, verified references, and AI assistance.
 - Submit the one public GitHub repository link when the full project is ready.
 
 ## Suggested message to resume
 
-“Continue my CSE437 Group 15 project from Step 14. Read PROJECT_STATUS.md and
+“Continue my CSE437 Group 15 project from Step 15. Read PROJECT_STATUS.md and
 HANDOFF_TO_SADAT.md in https://github.com/faraaz1027-cloud/cse437-hotel-cancellation-15
-first. Sadat owns Step 14; preserve the original proposal and frozen evaluation split.”
+first. Sadat leads Step 15 with both members reviewing; preserve the original
+proposal and frozen evaluation results. Finish and verify the remaining submission gates.”

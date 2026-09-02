@@ -9,11 +9,11 @@
 
 Repository: https://github.com/faraaz1027-cloud/cse437-hotel-cancellation-15
 
-**Working report:** Sections 1–7 are drafted from verified Steps 1–13, including the frozen held-out evaluation and error analysis. Research-question answers, final synthesis and the PDF remain pending. Finalize to the supplied template within 10 pages.
+**Working report:** Sections 1–8 are drafted from verified Steps 1–14, including the frozen held-out evaluation, answers to all three unchanged questions, and limitations. Step 15 must finalize the summary, contributions, provenance, reproducibility checks and PDF to the supplied template within 10 pages. Statements about an untouched test in earlier sections describe those stages, before the Step 13 evaluation.
 
 ## Summary
 
-Pending final results. Write the required 150–200-word summary last.
+Final results and research-question answers are available. Write and verify the required 150–200-word summary during Step 15 assembly.
 
 ## 1. Problem and Dataset
 
@@ -308,9 +308,99 @@ not causal or uniformly comparable importance. Repeated profiles, source timing,
 temporal mix and small subgroups limit interpretation. All 53 tests pass; the
 fitted pipeline is saved. Notebook 05 has six executed evidence-analysis cells.
 
+### 7.3 Answers to the approved research questions
+
+**1. Which booking and customer-related factors have the biggest effect on hotel cancellations?**
+
+Among the three predeclared factors, deposit type shows a large descriptive
+separation: development cancellation is 99.25% for Non Refund versus 26.82%
+for No Deposit. Lead-time rates increase across all six fixed bins, from 9.43%
+at 0–7 days to 80.81% at 366+ days, also increasing within both hotels.
+Prior cancellations are non-monotonic: rates for 0, 1, 2–3 and 4+ are 32.07%,
+95.65%, 31.29% and 74.77%. Equal-profile weighting changes the 4+ rate to
+26.32%, demonstrating repetition sensitivity. These are associations, not
+causal effects or an exhaustive ranking of every predictor. The largest
+positive encoded coefficient is Non Refund (+2.929658), but different scaling,
+coding and correlated features prevent interpreting magnitudes as a universal
+raw-feature importance ranking.
+
+Sources: [development EDA](../data/eda/README.md),
+[prior-history sensitivity](../data/eda/sensitivity_prior_cancellations.csv),
+and [model coefficients](../data/results/step13/feature_coefficients.csv).
+
+**2. How accurately can machine-learning models predict whether a hotel booking will be canceled?**
+
+The selected model achieves F1 0.750592, accuracy 76.09%, precision 65.42%,
+recall 88.03% and ROC-AUC 0.875977 on 23,795 held-out arrivals from 2017-04-23
+through 2017-08-31. It detects 8,562 cancellations, misses 1,164 and falsely
+flags 4,526 noncancellations. Thus, high detection comes with substantial false
+alerts. Short-lead and Online TA performance is weaker, and probability-bin
+diagnostics show overprediction. These are period-specific results for the
+selected model, not guaranteed performance for other hotels or calibrated
+probabilities. No financial savings were measured. Sources:
+[final metrics](../data/results/step13/final_metrics.csv) and
+[subgroup diagnostics](../data/results/step13/subgroup_metrics.csv).
+
+**3. Which machine-learning model gives the best result after data preprocessing, feature selection, dimensionality reduction, and hyperparameter tuning?**
+
+Selected-feature Logistic Regression with C=1 and balanced class weights is
+**best evaluated under this protocol**, at mean development F1 0.732102 versus
+0.669294 for the best tested forest. Selection improves the reference logistic
+F1 from 0.693094 to 0.713609; numeric PCA (0.694633) and selection-plus-PCA
+(0.701023) do not beat selection alone. PCA was demonstrated but is excluded
+from the final pipeline. Tuning increases selected-logistic F1 by 0.018492,
+with a recall gain and precision/accuracy reductions. All choices use the
+frozen forward development folds; the 0.5 threshold and pipeline are unchanged
+after test access. This is a finite, staged comparison, not universal model
+superiority or a test-set ranking of all candidates. Sources:
+[representations](../data/processed/step10/representation_comparison.csv),
+[tuning comparison](../data/results/step12/tuning_comparison.csv), and
+[frozen selection](../data/results/step12/final_selection.json).
+
+The [Step 14 synthesis](step14_research_answers.md) provides the complete
+question-to-evidence mapping, group denominators and interpretation boundaries.
+
 ## 8. Limitations and Next Steps
 
-Current limitations include source timing, repeated-record weighting, small groups, temporal variation, reused development folds, a single period-specific holdout, uncalibrated weighted probabilities, a finite grid and incomplete source provenance. Extend in the final synthesis without changing the frozen model.
+### 8.1 Limits of the evidence
+
+- **Retrospective source timing:** removing direct status leakage and potentially
+  updated fields does not prove all retained predictors were available at
+  booking time. The near-separation of Non Refund warrants scrutiny, not a
+  claim that deposits cause cancellations.
+- **Repeated profiles and small groups:** profiles are kept and protected from
+  within-fold/development–test overlap, but booking-weighted results can be
+  dominated by frequent profiles. Equal-group EDA answers a different question;
+  sparse categories cannot support strong generalizations or naive independent-
+  row confidence intervals.
+- **Temporal and population scope:** this is one city/resort source and one
+  later-arrival holdout, with partial seasonal coverage. The full-source quality
+  audit preceded splitting. Final prevalence is 40.87%, versus 36.13% in
+  development; a higher test F1 is not proof of improvement or generalization.
+- **Selection and search:** development folds were reused for representation,
+  model and parameter choices, so their scores can be optimistic. The finite
+  grid is not global optimization; PCA was only compared with the reference
+  logistic model. No isolated feature ablation or statistically significant
+  improvement is established.
+- **Decision usefulness:** weighted probabilities are not calibrated. False
+  positives and negatives have unmeasured costs, so no deployment readiness,
+  automatic overbooking policy or financial benefit is claimed.
+
+### 8.2 Conclusion and next work
+
+The measured evidence supports useful retrospective cancellation screening,
+with deposit type and lead time strongly associated with outcomes. The
+selected logistic pipeline leads the tested alternatives on the agreed
+development F1 objective and detects most held-out cancellations, but false
+alerts, subgroup weakness and source-timing uncertainty remain material.
+
+Future work could verify predictor availability at the decision time and
+evaluate deposit ablation, calibration, cost-based thresholds and external
+hotel/time coverage under a new predeclared design with fresh evaluation data.
+These are proposals, not completed experiments, and must not alter the frozen
+current result. Step 15 must resolve provenance/raw-data publication, clean-
+environment and fresh-kernel checks, genuine contributions, verified references,
+the final summary, and the template-compliant 10-page report/PDF.
 
 ## 9. Contributions
 

@@ -1,6 +1,6 @@
 # Handoff from Faraaz's stages to Sadat
 
-**CSE437 Group 15. Step 13 complete; Step 14 is next. Owner: Sadat.**
+**CSE437 Group 15. Step 14 complete; Step 15 is next. Owner: Sadat, with both members reviewing.**
 
 This is an implementation handoff prepared with ChatGPT/Codex assistance.
 Faraaz must review/explain the earlier stages and report actual contributions;
@@ -16,7 +16,7 @@ the document does not claim he personally wrote AI-prepared code.
    inside the model pipeline so training-fold medians/scalers/vocabularies
    cannot see validation data. CV indices are relative to the development subset.
 4. Read Notebook 01's development EDA, Notebook 03's executed Steps 9–10, and
-   report Sections 1–7. Notebook 04 contains comparison/tuning; Notebook 05 contains final evaluation.
+   report Sections 1–8 and the Step 14 answers. Notebook 04 contains comparison/tuning; Notebook 05 contains final evaluation.
 
 ## Step 9: implemented derived-feature candidates
 
@@ -71,11 +71,12 @@ Both families have been tuned through an exhaustive 20-setting, 60-fit grid.
 Selected-feature Logistic Regression is the development-selected model: **C=1.0, class_weight=balanced**,
 mean cancellation F1 **0.732102**. The threshold remains 0.5.
 Both untuned controls match Step 11 under documented numerical tolerances.
-All 47 tests pass; all 60 fits complete
+At Step 12, all 47 tests passed and all 60 fits completed
 with no failures or convergence warnings. No final test rows were transformed
-or scored and no full-development refit has occurred.
+or scored and no full-development refit occurred at that stage; Step 13
+subsequently performed the frozen evaluation.
 
-## Step 13 completed; next is Step 14
+## Step 13 completed evaluation
 
 The frozen Logistic Regression pipeline was fitted on development and evaluated
 once on the final test: F1 **0.750592**, accuracy 0.760874, precision 0.654187,
@@ -83,9 +84,28 @@ recall 0.880321 and ROC-AUC 0.875977. Confusion counts are TN 9,543, FP 4,526,
 FN 1,164 and TP 8,562. No test result changed the model or threshold.
 
 Read [the Step 13 report](report/step13_final_evaluation.md), [Notebook 05](notebooks/05_evaluation_and_error_analysis.ipynb)
-and [the complete evidence](data/results/step13/README.md). Step 14 answers the
-three exact research questions using verified EDA, development comparisons and
-held-out results. Do not make new test-driven modeling choices.
+and [the complete evidence](data/results/step13/README.md). Do not make new
+test-driven modeling choices.
+
+## Step 14 complete; next is Step 15
+
+Read [the completed research-question answers](report/step14_research_answers.md)
+and report Sections 7.3–8. Deposit type and lead time show strong descriptive
+associations; prior cancellations are non-monotonic and repetition-sensitive.
+The final model detects most cancellations but has substantial false alerts
+and uncalibrated probabilities. Selected-feature balanced Logistic Regression
+is best evaluated by development F1; PCA was tested but not retained.
+
+All conclusions link to existing tables, distinguish causality from association,
+and separate development model choices from final held-out performance. Step 14
+does not change models, data, splits, figures, notebooks or predictions.
+
+For Step 15, finalize the 150–200-word summary and template-compliant 10-page
+Markdown/PDF report; resolve provenance and publish the unchanged raw CSV;
+verify a clean environment, canonical notebook format and five fresh-kernel
+runs; verify references, figure links and genuine member contributions.
+See PROJECT_STATUS.md for the full checklist. Do not fabricate provenance,
+execution checks or personal contributions to mark a gate complete.
 
 ## Findings to carry into model analysis
 
@@ -107,10 +127,10 @@ components. Step 11 has compared the majority baseline plus logistic
 regression and random forest. Step 12 has tuned with the same three forward folds.
 Primary metric is mean cancellation-class F1; secondary metrics are accuracy,
 precision, recall, and ROC-AUC. Preserve seed 42 for stochastic components.
-Only after choosing the full pipeline may it be refitted on all development
-rows and evaluated on the final test in Step 13.
+The chosen full pipeline was refitted on development and evaluated on the
+final test in Step 13. Preserve it; later reproduction is verification only.
 
-Steps 11–13 modeling, tuning and final held-out analysis are complete. All 53 tests pass. Notebook 01
+Steps 11–14 modeling, tuning, held-out analysis and research-question synthesis are complete. All 53 tests pass. Notebook 01
 has ten preserved executed audit cells plus five newly executed EDA cells;
 Notebook 02 has thirteen executed cells; Notebook 03 has ten executed Python
 cells with saved outputs (five Step 9 and five Step 10); Notebook 04 preserves six Step 11 cells and adds five Step 12

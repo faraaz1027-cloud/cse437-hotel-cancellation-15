@@ -2,7 +2,7 @@
 
 **CSE437: Data Science | Group 15**
 
-**Status: Step 13 completed — frozen final test evaluation and error analysis.** Responsible: **Sadat**. **Next: Step 14 — answer the three unchanged research questions, owned by Sadat.** Final Logistic Regression F1 is 0.750592 on 23,795 held-out bookings. Notebook 05 contains the evaluation evidence; report Sections 1–7 are drafted. Final synthesis and report assembly remain pending.
+**Status: Step 14 completed — evidence-backed answers to the three unchanged research questions.** Responsible: **Sadat**. **Next: Step 15 — final report, reproducibility and submission, led by Sadat with both members reviewing.** Final Logistic Regression F1 is 0.750592 on 23,795 held-out bookings. Report Sections 1–8 now include the question answers and limitations; final assembly and submission checks remain pending.
 
 Resume checkpoint: [PROJECT_STATUS.md](PROJECT_STATUS.md) records completed work, remaining checks, and the next action.
 
@@ -40,7 +40,8 @@ The problem statement and question wording above are reproduced unchanged from t
 | `notebooks/` | Numbered analysis notebooks |
 | `models/` | Saved models and fitted pipelines |
 | `figures/` | Exported figures |
-| `report/report.md` | Sections 1–7 drafted; question answers and assembly pending |
+| `report/report.md` | Sections 1–8 drafted, including question answers; final assembly pending |
+| `report/step14_research_answers.md` | Detailed answers, source-table links, interpretation limits and Step 15 handoff |
 | `requirements.txt` | Starter Python dependencies |
 
 Empty `.gitkeep` files preserve folders in Git.
@@ -269,9 +270,34 @@ All **53 tests pass**. The complete fitted pipeline is saved at
 evidence-analysis cells. Full fresh-Jupyter, canonical format and clean-install
 verification remain final submission gates.
 
-**Next: Step 14 — Sadat.** Answer the three approved research questions from the
-verified EDA, model comparison, tuning and final test evidence. Do not change
-the model, threshold, dataset, target, problem statement or questions.
+Step 14 now synthesizes this frozen evidence below. Do not change the model,
+threshold, dataset, target, problem statement or questions.
+
+## Step 14 research-question answers
+
+1. **Factors:** deposit type shows a large development separation (Non Refund
+   99.25% canceled versus No Deposit 26.82%); lead-time rates increase from
+   9.43% at 0–7 days to 80.81% at 366+ days. Prior cancellations are
+   non-monotonic and sensitive to repeated-profile weighting. These are
+   associations, not causal effects or an exhaustive feature ranking.
+2. **Prediction:** the selected pipeline achieves held-out F1 0.750592,
+   accuracy 76.09%, precision 65.42%, recall 88.03% and ROC-AUC 0.875977.
+   It misses 1,164 cancellations and falsely flags 4,526 noncancellations.
+   Performance is period-specific, and the probabilities are not calibrated.
+3. **Best tested model:** selected-feature Logistic Regression with C=1 and
+   balanced weights leads on mean development F1 (0.732102 versus the best
+   tested forest's 0.669294). PCA was evaluated but not retained because
+   selection alone performed better. This is best evaluated under this
+   protocol, not universal superiority or a test-set ranking of all models.
+
+See the [full answers with source-table links](report/step14_research_answers.md)
+and [report Sections 7.3–8](report/report.md). Step 14 changes documentation only;
+datasets, model settings, saved predictions, figures and notebook outputs stay
+unchanged. No new model fitting or official test evaluation is performed.
+
+**Next: Step 15 — Sadat, with both members reviewing.** Complete the template-
+compliant report/PDF, raw-data/provenance requirements, clean-environment and
+fresh-kernel checks, references and genuine contribution records.
 
 ## Remaining setup
 
@@ -286,11 +312,12 @@ the model, threshold, dataset, target, problem statement or questions.
 - [x] Complete Step 11 majority baseline, two model families, full/selected controls, Notebook 04 outputs and report Section 5.
 - [x] Complete Step 12 exhaustive tuning, all candidate/fold results, frozen settings, Notebook 04 outputs and report Section 6.
 - [x] Complete Step 13 final test evaluation, saved model, predictions, error analysis, Notebook 05 outputs and report Section 7.
+- [x] Complete Step 14 answers to all three unchanged questions, evidence links, limitations and Step 15 handoff.
 - [ ] Confirm exact source terms and add the raw dataset to the repository.
 - [ ] Record collaborators' actual contributions as work is completed.
-- [ ] Implement the notebooks and verify a fresh-environment run.
+- [ ] Verify all implemented notebooks in a fresh environment and fresh Jupyter kernels.
 - [ ] Complete the report and export the final PDF.
 
 ## Assistance
 
-OpenAI ChatGPT/Codex assisted with repository scaffolding, transcription of user-approved project details, audit/EDA, Steps 5–10 preprocessing and feature work, and Steps 11–13 implementation, execution, tests, modeling/tuning/final evaluation, notebook outputs and documentation. Held-out results are available; research-question synthesis and final submission work remain pending.
+OpenAI ChatGPT/Codex assisted with repository scaffolding, transcription of user-approved project details, audit/EDA, Steps 5–10 preprocessing and feature work, Steps 11–13 implementation, execution, tests, modeling/tuning/final evaluation and notebook outputs, and Step 14 evidence checking and research-question synthesis. Final submission work remains pending. Assigned ownership does not establish personal contributions; members must review and record their actual work.
