@@ -2,6 +2,13 @@
 
 **CSE437 Group 15, Section 05, Summer 2026. Step 15 in progress. Owner: Sadat, with both members reviewing.**
 
+The 10-page report/PDF and 168-word summary are assembled and visually checked.
+58 tests, all five canonical notebook-format checks, and dependency consistency
+pass. Fresh-kernel execution remains pending because the host blocks startup;
+the user explicitly approved publishing with that limitation. Follow
+[FINAL_CHECKS.md](FINAL_CHECKS.md) locally, publish the unchanged raw CSV with
+attribution, and confirm actual contributions before declaring submission-ready.
+
 The approved Step 15 test-comparison supplement is complete. Test F1:
 baseline 0, frozen Logistic Regression 0.750592, development-selected Random
 Forest 0.723115. No selected model, threshold or Step 13 artifact changed.

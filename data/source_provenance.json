@@ -1,0 +1,25 @@
+{
+  "dataset": "Hotel booking demand",
+  "publisher": "Jesse Mostipak",
+  "source_url": "https://www.kaggle.com/datasets/jessemostipak/hotel-booking-demand",
+  "metadata_url": "https://www.kaggle.com/api/v1/datasets/view/jessemostipak/hotel-booking-demand",
+  "metadata_verified_on": "2026-09-02",
+  "observed_metadata_fields": {
+    "ref": "jessemostipak/hotel-booking-demand",
+    "licenseName": "Attribution 4.0 International (CC BY 4.0)",
+    "currentVersionNumber": 1,
+    "totalBytes": 16855599,
+    "lastUpdated": "2020-02-13T01:27:20.8Z"
+  },
+  "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+  "original_article": "Antonio, de Almeida and Nunes (2019), Hotel booking demand datasets, https://doi.org/10.1016/j.dib.2018.11.126",
+  "upstream_preparation_credit": "Metadata acknowledges Thomas Mock and Antoine Bichat for TidyTuesday, week of 2020-02-11.",
+  "original_acquisition_date": "unknown - user confirmed",
+  "original_acquired_version": "unknown - user confirmed",
+  "original_acquisition_caveat": "Current public metadata does not establish when or from which version the supplied file was originally downloaded.",
+  "supplied_file": "hotel_bookings.csv",
+  "supplied_file_sha256": "7c2ae42a7353905ea136e5c2287f17c92c5435826598bfbb8491c6f0c7b1fc06",
+  "raw_file_modified": false,
+  "raw_publication_status": "pending",
+  "derived_data_changes": "Eligibility, leakage exclusions, grouping, fold-fitted imputation, transformations and selection are documented separately; original raw bytes unchanged."
+}

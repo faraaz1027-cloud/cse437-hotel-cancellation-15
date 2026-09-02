@@ -2,18 +2,24 @@
 
 **CSE437: Data Science | Section 05 | Summer 2026 | Group 15**
 
+A leakage-aware, chronological comparison of Logistic Regression and Random Forest
+
 | Member | Student ID |
 | --- | --- |
 | Faraaz Jamil Chowdhury | 24241205 |
 | Ihfaz Rashid Sadat | 23301499 |
 
-Repository: https://github.com/faraaz1027-cloud/cse437-hotel-cancellation-15
+**Report date:** 2 September 2026
 
-**Working report:** Sections 1–8 are drafted from verified Steps 1–14, including the frozen held-out evaluation, answers to all three unchanged questions, and limitations. Step 15 must finalize the summary, contributions, provenance, reproducibility checks and PDF to the supplied template within 10 pages. Statements about an untouched test in earlier sections describe those stages, before the Step 13 evaluation.
+**Repository:** [cse437-hotel-cancellation-15](https://github.com/faraaz1027-cloud/cse437-hotel-cancellation-15)
 
 ## Summary
 
-Final results and research-question answers are available. Write and verify the required 150–200-word summary during Step 15 assembly.
+Hotel cancellations complicate revenue planning and room allocation. This project uses the Hotel Booking Demand dataset, containing 119,390 city and resort hotel reservations, to predict the binary target is_canceled. After excluding 180 confirmed zero-guest records, a chronological design reserves 95,415 bookings for development and 23,795 later bookings for testing. Missing-value handling, encoding, feature selection and numeric transformations are fitted only within training partitions. Logistic Regression and Random Forest are compared with a majority baseline; numeric PCA is evaluated but not retained because selection alone performs better in development. Grid search selects balanced Logistic Regression with C=1 and a fixed 0.5 threshold. It achieves test F1 of 0.7506, accuracy of 76.09% and recall of 88.03%. The most important finding is that deposit type has a pronounced association with cancellation, although retrospective recording and repeated booking profiles prevent a causal interpretation. Random Forest and baseline test scores are disclosed as a later reporting supplement, not a new selection exercise. False alerts, weaker short-lead performance and uncalibrated probabilities limit operational use.
+
+**Submission status:** Technical report assembled from recorded evidence. Fresh-kernel verification, raw-data repository publication and member-confirmed contributions remain open. The original CSE437 document and frozen selected-model results are unchanged. AI assistance is disclosed in the references.
+
+<!-- pagebreak -->
 
 ## 1. Problem and Dataset
 
@@ -23,419 +29,321 @@ Hotel booking cancellations can cause loss of money and make room planning diffi
 
 ### 1.2 Dataset
 
-The project uses Jesse Mostipak's [Hotel Booking Demand dataset](https://www.kaggle.com/datasets/jessemostipak/hotel-booking-demand), documented by Antonio et al. [1]. The supplied CSV combines city/resort hotel reservations: 119,390 rows, 32 columns, and 16,855,599 bytes (16.86 MB). Recorded arrivals span 2015-07-01 to 2017-08-31. The original publication describes extraction from hotel property-management databases.
+The supplied Hotel Booking Demand CSV has 119,390 rows, 32 columns and 16,855,599 bytes, covering arrivals from 1 July 2015 to 31 August 2017. It contains 79,330 City Hotel and 40,060 Resort Hotel records. Antonio et al. describe extraction from hotel property-management databases [1]. The Kaggle distribution by Jesse Mostipak acknowledges earlier preparation by Thomas Mock and Antoine Bichat [2]. This project uses that supplied combined CSV; it does not scrape or merge another dataset.
 
-The original bytes are preserved; the file checksum is in [data/README.md](../data/README.md). The user confirmed that the original download date and acquired source version are **unknown**; they must not be invented. Exact Kaggle licence verification and raw CSV publication remain submission tasks.
+Kaggle's public metadata lists CC BY 4.0, which permits redistribution subject to attribution and other terms [2,3]. The current metadata version is 1; the original acquisition date and acquired version remain unknown, as confirmed by the user. The unchanged source checksum and acquisition instructions are in [data/README.md](../data/README.md). Raw CSV publication is still pending; its size is below the faculty's 50 MB threshold.
 
-### 1.3 Target and analytic population
+### 1.3 Target variable
 
-The target is `is_canceled`: 1 for canceled and 0 otherwise. The original data contain 44,224 canceled and 75,166 noncanceled bookings. Excluding 180 records with a confirmed total of zero guests leaves 119,210 bookings. Missing guest counts do not establish zero guests.
+The binary target is is_canceled: 1 means canceled and 0 means not canceled. The raw counts are 44,224 canceled and 75,166 not canceled (37.04% versus 62.96%). Excluding 180 confirmed zero-total-guest rows leaves 119,210 bookings. Development contains 34,473 cancellations among 95,415 bookings (36.13%); the later test contains 9,726 among 23,795 (40.87%). Development-only statistics informed modeling.
 
-The frozen development cohort has 95,415 bookings (2015-07-01 through 2017-04-22): 34,473 canceled and 60,942 noncanceled, a cancellation rate of **36.13%**. The 23,795 later bookings are reserved for final testing. Section 3 uses development data only; no held-out class distribution or model score is reported.
-
-### 1.4 Approved research questions
+### 1.4 Three questions
 
 1. Which booking and customer-related factors have the biggest effect on hotel cancellations?
 2. How accurately can machine-learning models predict whether a hotel booking will be canceled?
 3. Which machine-learning model gives the best result after data preprocessing, feature selection, dimensionality reduction, and hyperparameter tuning?
 
-The wording above is unchanged. The predeclared factors are lead time, deposit type, and prior cancellations; observational associations are not treated as causal effects.
+The wording is unchanged. Lead time, deposit type and previous cancellations were the predeclared focus. "Effect" is interpreted as association, not causation.
 
 ## 2. Data Handling and Preprocessing
 
-### 2.1 Audit and eligibility
+### 2.1 Data quality audit
 
-The original audit found 31,994 additional exact full-row copies, four missing child counts, 488 missing countries, 16,340 missing agents, and 112,593 missing companies. ADR ranged from −6.38 to 5,400. Both reservation-status fields encode outcome information and are excluded from predictors; the target is stored separately.
+| Raw-data issue | Recorded evidence |
+| --- | --- |
+| Missing values | children 4; country 488; agent 16,340; company 112,593 |
+| Other columns | No missing values detected |
+| Exact duplicate copies beyond the first | 31,994; retained because no booking ID resolves genuine repeats |
+| Guest totals | 180 confirmed zeros; 4 unknown totals; no negative guest counts |
+| Explicit Undefined categories | meal 1,169; market_segment 2; distribution_channel 5 |
+| ADR | Minimum -6.38; maximum 5,400; one negative value |
 
-| Stage | Rows | Source predictor fields |
-| --- | ---: | ---: |
-| Original CSV | 119,390 | 29 after separating target and two status fields |
-| Known-zero-guest exclusion | −180 | Unchanged |
-| Eligible cohort | 119,210 | 29 |
-| Initial preprocessing schema | 119,210 | 25 |
+Both reservation_status and reservation_status_date encode outcomes and are excluded from predictors. Undefined category values remain distinct from missing values. The original full-source quality audit preceded splitting; this inspection is disclosed rather than described as an entirely untouched-data workflow.
 
-No booking identifier distinguishes accidental copies from legitimate repeated reservations. Records are retained and grouped by the 29 candidate fields for partition checks. No group crosses development/test or train/validation within a fold. The Step 8 equal-group analysis changes descriptive weighting only.
+<!-- pagebreak -->
 
-### 2.2 Missing values and outliers
+### 2.2 Missing values
 
-For model preprocessing, negative ADR becomes missing; zero and high positive prices remain. Numeric medians are fitted inside each training fold. Missing country becomes `Unknown`; missing agent becomes `NoAgent` under the source NULL convention [1]. Agent IDs are nominal strings. Explicit `Undefined` categories remain distinct from unknown values.
+Mechanisms are unverified. Agent/company NULLs are treated as potentially structural under the source convention [1]. Country/children/invalid ADR have unknown mechanisms; missing completely at random is not assumed.
 
-The sparse company identifier and three potentially updated fields—assigned room, booking changes, and waiting-list days—are excluded from the initial model schema. This conservative policy does not prove booking-time availability of every retained field. Step 9 adds a company-code-recording indicator while continuing to exclude the identifier itself.
+| Field | Treatment and rationale |
+| --- | --- |
+| children / numeric missingness | Training median + children indicator; zero fallback for entirely missing training columns. |
+| country | Explicit Unknown category; no country is fabricated. |
+| agent | NoAgent for missing values; nominal string codes. |
+| company | Drop sparse ID (94.31% missing); derive presence flag. |
+| adr | Negative to missing; training median + indicator. |
+| Derived totals/share | Propagate unknowns; training medians; indicators for total nights, total guests and cancellation share. |
 
-### 2.3 Transformations, scaling, and encoding
+### 2.3 Outliers
 
-Lead time, prior cancellations, prior noncanceled bookings, and ADR receive log1p after imputation. Numeric scaling and one-hot vocabularies are learned only from each training fold. Unseen categories map to an all-zero block for that field. Children and ADR retain missing indicators. A tree-compatible variant omits numeric standardization. Entirely missing training columns use a documented zero fallback.
+A raw ADR 1.5-IQR diagnostic (Q1=69.29, Q3=126; bounds -15.775/211.065) flagged 3,793 values, but missed the single negative ADR. These bounds were diagnostic, not deletion thresholds. Domain rules turn the negative value into missing; 1,959 raw zero-ADR values and high positive values, including 5,400, are retained. Only 180 confirmed zero-guest rows are excluded.
 
-The three folds produce 328, 422, and 491 encoded columns, respectively; each train/validation pair has matching width and zero nonfinite values. ADR training medians are 76.50, 80.75, and 90.00. The negative ADR occurs in fold 3 validation and uses 90.00. No extra rows are removed and no final test row is fitted/transformed during these checks.
+### 2.4 Transformation and scaling
 
-### 2.4 Reproducibility
+After imputation, log1p transforms lead time, prior canceled/noncanceled bookings, ADR and three derived totals. LR uses StandardScaler; RF is unscaled. One-hot encoding maps unseen categories to an all-zero block. The split precedes learned preprocessing: imputers, scalers, vocabularies, selectors and PCA fit training partitions only.
 
-Notebook 02 and reusable modules implement Steps 5–7; [the split plan](../data/splits/step6_split_plan.json) fixes dates and metrics. Section 3 EDA applies only fixed domain rules and reports observed-value statistics without statistical imputation. The original full-source quality audit was inspected before the holdout was constructed; that limitation is disclosed.
+Training ADR medians are 76.50/80.75/90.00; fold 3's negative validation ADR uses 90.00. Encoded widths are 328/422/491 with zero nonfinite outputs and matching train/validation width. Assigned room, booking changes and waiting-list days are excluded as potentially updated fields.
+
+### 2.5 Before and after
+
+| Stage | Rows | Predictor fields / encoded width |
+| --- | ---: | --- |
+| Raw CSV | 119,390 | 32 total columns |
+| Separate target and two status fields | 119,390 | 29 candidate predictors |
+| Remove confirmed zero guests | 119,210 | 29 candidates |
+| Initial source-field policy | 119,210 | 25 source fields |
+| Derived-feature schema | 119,210 eligible | 32 fields before encoding |
+| Selected final LR representation | 95,415 fitted; 23,795 tested | 406 encoded features |
 
 ## 3. Statistical Analysis
 
-### 3.1 Development descriptive statistics
+### 3.1 Descriptive statistics
 
-All rows in this section belong to development. Negative ADR is counted as missing; valid ADR includes zero and high positive values. Missingness uses field-specific denominators.
+| Development field | Mean | Median | Q1-Q3 | Maximum |
+| --- | ---: | ---: | --- | ---: |
+| Lead time (days) | 96.59 | 60 | 15-145 | 737 |
+| ADR, valid observed values | 93.71 | 88 | 65-115 | 5,400 |
+| Previous cancellations | 0.106 | 0 | 0-0 | 26 |
+| Weekday nights | 2.45 | 2 | 1-3 | 50 |
 
-| Field | Valid n | Mean | Median | Q1–Q3 | Maximum |
-| --- | ---: | ---: | ---: | --- | ---: |
-| Lead time (days) | 95,415 | 96.59 | 60 | 15–145 | 737 |
-| ADR (source units) | 95,414 | 93.71 | 88 | 65–115 | 5,400 |
-| Previous cancellations | 95,415 | 0.106 | 0 | 0–0 | 26 |
-| Weekday nights | 95,415 | 2.45 | 2 | 1–3 | 50 |
-| Weekend nights | 95,415 | 0.90 | 1 | 0–2 | 19 |
+Lead time and ADR are right-skewed; prior cancellations concentrate at zero. Development has 62,827 City and 32,588 Resort bookings. Deposit frequencies are 82,979 No Deposit, 12,296 Non Refund and 140 Refundable. Full frequency/spread tables are in [development EDA](../data/eda/README.md).
 
-These summaries show skew in lead time and ADR and a concentration of prior cancellations at zero. Full descriptive, missingness, category, and monthly tables are in [data/eda](../data/eda/README.md). April 2017 ends on the 22nd and is a partial month.
+<!-- pagebreak -->
 
-### 3.2 Relationships and observations
+### 3.2 Relationships
 
-1. **Lead time:** the cancellation rate rises across fixed bins, from **9.43%** at 0–7 days (n=17,247) to **80.81%** at 366+ days (n=2,079). The ascending pattern also appears within each hotel. This supports the planned association, not a causal effect.
+![Figure 1. Cancellation by fixed lead-time bands; development only.](../figures/03_lead_time_cancellation.png)
 
-![Lead time and cancellation](../figures/03_lead_time_cancellation.png)
+Longer lead-time bands have progressively higher cancellation rates: 9.43% for 0-7 days (n=17,247) versus 80.81% for 366+ days (n=2,079). The direction is consistent within both hotels.
 
-2. **Deposit type:** non-refundable bookings have **99.25%** cancellation (n=12,296), versus **26.82%** without a deposit (n=82,979). Refundable bookings have **10.71%**, but only 140 records. Non-refundable rates remain high within both hotels. Policies, booking mix, or recording timing could contribute; no causal explanation is established.
+![Figure 2. Deposit category differences and hotel stratification; development only.](../figures/04_deposit_cancellation.png)
 
-![Deposit type and hotel stratification](../figures/04_deposit_cancellation.png)
+Non Refund has 99.25% cancellation, compared with 26.82% for No Deposit and 10.71% for Refundable. The latter has only 140 observations. Booking mix, policies and retrospective recording may contribute; the figures do not show that deposits cause cancellation.
 
-3. **Prior cancellations:** rates are **32.07%, 95.65%, 31.29%, and 74.77%** for 0, 1, 2–3, and 4+ respectively. Counts are 89,079; 5,951; 163; and 222. The relationship is not monotonic; sparse higher-count groups require caution.
-4. **Hotel mix:** City Hotel's rate is **41.41%** (n=62,827), compared with **25.94%** for Resort Hotel (n=32,588). Pooled interpretations should account for this difference.
-5. **Repeated-record sensitivity:** assigning total weight one to each of 67,961 duplicate-profile groups changes the overall rate from **36.13% to 25.26%**. For 4+ prior cancellations, **74.77% becomes 26.32%**. Conflicting labels within a profile are averaged, not discarded. This alternative describes an average profile rather than an average booking; neither is asserted to be a correction to an unknown true population.
+### 3.3 What the data says so far
 
-![Prior cancellations and weighting sensitivity](../figures/05_prior_cancellations_sensitivity.png)
+- Preserve lead time and deposit type as planned predictors; assess their limitations rather than infer causality.
+- Prior-cancellation rates are non-monotonic: 32.07%, 95.65%, 31.29% and 74.77% for counts 0, 1, 2-3 and 4+. The last two groups have only 163 and 222 records.
+- City Hotel cancellation is 41.41%, versus 25.94% for Resort Hotel; pooled patterns depend on hotel mix.
+- Equal-profile weighting changes overall cancellation from 36.13% to 25.26%, and the 4+ prior-cancellation rate from 74.77% to 26.32%. Repetition sensitivity is substantial.
+- Retain grouped, chronological validation. Do not use naive independent-row confidence intervals or describe EDA rates as model importance.
 
-These are descriptive associations, not model importance rankings or predictive performance. No p-values or row-independent confidence intervals are used because retained records need not be independent. Later modeling must preserve the frozen split, examine development-only comparisons, and avoid choosing settings from final test results.
+Equal-profile weighting averages conflicting labels within each of 67,961 candidate-profile groups. It describes the average profile rather than the average booking; it is a sensitivity analysis, not a replacement training population.
+
+<!-- pagebreak -->
 
 ## 4. Feature Engineering
 
-### 4.1 Derived features (Step 9)
+### 4.1 Derived features
 
-Eight fixed features yield **32 candidate fields before encoding**: 24 retained source fields plus the eight below. Month names are replaced by fixed cyclic coordinates.
-
-| Feature | Definition |
+| Constructed field(s) | Definition and reason |
 | --- | --- |
-| Total nights | Weekend + weekday nights |
-| Total guests | Adults + children + babies |
-| Previous bookings total | Prior canceled + prior noncanceled bookings |
-| History presence | 1 for positive history total, 0 for zero, missing if unknown |
-| Previous cancellation share | Prior cancellations / history total; zero for no history, interpreted with presence |
-| Company code recorded | 1 for a present code, 0 for null; does not prove corporate payment |
-| Month sine and cosine | sin/cos(2π(m−1)/12), m=1…12 |
+| total_nights | Weekend plus weekday nights; booking duration. |
+| total_guests | Adults plus children plus babies; party size. |
+| previous_bookings_total | Previous canceled plus noncanceled bookings; history volume. |
+| has_booking_history | Indicator of positive history total; distinguishes no history. |
+| previous_cancellation_share | Canceled/history total; zero for no history, interpreted with the history flag. |
+| company_code_recorded | Presence of a company code; recording proxy, not proof of corporate payment. |
+| arrival_month_sin / arrival_month_cos | sin/cos of 2*pi*(month-1)/12; cyclic seasonality, replacing month names. |
 
-Unknown components propagate to totals before training-fold median imputation;
-known zero denominators get a zero share and a no-history flag. Separate imputed
-totals need not equal sums of imputed components. Three totals receive log1p;
-ratios, flags, and calendar coordinates do not. Children, ADR, total nights,
-total guests, and cancellation share have fixed missing indicators.
+These eight deterministic fields extend 24 retained source fields to 32 inputs. Unknown components propagate before imputation. The audit retains 604 zero-night development bookings and four unknown guest totals. Separately imputed totals need not equal sums of separately imputed components. Ratios, flags and calendar coordinates are not logged.
 
-The audit retains 604 zero-night development bookings and four unknown guest
-totals. Both scaled and unscaled variants pass all three frozen folds, producing
-332/421/490 encoded columns with matching train/validation widths and no nonfinite
-values. Learned statistics use training data only. All 29 tests pass. Notebook 03
-contains five executed Python cells. No target values are read by the feature
-audit and no test rows are fitted/transformed.
+### 4.2 Dimensionality reduction
 
-These features summarize duration, party size, history and seasonality, but
-their predictive benefit is untested. Fixed calendar coordinates cover the five
-months missing from the first training window without proving seasonal
-generalization. Full formulas and diagnostics are in [the Step 9 report](step9_feature_engineering.md).
+Centered full-SVD PCA retains at least 95% training variance in the scaled numeric block; category and missing-indicator columns bypass PCA. It reduces 23 numeric fields to 16/15/16 components across folds, retaining 95.88%/95.00%/95.69% variance. Selection-plus-PCA uses 15 components per fold. PCA is demonstrated but not retained: preserving variance did not improve the agreed development F1 over selection alone.
 
-### 4.2 Selection and dimensionality reduction
+### 4.3 Feature selection
 
-Step 10 removes training-constant encoded columns (variance ≤1e−12), ranks
-remaining fields by training-label ANOVA F, and retains the top 75% rounded
-upward. Ties follow encoded order. Scores are selection heuristics; no p-values
-or causal effects are inferred. Centered full-SVD PCA separately reduces the
-scaled numeric block to at least 95% cumulative training variance; categorical
-and missing-indicator columns bypass PCA.
+Training-constant encoded columns (variance at most 1e-12) are removed. Remaining columns are ranked by training-label ANOVA F; the top 75%, rounded upward, are retained, with ties resolved by encoded order. Scores are ranking heuristics, not causal importance or inferential p-values.
 
-Four fixed representations use the same logistic-regression reference (C=1,
-lbfgs, max_iter=2000, tol=1e−4, no class weights, seed=42, threshold=0.5) and the
-three frozen forward folds. All preprocessing, selection and PCA fit within
-each training fold. The protocol is stored with the results.
-
-| Representation | Mean development F1 | Output columns across folds |
+| Fixed representation with reference LR | Mean development F1 | Fold output widths |
 | --- | ---: | --- |
-| All Step 9 features | 0.693094 | 332 / 421 / 490 |
-| Selection only | **0.713609** | 247 / 314 / 366 |
+| All engineered features | 0.693094 | 332 / 421 / 490 |
+| Selection only | 0.713609 | 247 / 314 / 366 |
 | Numeric PCA | 0.694633 | 325 / 413 / 483 |
 | Selection then PCA | 0.701023 | 242 / 308 / 360 |
 
-Selection alone is the current choice: its mean F1 is highest, although its
-third-fold F1 is slightly lower than all features. PCA was demonstrated but
-not retained in the preferred pipeline because its validation result was worse.
-PCA reduces 23 numeric fields to 16/15/16 components, retaining 95.88%/95.00%/
-95.69% numeric variance. After selection, PCA reduces 20/21/21 numeric fields
-to 15 components per fold. Variance retention does not guarantee predictive
-information retention.
+### 4.4 Final feature set
 
-The preferred rule is refitted on each later training fold; complete retained
-names and component coefficients are saved in [the Step 10 evidence](../data/processed/step10/README.md).
-No global full-development mask is fitted now. These are development selection
-scores, not unbiased final performance. Nonlinear interactions may be missed;
-Step 11 retains an all-feature control for model-family comparison. All
-35 tests pass and all 12 reference fits converged. The held-out test remains
-untouched. See [the full Step 10 report](step10_selection_and_reduction.md).
+The 32 pre-encoding inputs are: lead_time; previous_cancellations; previous_bookings_not_canceled; adr; total_nights; total_guests; previous_bookings_total; arrival_date_year; arrival_date_week_number; arrival_date_day_of_month; stays_in_weekend_nights; stays_in_week_nights; adults; children; babies; is_repeated_guest; required_car_parking_spaces; total_of_special_requests; has_booking_history; previous_cancellation_share; company_code_recorded; arrival_month_sin; arrival_month_cos; hotel; meal; country; market_segment; distribution_channel; reserved_room_type; deposit_type; agent; customer_type.
+
+The final training-fitted selection retains 406 encoded features, listed completely in [feature_coefficients.csv](../data/results/step13/feature_coefficients.csv). The rule, not a global pre-CV mask, is refitted within each training partition. Dropped fields are the two outcome-status columns, raw company ID, assigned room, booking changes, waiting-list days and replaced month names. Selection is justified by the development comparison, not test performance; no isolated benefit is claimed for every engineered field.
+
+<!-- pagebreak -->
 
 ## 5. Modeling and Validation
 
-### 5.1 Models and protocol
+### 5.1 Validation strategy
 
-Step 11 compares a training-majority baseline and two families: logistic
-regression and random forest. Each learned family uses full and selected
-features. Logistic regression uses C=1, lbfgs, max_iter=2000, tol=1e−4 and scaled
-numeric inputs. Random forest uses 100 trees, unlimited depth, leaf size 1,
-sqrt feature sampling and bootstrap with unscaled numeric inputs. Seeds are
-42; neither class weighting nor resampling is used. Threshold is 0.5.
+The split uses whole arrival dates near an 80/20 row target: 95,415 development bookings (80.04%) end on 22 April 2017, and 23,795 test bookings begin on 23 April. Three expanding forward folds remain entirely within development. Boundaries are deterministic and do not use target labels; no random shuffle or label stratification is applied. Model seeds are 42.
 
-All five candidates use the same three frozen forward development folds.
-Preprocessing and feature selection are training-only inside each pipeline.
-Mean cancellation F1 is primary; accuracy, precision, recall and ROC-AUC are
-secondary. This is the untuned comparison; Section 6 reports Step 12 tuning.
+| Fold | Training rows / end | Validation rows / period |
+| --- | --- | --- |
+| 1 | 23,797 / 26 Jan 2016 | 23,893 / 27 Jan-21 Jun 2016 |
+| 2 | 47,690 / 21 Jun 2016 | 23,776 / 22 Jun-6 Nov 2016 |
+| 3 | 71,466 / 6 Nov 2016 | 23,949 / 7 Nov 2016-22 Apr 2017 |
 
-### 5.2 Development comparison
+Candidate-profile groups cannot cross development/test or training/validation within a fold. This guards recorded duplicate profiles, not unobserved shared guests. There is no temporal embargo, and arrival cohorts do not establish real-time label availability. The design is retrospective, not a simulated live booking system.
 
-| Candidate | Mean F1 | Accuracy | Precision | Recall | ROC-AUC |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| Majority baseline | 0.000000 | 0.638167 | 0.000000 | 0.000000 | 0.500000 |
-| Logistic regression — full | 0.693094 | 0.751370 | 0.681025 | 0.753386 | 0.876098 |
-| Logistic regression — selected | 0.713609 | 0.809314 | 0.783364 | 0.659498 | 0.882905 |
-| Random forest — full | 0.626504 | 0.793498 | 0.906662 | 0.481119 | 0.886473 |
-| Random forest — selected | 0.657994 | 0.803866 | 0.893717 | 0.521714 | 0.892267 |
+### 5.2 Baseline
 
-The current leader is **Logistic regression — selected** (mean F1 0.713609).
-The majority baseline has 63.82% mean accuracy but zero
-cancellation F1/recall, showing why accuracy alone is insufficient. Forest
-training F1 greatly exceeds its later-period validation F1; overfitting,
-temporal shift and repeated profiles may contribute. Step 12 therefore examines
-regularization; added model complexity alone does not establish improvement.
+A training-majority DummyClassifier predicts not canceled. Its mean forward-validation F1 and recall are zero, despite 63.82% accuracy. This shows why majority accuracy is not an adequate success criterion.
 
-All 15 fits completed; the six logistic fits had no convergence warnings and
-reproduce Step 10's metrics. Forty tests pass. Full fold scores, confusion
-counts, feature names and parameters are in [the Step 11 evidence](../data/results/step11/README.md).
-The reused development folds guide selection; these are not unbiased final
-performance estimates. No final test row was transformed or scored and no
-global full-development model was fitted. See [the detailed comparison](step11_model_comparison.md).
+### 5.3 Model families
+
+Logistic Regression supplies a regularized linear log-odds baseline for encoded features; nonlinear relations require suitable transformations, and coefficients are not causal. Random Forest models nonlinear splits and interactions without numeric scaling, but can overfit repeated patterns and transfer poorly across time. Both full and selected representations are compared before tuning.
+
+| Untuned candidate | Mean F1 | Precision | Recall |
+| --- | ---: | ---: | ---: |
+| Logistic Regression, full | 0.693094 | 0.681025 | 0.753386 |
+| Logistic Regression, selected | 0.713609 | 0.783364 | 0.659498 |
+| Random Forest, full | 0.626504 | 0.906662 | 0.481119 |
+| Random Forest, selected | 0.657994 | 0.893717 | 0.521714 |
+
+### 5.4 Metrics
+
+The split plan fixes cancellation-class F1 as primary, aggregated by the unweighted mean across three folds. F1 balances precision and recall under moderate class imbalance. Accuracy, precision, recall and ROC-AUC provide context; Brier score is a later probability diagnostic. Undefined precision is reported as zero. Threshold remains 0.5. No measured business costs justify optimizing financial savings.
 
 ## 6. Hyperparameter Tuning
 
-### 6.1 Search design
+### 6.1 Search space
 
-Exhaustive GridSearchCV evaluates 8 logistic settings (C=0.01/0.1/1/10 ×
-class_weight=None/balanced) and 12 forest settings (max_depth=8/16/None ×
-min_samples_leaf=1/10 × class_weight=None/balanced), totaling **60 fits** on
-the three frozen development folds. Each grid includes its Step 11 control.
-Forest size stays 100 trees with sqrt feature sampling; logistic uses lbfgs,
-max_iter=2000; seed 42. The fixed selected-feature rule and 0.5 threshold remain.
+| Family | Searched hyperparameter | Values |
+| --- | --- | --- |
+| Logistic Regression | C | 0.01, 0.1, 1, 10 |
+| Logistic Regression | class_weight | None, balanced |
+| Random Forest | max_depth | 8, 16, None |
+| Random Forest | min_samples_leaf | 1, 10 |
+| Random Forest | class_weight | None, balanced |
 
-Every candidate receives a fresh complete pipeline. Feature transformations
-and selection fit only within each training fold. Balanced weights derive
-from that training fold. Mean cancellation F1 selects settings; accuracy,
-precision, recall and ROC-AUC provide secondary context. Search uses
-`refit=False`, so no full-development estimator is fitted yet. The protocol,
-tie rule, complete candidate/fold results and actual settings are saved.
+<!-- pagebreak -->
 
-### 6.2 Tuning results and decision
+### 6.2 Method
 
-| Family | Selected search parameters | Untuned F1 | Tuned F1 | Change |
-| --- | --- | ---: | ---: | ---: |
-| Logistic Regression | C=1.0, class_weight=balanced | 0.713609 | 0.732102 | +0.018492 |
-| Random Forest | class_weight=balanced, max_depth=None, min_samples_leaf=10 | 0.657994 | 0.669294 | +0.011300 |
+GridSearchCV evaluates 8 LR and 12 RF candidates over 3 frozen folds: 60 fits. Each complete pipeline refits preprocessing/selection on training only. LR uses lbfgs and max_iter=2000; RF uses 100 trees and sqrt feature sampling. Both use seed 42, selected representation and threshold 0.5. Search refit=False defers full-development fitting until selection is frozen.
 
-The selected model is **Logistic Regression** with **C=1.0, class_weight=balanced** (mean F1
-**0.732102**). This is the best evaluated grid setting, not
-proof of global optimality or final test performance. Both untuned controls
-reproduce Step 11's threshold-based metrics within 1e−12 (forest AUC tolerance
-1e−7; numerical audit documented separately). All 60 fits complete without
-convergence warnings or failed fits; all 47 tests pass. Notebook 04 adds five
-actually Python-executed tuning cells.
+### 6.3 Results
 
-For selected-feature logistic regression, balanced weighting raises mean recall
-from 0.659498 to 0.756772 while precision falls from 0.783364 to 0.715322;
-accuracy falls from 0.809314 to 0.800244. The F1 gain reflects this tradeoff,
-not improvement on every metric. The best forest uses balanced weights and
-leaf size 10; its training–validation F1 gap falls from 0.332209 to 0.203017,
-but it still trails logistic regression on the agreed primary metric.
+| Family and weights | Search trend: mean development F1 |
+| --- | --- |
+| LR, unweighted; C=0.01 / 0.1 / 1 / 10 | 0.7012 / 0.7102 / 0.7136 / 0.7147 |
+| LR, balanced; C=0.01 / 0.1 / 1 / 10 | 0.7267 / 0.7317 / 0.7321 / 0.7304 |
+| RF, balanced, leaf=10; depth=8 / 16 / None | 0.5796 / 0.6543 / 0.6693 |
+| RF, unweighted, leaf=10; depth=8 / 16 / None | 0.4972 / 0.5590 / 0.5892 |
 
-Development folds are reused for several choices, creating selection optimism;
-no nested validation or confidence-tested performance gain is claimed. Class
-weighting changes the precision/recall tradeoff. Final test rows remain untouched.
-`final_selection.json` freezes the complete settings and threshold for Step 13.
-See [the tuning report](step12_hyperparameter_tuning.md) and
-[complete evidence](../data/results/step12/README.md).
+| Best family configuration | Untuned F1 | Tuned F1 | Change |
+| --- | ---: | ---: | ---: |
+| LR: C=1, balanced weights | 0.713609 | 0.732102 | +0.018492 |
+| RF: depth=None, leaf=10, balanced weights | 0.657994 | 0.669294 | +0.011300 |
 
-## 7. Results, Visualization, and Error Analysis
+Balanced LR improves recall from 0.6595 to 0.7568 while precision falls from 0.7834 to 0.7153. Stronger/deeper models are not uniformly better: balanced LR declines at C=10; unrestricted RF with leaf=1 shows a larger training-validation gap than the selected leaf=10 forest. Full 20-candidate results, fold scores and settings are in [Step 12 evidence](../data/results/step12/README.md).
 
-### 7.1 Held-out performance
+The selected LR setting is best among the evaluated choices, not globally optimal. Reusing the same development folds for feature, family and parameter decisions creates selection optimism; no significance claim is made. All 60 fits completed without convergence failures. The selected family, parameters and threshold were frozen before Step 13 testing.
 
-The frozen selected-feature Logistic Regression (`C=1`, balanced class weights,
-threshold 0.5) was fitted on 95,415 development rows and evaluated once on
-23,795 later bookings. No test score altered the pipeline.
+## 7. Results, Visualization and Error Analysis
 
-The following baseline and Random Forest rows were added with user approval
-in Step 15, **after** the Step 13 Logistic Regression outcome was known.
-This is a reporting supplement, not a simultaneous preregistered three-model
-test. Both added models fit only the same 95,415 development rows. Random
-Forest uses the Step 12 development-selected `rf_12` settings: 100 trees,
-unlimited depth, minimum leaf size 10, balanced class weights, `sqrt` feature
-sampling and seed 42. All models use threshold 0.5. The saved Logistic
-Regression predictions are reused, verified and not overwritten.
+### 7.1 Test set performance
+
+The selected LR pipeline was fitted on all 95,415 development rows and evaluated on 23,795 later bookings. Step 15 subsequently added the development-selected RF and baseline with user approval. This late addition occurred after LR test results were known; it is not a preregistered simultaneous three-model test. No model, feature or threshold was reselected. Saved LR predictions and fitted model remain unchanged.
 
 | Model | F1 | Accuracy | Precision | Recall | ROC-AUC |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Training-majority baseline | 0.000000 | 0.591259 | 0.000000 | 0.000000 | 0.500000 |
-| Logistic Regression (selected in Step 12) | **0.750592** | 0.760874 | 0.654187 | 0.880321 | 0.875977 |
-| Random Forest (reporting supplement) | 0.723115 | 0.789325 | 0.781239 | 0.673041 | 0.878190 |
+| Majority baseline | 0.000000 | 0.591259 | 0.000000 | 0.000000 | 0.500000 |
+| Logistic Regression, selected | 0.750592 | 0.760874 | 0.654187 | 0.880321 | 0.875977 |
+| Random Forest, supplement | 0.723115 | 0.789325 | 0.781239 | 0.673041 | 0.878190 |
 
-The baseline predicts no cancellations; its precision is set to zero by the
-documented undefined-metric convention. Logistic Regression remains the
-development-selected final model: it has higher test F1 and recall, while
-Random Forest has higher precision, accuracy and slightly higher ROC-AUC.
-No family, feature, hyperparameter or threshold is reselected from this table.
-
-| Model | TN | FP | FN | TP | Brier score (lower is better) |
+| Model | TN | FP | FN | TP | Brier score |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Training-majority baseline | 14,069 | 0 | 9,726 | 0 | 0.408741 |
+| Majority baseline | 14,069 | 0 | 9,726 | 0 | 0.408741 |
 | Logistic Regression | 9,543 | 4,526 | 1,164 | 8,562 | 0.160007 |
 | Random Forest | 12,236 | 1,833 | 3,180 | 6,546 | 0.145476 |
 
-See the [Step 15 protocol, metrics and prediction evidence](../data/results/step15/README.md).
-Brier scores are probability-error diagnostics, not a claim of calibration.
+All rows use identical test membership and threshold 0.5. LR has higher F1/recall; RF has higher precision/accuracy and slightly higher ROC-AUC. Lower Brier error does not establish calibration. The baseline predicts no cancellations, so precision is zero by convention. A test F1 above the development mean is a period-specific outcome, not proof of improvement.
 
-![Final test performance](../figures/09_final_test_performance.png)
+<!-- pagebreak -->
 
-The test cancellation rate is 40.87%. High recall and lower precision reflect
-the balanced-weight model's emphasis on detecting cancellations; false positives
-outnumber false negatives. Test F1 exceeds the 0.732102 development mean, but
-one later period is not evidence of improvement or a confidence interval.
+### 7.2 Visualization
 
-### 7.2 Error analysis
+![Figure 3. Frozen held-out prediction diagnostics; RF curves are the disclosed late supplement.](../figures/11_report_test_diagnostics.png)
 
-City Hotel error rate is 25.59%, compared with 20.24% for Resort Hotel. Online
-TA has 31.95% error and contains 3,653 false positives. Short lead-time F1 is
-weak (0.3344 for 0–7 days; 0.5882 for 8–30), whereas 366+ days has F1 0.9481.
-No Deposit contains almost every error; 2,290 of 2,291 Non Refund bookings
-cancel, giving near-perfect separation. These post-test groups are descriptive,
-not reasons to change the model.
+The ROC and precision-recall curves expose discrimination and operating-point tradeoffs; they do not select a new threshold. The confusion matrix shows LR's 8,562 detected cancellations, 1,164 missed cancellations and 4,526 false alerts. Non Refund has the largest positive coefficient (+2.929658). Several large coefficients are agent categories. Different encoding/scaling and correlated inputs prevent a universal raw-feature importance ranking.
 
-![Final probability and hotel errors](../figures/10_final_error_analysis.png)
+### 7.3 Error analysis
 
-Fixed-bin observed rates lie below mean predicted probabilities, so outputs are
-not presented as calibrated probabilities. A confident false positive (source
-14,182) received probability 0.999603; a confident false negative (source
-94,387) received 0.006030. Twenty distinct examples show confident and
-near-threshold FP/FN cases. Full subgroup metrics, coefficients and examples
-are in [Step 13 evidence](../data/results/step13/README.md) and the
-[detailed evaluation](step13_final_evaluation.md).
+| LR subgroup | Recorded weakness or contrast |
+| --- | --- |
+| City / Resort Hotel | Error rates 25.59% / 20.24% |
+| Online TA | 31.95% error; 3,653 false positives |
+| Lead time 0-7 / 8-30 days | F1 0.3344 / 0.5882 |
+| Non Refund | 2,290 of 2,291 test bookings canceled |
+| Probability bins | Observed rates below mean predicted probabilities in every fixed bin |
 
-The strongest positive coefficient is Non Refund; several large coefficients
-are agent categories. Coefficients on encoded/scaled inputs are associations,
-not causal or uniformly comparable importance. Repeated profiles, source timing,
-temporal mix and small subgroups limit interpretation. All 53 tests pass; the
-fitted pipeline is saved. Notebook 05 has six executed evidence-analysis cells.
+Most errors occur in No Deposit bookings. The weighted LR outputs should not be presented as calibrated probabilities. Subgroups are descriptive post-test diagnostics, not grounds for retrospective tuning.
 
-### 7.3 Answers to the approved research questions
+Two concrete errors illustrate what the recorded predictors cannot reliably resolve:
 
-**1. Which booking and customer-related factors have the biggest effect on hotel cancellations?**
+| Source row ID | Actual / predicted; probability | Why this case is difficult |
+| --- | --- | --- |
+| 14,182 | Not canceled / canceled; 0.999603 | Direct, No Deposit, lead time 80 days, one prior cancellation. A strong score did not determine this customer's outcome; combinations of historical associations cannot recover unrecorded intent. |
+| 94,387 | Canceled / not canceled; 0.006030 | Lead time 1 day, Complementary segment, Transient-Party, four prior cancellations and three special requests. The rare combination received a low score despite cancellation history; the actual reason for cancellation is not observed. |
 
-Among the three predeclared factors, deposit type shows a large descriptive
-separation: development cancellation is 99.25% for Non Refund versus 26.82%
-for No Deposit. Lead-time rates increase across all six fixed bins, from 9.43%
-at 0–7 days to 80.81% at 366+ days, also increasing within both hotels.
-Prior cancellations are non-monotonic: rates for 0, 1, 2–3 and 4+ are 32.07%,
-95.65%, 31.29% and 74.77%. Equal-profile weighting changes the 4+ rate to
-26.32%, demonstrating repetition sensitivity. These are associations, not
-causal effects or an exhaustive ranking of every predictor. The largest
-positive encoded coefficient is Non Refund (+2.929658), but different scaling,
-coding and correlated features prevent interpreting magnitudes as a universal
-raw-feature importance ranking.
+These are plausible interpretations of model difficulty, not known causal explanations. Twenty distinct confident and near-threshold errors, full group metrics and probability-bin diagnostics are preserved in [Step 13 evidence](../data/results/step13/README.md).
 
-Sources: [development EDA](../data/eda/README.md),
-[prior-history sensitivity](../data/eda/sensitivity_prior_cancellations.csv),
-and [model coefficients](../data/results/step13/feature_coefficients.csv).
+<!-- pagebreak -->
 
-**2. How accurately can machine-learning models predict whether a hotel booking will be canceled?**
+### 7.4 Answers to the three questions
 
-The selected model achieves F1 0.750592, accuracy 76.09%, precision 65.42%,
-recall 88.03% and ROC-AUC 0.875977 on 23,795 held-out arrivals from 2017-04-23
-through 2017-08-31. It detects 8,562 cancellations, misses 1,164 and falsely
-flags 4,526 noncancellations. Thus, high detection comes with substantial false
-alerts. Short-lead and Online TA performance is weaker, and probability-bin
-diagnostics show overprediction. These are period-specific results for the
-selected model, not guaranteed performance for other hotels or calibrated
-probabilities. No financial savings were measured. Sources:
-[final metrics](../data/results/step13/final_metrics.csv) and
-[subgroup diagnostics](../data/results/step13/subgroup_metrics.csv).
+**Question 1: Which booking and customer-related factors have the biggest effect on hotel cancellations?**
 
-**3. Which machine-learning model gives the best result after data preprocessing, feature selection, dimensionality reduction, and hyperparameter tuning?**
+Among the three predeclared factors, deposit type shows the sharpest descriptive separation: Non Refund cancellation is 99.25% versus 26.82% for No Deposit in development. Lead-time rates increase from 9.43% to 80.81% across the shortest/longest fixed bands, including within both hotels. Prior-cancellation rates are non-monotonic and sensitive to repeated-profile weighting. The positive Non Refund coefficient is consistent with its association, but this evidence cannot establish causal effects or an exhaustive importance ranking of all predictors.
 
-Selected-feature Logistic Regression with C=1 and balanced class weights is
-**best evaluated under this protocol**, at mean development F1 0.732102 versus
-0.669294 for the best tested forest. Selection improves the reference logistic
-F1 from 0.693094 to 0.713609; numeric PCA (0.694633) and selection-plus-PCA
-(0.701023) do not beat selection alone. PCA was demonstrated but is excluded
-from the final pipeline. Tuning increases selected-logistic F1 by 0.018492,
-with a recall gain and precision/accuracy reductions. All choices use the
-frozen forward development folds; the 0.5 threshold and pipeline are unchanged
-after test access. This is a finite, staged comparison, not universal model
-superiority or a test-set ranking of all candidates. Sources:
-[representations](../data/processed/step10/representation_comparison.csv),
-[tuning comparison](../data/results/step12/tuning_comparison.csv), and
-[frozen selection](../data/results/step12/final_selection.json).
+**Question 2: How accurately can machine-learning models predict whether a hotel booking will be canceled?**
 
-The [Step 14 synthesis](step14_research_answers.md) provides the complete
-question-to-evidence mapping, group denominators and interpretation boundaries.
+The selected LR achieves test F1 0.750592, accuracy 76.09%, precision 65.42%, recall 88.03% and ROC-AUC 0.875977. It detects most cancellations, but falsely flags 4,526 noncancellations and misses 1,164 cancellations. Short-lead and Online TA cases are weaker. This is useful retrospective discrimination within the measured source/period, not guaranteed performance for other hotels, calibrated risk or measured financial benefit.
+
+**Question 3: Which machine-learning model gives the best result after data preprocessing, feature selection, dimensionality reduction, and hyperparameter tuning?**
+
+Selected-feature LR with C=1 and balanced weights is best evaluated under the predeclared development F1 objective: 0.732102 versus 0.669294 for the best RF. Selection beats the full representation with the reference LR; numeric PCA and selection-plus-PCA do not beat selection alone, so PCA is not in the final pipeline. The late test comparison also reports higher LR F1, but it does not determine model choice. RF is better on some secondary test metrics. No universal superiority or global optimum is claimed.
+
+The [Step 14 synthesis](step14_research_answers.md) and the frozen Step 10/12/13/15 tables provide the detailed question-to-evidence mapping.
 
 ## 8. Limitations and Next Steps
 
-### 8.1 Limits of the evidence
+- Retrospective source timing remains uncertain. Removing direct status leakage and update-prone fields does not prove all retained values were available when a booking decision would be made.
+- The full-source quality audit preceded the split. Arrival-based chronology does not guarantee live label availability; no temporal embargo or external-hotel validation was performed.
+- Repeated profiles can dominate booking-weighted results. Group separation guards recorded profiles only; sparse categories and unknown customer identity limit statistical independence claims.
+- One later-arrival holdout has partial seasonal coverage and higher cancellation prevalence. Reused development folds, finite search and reference-LR-only PCA comparisons limit generalization and claims of improvement.
+- The supplementary RF/baseline test comparison was authorized after LR results were known. Its timing is disclosed, and no choice was changed in response.
+- Model outputs are not calibrated probabilities; costs of false alerts and misses are not measured. Automated overbooking or production deployment is not justified.
 
-- **Retrospective source timing:** removing direct status leakage and potentially
-  updated fields does not prove all retained predictors were available at
-  booking time. The near-separation of Non Refund warrants scrutiny, not a
-  claim that deposits cause cancellations.
-- **Repeated profiles and small groups:** profiles are kept and protected from
-  within-fold/development–test overlap, but booking-weighted results can be
-  dominated by frequent profiles. Equal-group EDA answers a different question;
-  sparse categories cannot support strong generalizations or naive independent-
-  row confidence intervals.
-- **Temporal and population scope:** this is one city/resort source and one
-  later-arrival holdout, with partial seasonal coverage. The full-source quality
-  audit preceded splitting. Final prevalence is 40.87%, versus 36.13% in
-  development; a higher test F1 is not proof of improvement or generalization.
-- **Selection and search:** development folds were reused for representation,
-  model and parameter choices, so their scores can be optimistic. The finite
-  grid is not global optimization; PCA was only compared with the reference
-  logistic model. No isolated feature ablation or statistically significant
-  improvement is established.
-- **Decision usefulness:** weighted probabilities are not calibrated. False
-  positives and negatives have unmeasured costs, so no deployment readiness,
-  automatic overbooking policy or financial benefit is claimed.
+Future work should first verify predictor availability at the intended decision time. Deposit ablation, calibration, cost-sensitive thresholds and evaluation across additional hotels/time periods require a new predeclared design with fresh evaluation data. These are proposed experiments, not completed improvements.
 
-### 8.2 Conclusion and next work
-
-The measured evidence supports useful retrospective cancellation screening,
-with deposit type and lead time strongly associated with outcomes. The
-selected logistic pipeline leads the tested alternatives on the agreed
-development F1 objective and detects most held-out cancellations, but false
-alerts, subgroup weakness and source-timing uncertainty remain material.
-
-Future work could verify predictor availability at the decision time and
-evaluate deposit ablation, calibration, cost-based thresholds and external
-hotel/time coverage under a new predeclared design with fresh evaluation data.
-These are proposals, not completed experiments, and must not alter the frozen
-current result. Step 15 must resolve provenance/raw-data publication, clean-
-environment and fresh-kernel checks, genuine contributions, verified references,
-the final summary, and the template-compliant 10-page report/PDF.
+<!-- pagebreak -->
 
 ## 9. Contributions
 
-Faraaz owns Steps 1–8 and draft Sections 1–3; Sadat owns Steps 9–15 and later report assembly. Record each member's actual reviewed/implemented work and commits before submission. Do not treat assigned ownership as proof of personal work.
+The assignment below records intended responsibility, not a verified claim of personal authorship. Each member must confirm the work they actually performed or reviewed and provide their own attributable commits before submission.
 
-## References and assistance
+| Member | Student ID | Contribution record |
+| --- | --- | --- |
+| Faraaz Jamil Chowdhury | 24241205 | Assigned Steps 1-8 and report Sections 1-3. Actual completed/reviewed work and contribution commits await member confirmation. |
+| Ihfaz Rashid Sadat | 23301499 | Assigned Steps 9-15 and report assembly. Actual completed/reviewed work and contribution commits await member confirmation. |
 
-[1] Antonio, N., de Almeida, A., and Nunes, L. (2019). Hotel booking demand datasets. *Data in Brief*, 22, 41–49. https://doi.org/10.1016/j.dib.2018.11.126
+**Open sign-off:** Both members must review the analysis and replace these unconfirmed records with truthful contribution statements. Commit account identity alone does not establish who personally wrote or understood AI-assisted work.
 
-[2] Jesse Mostipak. Hotel Booking Demand. Kaggle. https://www.kaggle.com/datasets/jessemostipak/hotel-booking-demand . Original acquired version and download date unknown (user confirmed); exact licence verification remains open.
+## References
 
-OpenAI ChatGPT/Codex assisted with scaffolding, user-approved transcription, code, testing, execution, figures, interpretation, and this draft. No predictive results have been fabricated. Notebook 01 preserves ten earlier IPython-executed audit cells and adds five Python-executed EDA cells with actual captured outputs. Notebook 03 preserves five Step 9 cells and appends five actually Python-executed Step 10 cells. Notebook 04 preserves six actually Python-executed Step 11 cells and adds five actually Python-executed Step 12 cells. Notebook 05 contains six actually Python-executed evidence-analysis cells for Step 13. Full fresh-kernel notebook execution and canonical format validation remain final gates. Produce report.pdf after completing and checking the report.
+[1] Antonio, N., de Almeida, A., and Nunes, L. (2019). Hotel booking demand datasets. Data in Brief, 22, 41-49. [Original article](https://doi.org/10.1016/j.dib.2018.11.126).
+
+[2] Mostipak, J. Hotel booking demand. [Kaggle dataset](https://www.kaggle.com/datasets/jessemostipak/hotel-booking-demand). [Public metadata](https://www.kaggle.com/api/v1/datasets/view/jessemostipak/hotel-booking-demand), verified 2 September 2026: CC BY 4.0; current version 1. Original acquired version/date unknown. Metadata credits earlier preparation by Thomas Mock and Antoine Bichat for TidyTuesday.
+
+[3] Creative Commons. [Attribution 4.0 International licence](https://creativecommons.org/licenses/by/4.0/). Source attribution is retained; raw bytes are unchanged and project preprocessing is documented separately. No endorsement by the original authors or distributor is implied.
+
+[4] Pedregosa, F., et al. (2011). Scikit-learn: Machine Learning in Python. Journal of Machine Learning Research, 12, 2825-2830. [Article](https://jmlr.org/papers/v12/pedregosa11a.html). Implementation: scikit-learn 1.8.0.
+
+[5] [NumPy](https://numpy.org/), [pandas](https://pandas.pydata.org/), [SciPy](https://scipy.org/), [Matplotlib](https://matplotlib.org/), [seaborn](https://seaborn.pydata.org/), [joblib](https://joblib.readthedocs.io/), [Jupyter](https://jupyter.org/), and [ReportLab](https://www.reportlab.com/). Direct versions are pinned in requirements.txt; the resolved Linux/Python 3.12 environment is recorded in requirements-lock.txt.
+
+**AI assistance declaration:** OpenAI ChatGPT/Codex assisted with repository setup, user-approved transcription, data audits, implementation, tests, execution, figures, modeling/tuning, interpretation and report preparation. Results come from executed code and saved evidence; no predictive measurements or member contributions were invented. The group remains responsible for understanding and reviewing the work. No separately adapted tutorial code is identified in the implementation record.
+
+**Reproducibility and submission status:** The 58-test suite and all five notebooks' canonical-format checks pass; the dependency consistency check passes. Existing notebook outputs retain their original execution provenance. Fresh-kernel execution was attempted but blocked by host permissions and remains pending, explicitly approved for local completion. The local runner and [final-check instructions](../FINAL_CHECKS.md) are supplied. The raw CSV still needs publication in data/raw/ after source attribution; the source link and checksum are available. The PDF is within the 10-page limit, but the repository is not declared submission-ready until these checks and contribution sign-off are complete.

@@ -22,9 +22,25 @@ Download the dataset, extract `hotel_bookings.csv`, and place the untouched file
 | Not canceled / canceled | 75,166 / 44,224 |
 | Original acquired source version | Unknown — user confirmed |
 | Original download date | Unknown — user confirmed |
-| Exact Kaggle dataset licence | Pending confirmation at the source |
+| Kaggle dataset licence | CC BY 4.0; public metadata verified 2026-09-02 |
+| Current public metadata version | 1; distinct from the unknown original acquired version |
 
 The file is below 50 MB. Adding the raw data remains a submission task. The source download link above supports obtaining the input in the meantime.
+
+## Attribution and licence
+
+The [Kaggle public metadata](https://www.kaggle.com/api/v1/datasets/view/jessemostipak/hotel-booking-demand)
+lists Attribution 4.0 International (CC BY 4.0). See the
+[licence](https://creativecommons.org/licenses/by/4.0/) and the compact
+[verified provenance record](source_provenance.json). Credit Nuno Antonio,
+Ana de Almeida and Luis Nunes for the original publication, Jesse Mostipak for
+the Kaggle distribution, and the acknowledged prior preparation by Thomas Mock
+and Antoine Bichat for TidyTuesday. No endorsement is implied.
+
+Raw bytes remain unchanged. Project-derived data use the separately documented
+eligibility, leakage exclusions, grouping and training-fitted transformations.
+Retain these attribution and change notices when sharing. The current public
+version/date must not be substituted for unknown original acquisition facts.
 
 ## Audit evidence
 

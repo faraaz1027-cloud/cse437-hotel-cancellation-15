@@ -2,7 +2,7 @@
 
 ## Current position
 
-**Step 15 is in progress — approved test-comparison supplement complete. Owner: Sadat, with both members reviewing.** Section 05, Summer 2026. Step 14 was documentation-only; Step 15 now adds baseline/Random Forest reporting after the original selected-model evaluation. No frozen selection or Step 13 artifact is changed. Actual member contributions remain unconfirmed.
+**Step 15 report/PDF assembled and checked; final sign-off pending. Owner: Sadat, with both members reviewing.** Section 05, Summer 2026. The PDF has 10 pages and a 168-word summary; the approved comparison, diagnostic plots, numbered sections and disclosures are included. Frozen model/results are unchanged. Next: local fresh-kernel verification, raw CSV publication and genuine contribution statements; see [FINAL_CHECKS.md](FINAL_CHECKS.md). No Step 16.
 
 Repository: https://github.com/faraaz1027-cloud/cse437-hotel-cancellation-15
 
@@ -36,7 +36,7 @@ documents or verbatim faculty feedback as part of resuming.
 | 12 | Hyperparameter tuning | Sadat | Complete; 20 settings, 60 fits, frozen selection, Notebook 04 outputs and Section 6 |
 | 13 | Final test evaluation and error analysis | Sadat | Complete; fitted pipeline, final metrics, predictions, errors, figures, Notebook 05 and Section 7 |
 | 14 | Answer the unchanged three questions | Sadat | Complete; evidence-backed answers, source links, limitations and report Sections 7.3–8 |
-| 15 | Report, reproducibility, and submission | Sadat + both reviewers | **In progress — approved three-model test table complete; other submission gates open** |
+| 15 | Report, reproducibility, and submission | Sadat + both reviewers | **Report/PDF and technical checks complete; fresh kernels, raw publication and member sign-off remain open** |
 
 ## What has been verified
 
@@ -149,6 +149,15 @@ suite size (58 tests).
 
 ## Resume Step 15
 
+The report is now assembled as report/report.md and a visually reviewed 10-page
+report/report.pdf. All five notebooks pass canonical format validation. The
+installed Python 3.12 environment passes pip check, and the 58-test suite passes.
+Full fresh-kernel execution is NOT certified: kernel startup is blocked by host
+permissions. The user approved report publication with that check pending.
+Do not retry the restricted host workflow or claim it succeeded. The local
+runner and exact next actions are in FINAL_CHECKS.md. Source metadata/CC BY 4.0
+are verified; raw CSV publication and member contributions remain open.
+
 The user-approved test-comparison supplement is complete: baseline F1 0,
 Logistic Regression F1 0.750591742, Random Forest F1 0.723115162. Forest uses
 the development-selected `rf_12` settings, not newly tuned settings. The
@@ -161,14 +170,13 @@ follows completion of the remaining gates below.
 
 1. Read report Sections 1–8 and the Step 14 answers. Preserve the exact
    problem/questions and the frozen model, predictions and split.
-2. Retain unknown original date/version honestly, verify exact source licence,
+2. Retain unknown original date/version and the verified source licence,
    and add the unchanged sub-50-MB original CSV under `data/raw/`.
-3. Verify a clean dependency install, canonical notebook format, and all five
-   notebooks top-to-bottom in fresh Jupyter kernels with outputs saved.
+3. Dependencies and canonical format are checked. Run all five notebooks
+   top-to-bottom in fresh Jupyter kernels locally with outputs saved.
    Reproduction checks do not authorize a new model choice from test results.
-4. Finalize the 150–200-word summary and compress/format the report to the
-   supplied 10-page template; produce and visually verify `report/report.pdf`
-   against `report/report.md`. Verify references and figure links.
+4. The 168-word summary and 10-page report/PDF are assembled and visually checked.
+   Rebuild and recheck the PDF after member contributions or verification status change.
 5. Have Faraaz review Sections 1–3 and Sadat review Sections 4–8/assembly.
    Both record genuine contributions, commit links and AI assistance; do not
    claim assigned work was personally performed without member confirmation.
@@ -229,16 +237,16 @@ requires the original `data/raw/hotel_bookings.csv` for its Step 5 cells.
 ## Remaining reproducibility/submission items
 
 - Add the original CSV under `data/raw/` (it is below the faculty's 50 MB limit).
-  Its exact SHA-256 and source link are in data/README.md. Record the actual
-  source version/download date and exact licence; do not invent missing details.
-- Validate a clean dependency install and separate fresh Jupyter-kernel runs;
-  the earlier IPython and Steps 8–13 Python execution checks do not establish
-  that final gate. Canonical notebook format validation is also pending.
+  Its exact SHA-256, source and verified CC BY 4.0 terms are in data/README.md.
+  Original acquisition date/version are unknown; do not invent missing details.
+- Dependency consistency and canonical notebook validation pass. Complete the
+  separate fresh-Jupyter-kernel check locally using FINAL_CHECKS.md; existing
+  Python/IPython checks do not establish that gate. Host startup is restricted.
 - Keep notebooks numbered 01–05 with saved outputs and relative paths.
 - Preserve frozen data/split hashes and the original CSE437 document.
-- Complete report/report.md and report/report.pdf to the supplied template,
-  at most 10 pages. Current report/report.md drafts Sections 1–8 and all question
-  answers; final summary, contribution records, and PDF assembly remain pending.
+- The report/report.md and 10-page report/report.pdf are assembled and visually
+  checked. Update the contribution/status records and regenerate/review the PDF
+  only after the relevant member confirmations and local checks are complete.
 - Record genuine member contributions, verified references, and AI assistance.
 - Submit the one public GitHub repository link when the full project is ready.
 

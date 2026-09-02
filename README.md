@@ -1,8 +1,12 @@
 # Hotel Booking Cancellation Project
 
-**CSE437: Data Science | Group 15**
+**CSE437: Data Science | Section 05 | Summer 2026 | Group 15**
 
-**Status: Step 15 in progress — approved baseline/Random Forest test comparison completed.** Responsible: **Sadat, with both members reviewing.** Section **05**, **Summer 2026**. Final Logistic Regression F1 remains 0.750592 on 23,795 held-out bookings. Next: finish the remaining Step 15 report/PDF, reproducibility, provenance/publication and contribution checks; then submit. There is no Step 16.
+**Status: Step 15 report/PDF assembled and checked; final submission sign-off pending.** Responsible: **Sadat, with both members reviewing.** The 10-page PDF and 168-word summary follow the faculty template. Final Logistic Regression F1 remains 0.750592 on 23,795 held-out bookings. **Next:** run the local fresh-kernel check, publish the original raw CSV, and confirm both members' actual contributions. There is no Step 16.
+
+Open the [10-page report](report/report.pdf), [Markdown source](report/report.md),
+and [remaining checks with local commands](FINAL_CHECKS.md). Fresh-kernel execution
+is explicitly pending with user approval because this host blocks kernel startup.
 
 Resume checkpoint: [PROJECT_STATUS.md](PROJECT_STATUS.md) records completed work, remaining checks, and the next action.
 
@@ -40,15 +44,17 @@ The problem statement and question wording above are reproduced unchanged from t
 | `notebooks/` | Numbered analysis notebooks |
 | `models/` | Saved models and fitted pipelines |
 | `figures/` | Exported figures |
-| `report/report.md` | Sections 1–8 drafted, including question answers; final assembly pending |
+| `report/report.md` and `report/report.pdf` | Template-aligned 10-page technical report; member sign-off and final checks disclosed |
 | `report/step14_research_answers.md` | Detailed answers, source-table links, interpretation limits and Step 15 handoff |
-| `requirements.txt` | Starter Python dependencies |
+| `requirements.txt` / `requirements-lock.txt` | Pinned direct dependencies / resolved Linux Python 3.12 environment |
+| `FINAL_CHECKS.md` | Remaining local verification, raw publication and contribution steps |
+| `scripts/` | Rebuild report/plots, check evidence, and run isolated fresh-kernel verification |
 
 Empty `.gitkeep` files preserve folders in Git.
 
 ## Local setup
 
-Use Python 3.11 or newer. The dependency ranges are provisional and have not been tested together for this project.
+Use Python 3.12. Direct dependencies are pinned and installed together with a successful `pip check`; the complete Linux resolution is recorded separately. All five notebooks pass canonical format validation and 58 unit tests pass. Full fresh-kernel execution remains pending; follow [FINAL_CHECKS.md](FINAL_CHECKS.md).
 
 ```bash
 git clone https://github.com/faraaz1027-cloud/cse437-hotel-cancellation-15.git
@@ -291,13 +297,13 @@ threshold, dataset, target, problem statement or questions.
    protocol, not universal superiority or a test-set ranking of all models.
 
 See the [full answers with source-table links](report/step14_research_answers.md)
-and [report Sections 7.3–8](report/report.md). Step 14 changes documentation only;
+and [report Sections 7.4–8](report/report.md). Step 14 changes documentation only;
 datasets, model settings, saved predictions, figures and notebook outputs stay
 unchanged. No new model fitting or official test evaluation is performed.
 
-**Next: Step 15 — Sadat, with both members reviewing.** Complete the template-
-compliant report/PDF, raw-data/provenance requirements, clean-environment and
-fresh-kernel checks, references and genuine contribution records.
+**Historical Step 14 handoff: Step 15 — Sadat, with both reviewing.** The
+report/PDF is now assembled. Follow FINAL_CHECKS.md for the remaining local
+fresh-kernel check, raw-data publication and genuine contribution records.
 
 ## Step 15 reporting supplement
 
@@ -333,10 +339,12 @@ recorded as unknown, not invented. No claim of full Step 15 completion is made.
 - [x] Complete Step 13 final test evaluation, saved model, predictions, error analysis, Notebook 05 outputs and report Section 7.
 - [x] Complete Step 14 answers to all three unchanged questions, evidence links, limitations and Step 15 handoff.
 - [x] Add the approved Step 15 held-out baseline/Random Forest comparison, with timing disclosure and unchanged selected model.
-- [ ] Confirm exact source terms and add the raw dataset to the repository.
+- [x] Verify public source metadata and CC BY 4.0 terms; record unknown original acquisition details honestly.
+- [ ] Add the unchanged original raw dataset to the repository with its source attribution.
 - [ ] Record collaborators' actual contributions as work is completed.
 - [ ] Verify all implemented notebooks in a fresh environment and fresh Jupyter kernels.
-- [ ] Complete the report and export the final PDF.
+- [x] Assemble and visually check the 10-page report/PDF, including the 168-word summary, plots and limitations.
+- [ ] Confirm actual contributions and update Section 9/PDF before submission.
 
 ## Assistance
 
