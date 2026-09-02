@@ -9,7 +9,7 @@
 
 Repository: https://github.com/faraaz1027-cloud/cse437-hotel-cancellation-15
 
-**Working report:** Sections 1–3 are drafted from verified Steps 1–8. Later modeling/results sections and the final PDF are pending. Finalize to the supplied template within 10 pages.
+**Working report:** Sections 1–3 and the derived-feature part of Section 4 are drafted from verified Steps 1–9. Selection/reduction, modeling/results, and the final PDF are pending. Finalize to the supplied template within 10 pages.
 
 ## Summary
 
@@ -60,7 +60,7 @@ No booking identifier distinguishes accidental copies from legitimate repeated r
 
 For model preprocessing, negative ADR becomes missing; zero and high positive prices remain. Numeric medians are fitted inside each training fold. Missing country becomes `Unknown`; missing agent becomes `NoAgent` under the source NULL convention [1]. Agent IDs are nominal strings. Explicit `Undefined` categories remain distinct from unknown values.
 
-The sparse company identifier and three potentially updated fields—assigned room, booking changes, and waiting-list days—are excluded from the initial model schema. This conservative policy does not prove booking-time availability of every retained field. A company-presence feature remains a Step 9 candidate.
+The sparse company identifier and three potentially updated fields—assigned room, booking changes, and waiting-list days—are excluded from the initial model schema. This conservative policy does not prove booking-time availability of every retained field. Step 9 adds a company-code-recording indicator while continuing to exclude the identifier itself.
 
 ### 2.3 Transformations, scaling, and encoding
 
@@ -108,7 +108,44 @@ These are descriptive associations, not model importance rankings or predictive 
 
 ## 4. Feature Engineering
 
-Pending Steps 9–10: derived features, justified final feature set, feature selection, and dimensionality reduction. Step 7 policy exclusions do not satisfy statistical selection/reduction.
+### 4.1 Derived features (Step 9)
+
+Eight fixed features yield **32 candidate fields before encoding**: 24 retained source fields plus the eight below. Month names are replaced by fixed cyclic coordinates.
+
+| Feature | Definition |
+| --- | --- |
+| Total nights | Weekend + weekday nights |
+| Total guests | Adults + children + babies |
+| Previous bookings total | Prior canceled + prior noncanceled bookings |
+| History presence | 1 for positive history total, 0 for zero, missing if unknown |
+| Previous cancellation share | Prior cancellations / history total; zero for no history, interpreted with presence |
+| Company code recorded | 1 for a present code, 0 for null; does not prove corporate payment |
+| Month sine and cosine | sin/cos(2π(m−1)/12), m=1…12 |
+
+Unknown components propagate to totals before training-fold median imputation;
+known zero denominators get a zero share and a no-history flag. Separate imputed
+totals need not equal sums of imputed components. Three totals receive log1p;
+ratios, flags, and calendar coordinates do not. Children, ADR, total nights,
+total guests, and cancellation share have fixed missing indicators.
+
+The audit retains 604 zero-night development bookings and four unknown guest
+totals. Both scaled and unscaled variants pass all three frozen folds, producing
+332/421/490 encoded columns with matching train/validation widths and no nonfinite
+values. Learned statistics use training data only. All 29 tests pass. Notebook 03
+contains five executed Python cells. No target values are read by the feature
+audit and no test rows are fitted/transformed.
+
+These features summarize duration, party size, history and seasonality, but
+their predictive benefit is untested. Fixed calendar coordinates cover the five
+months missing from the first training window without proving seasonal
+generalization. Full formulas and diagnostics are in [the Step 9 report](step9_feature_engineering.md).
+
+### 4.2 Selection and dimensionality reduction
+
+Pending Step 10: demonstrate both methods, assess redundancy, and justify the
+final feature set or representation using training-fold fitting and the frozen
+development evaluation policy. Policy exclusions and feature construction alone
+do not satisfy this requirement.
 
 ## 5. Modeling and Validation
 
@@ -136,4 +173,4 @@ Faraaz owns Steps 1–8 and draft Sections 1–3; Sadat owns Steps 9–15 and la
 
 [2] Jesse Mostipak. Hotel Booking Demand. Kaggle. https://www.kaggle.com/datasets/jessemostipak/hotel-booking-demand . Exact version, download date, and licence pending verification.
 
-OpenAI ChatGPT/Codex assisted with scaffolding, user-approved transcription, code, testing, execution, figures, interpretation, and this draft. No predictive results have been fabricated. Notebook 01 preserves ten earlier IPython-executed audit cells and adds five Python-executed EDA cells with actual captured outputs. Full fresh-kernel notebook execution and canonical format validation remain final gates. Produce report.pdf after completing and checking the report.
+OpenAI ChatGPT/Codex assisted with scaffolding, user-approved transcription, code, testing, execution, figures, interpretation, and this draft. No predictive results have been fabricated. Notebook 01 preserves ten earlier IPython-executed audit cells and adds five Python-executed EDA cells with actual captured outputs. Notebook 03 adds five sequentially Python-executed Step 9 cells with actual outputs. Full fresh-kernel notebook execution and canonical format validation remain final gates. Produce report.pdf after completing and checking the report.

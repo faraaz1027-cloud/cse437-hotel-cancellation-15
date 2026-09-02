@@ -1,0 +1,198 @@
+{
+  "step": 9,
+  "status": "completed",
+  "responsible_member": "Sadat",
+  "next_step": 10,
+  "next_owner": "Sadat",
+  "development_rows": 95415,
+  "input_candidate_fields": 29,
+  "retained_source_fields": 24,
+  "derived_fields": [
+    "total_nights",
+    "total_guests",
+    "previous_bookings_total",
+    "has_booking_history",
+    "previous_cancellation_share",
+    "company_code_recorded",
+    "arrival_month_sin",
+    "arrival_month_cos"
+  ],
+  "fields_before_encoding": 32,
+  "fixed_missing_indicators": [
+    "children",
+    "adr",
+    "total_nights",
+    "total_guests",
+    "previous_cancellation_share"
+  ],
+  "month_names_replaced_by_cyclic_pair": true,
+  "development_zero_night_bookings_retained": 604,
+  "development_unknown_total_guests": 4,
+  "development_no_recorded_history": 86585,
+  "development_company_code_recorded": 5900,
+  "test_rows_fitted_or_transformed": 0,
+  "target_values_read": false,
+  "predictive_models_trained": 0,
+  "rows_removed": 0,
+  "folds": [
+    {
+      "fold": 1,
+      "training": {
+        "rows": 23797,
+        "columns": 332,
+        "nonzero": 761512,
+        "nonfinite_values": 0,
+        "density": 0.09638655474948497
+      },
+      "validation": {
+        "rows": 23893,
+        "columns": 332,
+        "nonzero": 762869,
+        "nonfinite_values": 0,
+        "density": 0.09617035084631835
+      },
+      "training_medians_derived": {
+        "total_nights": 3.0,
+        "total_guests": 2.0,
+        "previous_bookings_total": 0.0,
+        "has_booking_history": 0.0,
+        "previous_cancellation_share": 0.0,
+        "company_code_recorded": 0.0,
+        "arrival_month_sin": -0.8660254037844384,
+        "arrival_month_cos": -1.8369701987210297e-16
+      },
+      "validation_missing_derived_before_imputation": {
+        "total_nights": 0,
+        "total_guests": 0,
+        "previous_bookings_total": 0,
+        "has_booking_history": 0,
+        "previous_cancellation_share": 0,
+        "company_code_recorded": 0,
+        "arrival_month_sin": 0,
+        "arrival_month_cos": 0
+      },
+      "validation_months_absent_from_training": [
+        "April",
+        "February",
+        "June",
+        "March",
+        "May"
+      ],
+      "validation_rows_with_unseen_month": 23475,
+      "unseen_months_have_valid_cyclic_coordinates": true,
+      "training_only_statistics_verified": true,
+      "validation_did_not_change_fitted_state": true,
+      "scaled_and_unscaled_variants_verified": true
+    },
+    {
+      "fold": 2,
+      "training": {
+        "rows": 47690,
+        "columns": 421,
+        "nonzero": 1526088,
+        "nonfinite_values": 0,
+        "density": 0.07600989964382998
+      },
+      "validation": {
+        "rows": 23776,
+        "columns": 421,
+        "nonzero": 760452,
+        "nonfinite_values": 0,
+        "density": 0.07597153799675835
+      },
+      "training_medians_derived": {
+        "total_nights": 3.0,
+        "total_guests": 2.0,
+        "previous_bookings_total": 0.0,
+        "has_booking_history": 0.0,
+        "previous_cancellation_share": 0.0,
+        "company_code_recorded": 0.0,
+        "arrival_month_sin": 1.2246467991473532e-16,
+        "arrival_month_cos": -1.8369701987210297e-16
+      },
+      "validation_missing_derived_before_imputation": {
+        "total_nights": 0,
+        "total_guests": 0,
+        "previous_bookings_total": 0,
+        "has_booking_history": 0,
+        "previous_cancellation_share": 0,
+        "company_code_recorded": 0,
+        "arrival_month_sin": 0,
+        "arrival_month_cos": 0
+      },
+      "validation_months_absent_from_training": [],
+      "validation_rows_with_unseen_month": 0,
+      "unseen_months_have_valid_cyclic_coordinates": true,
+      "training_only_statistics_verified": true,
+      "validation_did_not_change_fitted_state": true,
+      "scaled_and_unscaled_variants_verified": true
+    },
+    {
+      "fold": 3,
+      "training": {
+        "rows": 71466,
+        "columns": 490,
+        "nonzero": 2286920,
+        "nonfinite_values": 0,
+        "density": 0.06530635090069946
+      },
+      "validation": {
+        "rows": 23949,
+        "columns": 490,
+        "nonzero": 765741,
+        "nonfinite_values": 0,
+        "density": 0.06525269258398587
+      },
+      "training_medians_derived": {
+        "total_nights": 3.0,
+        "total_guests": 2.0,
+        "previous_bookings_total": 0.0,
+        "has_booking_history": 0.0,
+        "previous_cancellation_share": 0.0,
+        "company_code_recorded": 0.0,
+        "arrival_month_sin": -0.4999999999999997,
+        "arrival_month_cos": -0.4999999999999998
+      },
+      "validation_missing_derived_before_imputation": {
+        "total_nights": 0,
+        "total_guests": 0,
+        "previous_bookings_total": 0,
+        "has_booking_history": 0,
+        "previous_cancellation_share": 0,
+        "company_code_recorded": 0,
+        "arrival_month_sin": 0,
+        "arrival_month_cos": 0
+      },
+      "validation_months_absent_from_training": [],
+      "validation_rows_with_unseen_month": 0,
+      "unseen_months_have_valid_cyclic_coordinates": true,
+      "training_only_statistics_verified": true,
+      "validation_did_not_change_fitted_state": true,
+      "scaled_and_unscaled_variants_verified": true
+    }
+  ],
+  "input_sha256": {
+    "step5_candidates.csv.gz": "1721717023e4f27371e37c8e05fefccda4fbf2ef89f1e60b3fc1a026ebb7bbb9",
+    "step5_metadata.csv.gz": "24655f99f16d70acde3295c270438bdc096d5d94f5b572d649a8a9bb1927e9db",
+    "step6_assignments.csv.gz": "57b4e8bcf947059dbb3ae34e39c49306b96aa86a4ad74898966e931b63a998e1",
+    "step6_split_plan.json": "7bb32486064b85568dbaf81d821cd02ec30e6b7d5bd87837c5bbc2e99600550e"
+  },
+  "runtime": {
+    "python": "3.12.13",
+    "pandas": "2.2.3",
+    "numpy": "2.3.5",
+    "scikit_learn": "1.8.0"
+  },
+  "limitations": [
+    "Derived features are candidates, not a validated final feature set.",
+    "Totals are formed before imputation; separately imputed totals need not equal sums of imputed components.",
+    "Company-code presence is a recording indicator, not proof of corporate payment or booking-time availability.",
+    "Cyclic month coordinates encode proximity but do not establish observed seasonal coverage or solve temporal drift.",
+    "Source history and other feature timing remain retrospective; no live prediction claim is made.",
+    "Statistical feature selection, dimensionality reduction, and performance comparisons remain for later steps."
+  ],
+  "output_sha256": {
+    "derived_feature_statistics.csv": "c93ac875535270894ae381f1d6793f6b973e91f8f80866cf09915e3fdb9120d8",
+    "feature_schemas.json": "7fb29ccc447d45a373af0d790de73be8ae07e880adba47a72f161b3c69e8dbb5"
+  }
+}
