@@ -1,6 +1,6 @@
 # Handoff from Faraaz's stages to Sadat
 
-**CSE437 Group 15. Step 11 complete; Step 12 is next. Owner: Sadat.**
+**CSE437 Group 15. Step 12 complete; Step 13 is next. Owner: Sadat.**
 
 This is an implementation handoff prepared with ChatGPT/Codex assistance.
 Faraaz must review/explain the earlier stages and report actual contributions;
@@ -16,7 +16,7 @@ the document does not claim he personally wrote AI-prepared code.
    inside the model pipeline so training-fold medians/scalers/vocabularies
    cannot see validation data. CV indices are relative to the development subset.
 4. Read Notebook 01's development EDA, Notebook 03's executed Steps 9–10, and
-   report Sections 1–5. Notebook 04 adds the Step 11 model-family comparison.
+   report Sections 1–6. Notebook 04 contains Step 11 comparison and Step 12 tuning.
 
 ## Step 9: implemented derived-feature candidates
 
@@ -51,7 +51,7 @@ fold. PCA is demonstrated but not retained in the preferred representation.
 
 Read [the Step 10 report](report/step10_selection_and_reduction.md) for the selection/PCA evidence. Step 11 compared full and selected representations for both learned model families, using the same frozen folds.
 
-## Step 11 completed; next is Step 12
+## Step 11 untuned comparison
 
 The majority baseline, logistic regression and random forest are implemented
 in Notebook 04. Across three frozen folds, mean cancellation F1 is 0 for the
@@ -65,20 +65,30 @@ warrant regularization experiments. Higher forest ROC-AUC does not override
 the agreed F1 selection metric. See [the Step 11 report](report/step11_model_comparison.md)
 and [measured evidence](data/results/step11/README.md).
 
-Step 12 should tune both families using fresh `make_model_pipeline` instances
-from `src/modeling.py`. Keep all feature learning inside CV, use development-
-relative fold indices and seed 42, document the spaces/results, and compare
-with the untuned references. Add actual search outputs to Notebook 04 and
-report Section 6. Any threshold changes use development data only. Freeze all
-choices before final refitting and test evaluation in Step 13.
+## Step 12 completed; next is Step 13
+
+Both families have been tuned through an exhaustive 20-setting, 60-fit grid.
+Selected-feature Logistic Regression is the development-selected model: **C=1.0, class_weight=balanced**,
+mean cancellation F1 **0.732102**. The threshold remains 0.5.
+Both untuned controls match Step 11 under documented numerical tolerances.
+All 47 tests pass; all 60 fits complete
+with no failures or convergence warnings. No final test rows were transformed
+or scored and no full-development refit has occurred.
+
+Read [the tuning report](report/step12_hyperparameter_tuning.md) and
+`data/results/step12/final_selection.json`. Use `build_frozen_pipeline` from
+`src/tuning.py` to construct the selected **unfitted** pipeline. Step 13 fits it
+on development only, then evaluates the untouched test with these frozen choices.
+Save the fitted model, test metrics/confusion matrix, real wrong predictions,
+Notebook 05 outputs and report Section 7. Do not retune from test performance.
 
 ## Findings to carry into model analysis
 
 - Lead-time cancellation rates increase across the descriptive bins, including
   within each hotel. This is an association, not a causal estimate.
-- Non-refundable rates are extremely high in both hotels. Consider a
-  development-only with/without-deposit comparison to understand dependence
-  on this signal; do not use final test results to choose it.
+- Non-refundable rates are extremely high in both hotels. Discuss dependence
+  on this signal and its uncertain source timing using the existing evidence;
+  do not change the frozen pipeline in response to final test results.
 - Prior cancellation counts are non-monotonic; a simple 'more always means
   worse' interpretation is unsupported. Groups above one cancellation are small.
 - Repeated-record frequency materially affects rates. The equal-group EDA is
@@ -89,17 +99,17 @@ choices before final refitting and test evaluation in Step 13.
 
 Step 10 has demonstrated selection and reduction with complete fold lists and
 components. Step 11 has compared the majority baseline plus logistic
-regression and random forest. Step 12 tunes with the same three forward folds.
+regression and random forest. Step 12 has tuned with the same three forward folds.
 Primary metric is mean cancellation-class F1; secondary metrics are accuracy,
 precision, recall, and ROC-AUC. Preserve seed 42 for stochastic components.
 Only after choosing the full pipeline may it be refitted on all development
 rows and evaluated on the final test in Step 13.
 
-Step 11 model-family comparisons are complete; tuning and final held-out
-results remain pending. All 40 tests pass. Notebook 01
+Step 11 comparisons and Step 12 tuning are complete; final held-out
+results remain pending. All 47 tests pass. Notebook 01
 has ten preserved executed audit cells plus five newly executed EDA cells;
 Notebook 02 has thirteen executed cells; Notebook 03 has ten executed Python
-cells with saved outputs (five Step 9 and five Step 10); Notebook 04 adds six
+cells with saved outputs (five Step 9 and five Step 10); Notebook 04 preserves six Step 11 cells and adds five Step 12
 executed Python cells. Full fresh-kernel runs, canonical
 notebook validation, clean-install dependencies, raw CSV/provenance completion,
 and the final 10-page Markdown/PDF report remain submission tasks.

@@ -1,0 +1,99 @@
+{
+  "step": 12,
+  "candidate": "lr_06",
+  "family": "logistic_regression",
+  "representation": "selected",
+  "search_parameters": {
+    "model__C": 1.0,
+    "model__class_weight": "balanced"
+  },
+  "estimator_parameters": {
+    "C": 1.0,
+    "class_weight": "balanced",
+    "dual": false,
+    "fit_intercept": true,
+    "intercept_scaling": 1,
+    "l1_ratio": 0.0,
+    "max_iter": 2000,
+    "n_jobs": null,
+    "penalty": "deprecated",
+    "random_state": 42,
+    "solver": "lbfgs",
+    "tol": 0.0001,
+    "verbose": 0,
+    "warm_start": false
+  },
+  "threshold": 0.5,
+  "threshold_rule": "class 1 when cancellation probability >= 0.5",
+  "mean_development_f1": 0.7321017246390454,
+  "best_by_family": {
+    "logistic_regression": {
+      "candidate": "lr_06",
+      "family": "logistic_regression",
+      "representation": "selected",
+      "search_parameters": {
+        "model__C": 1.0,
+        "model__class_weight": "balanced"
+      },
+      "estimator_parameters": {
+        "C": 1.0,
+        "class_weight": "balanced",
+        "dual": false,
+        "fit_intercept": true,
+        "intercept_scaling": 1,
+        "l1_ratio": 0.0,
+        "max_iter": 2000,
+        "n_jobs": null,
+        "penalty": "deprecated",
+        "random_state": 42,
+        "solver": "lbfgs",
+        "tol": 0.0001,
+        "verbose": 0,
+        "warm_start": false
+      },
+      "mean_f1": 0.7321017246390454
+    },
+    "random_forest": {
+      "candidate": "rf_12",
+      "family": "random_forest",
+      "representation": "selected",
+      "search_parameters": {
+        "model__class_weight": "balanced",
+        "model__max_depth": null,
+        "model__min_samples_leaf": 10
+      },
+      "estimator_parameters": {
+        "bootstrap": true,
+        "ccp_alpha": 0.0,
+        "class_weight": "balanced",
+        "criterion": "gini",
+        "max_depth": null,
+        "max_features": "sqrt",
+        "max_leaf_nodes": null,
+        "max_samples": null,
+        "min_impurity_decrease": 0.0,
+        "min_samples_leaf": 10,
+        "min_samples_split": 2,
+        "min_weight_fraction_leaf": 0.0,
+        "monotonic_cst": null,
+        "n_estimators": 100,
+        "n_jobs": 2,
+        "oob_score": false,
+        "random_state": 42,
+        "verbose": 0,
+        "warm_start": false
+      },
+      "mean_f1": 0.6692935581530545
+    }
+  },
+  "input_sha256": {
+    "step5_candidates.csv.gz": "1721717023e4f27371e37c8e05fefccda4fbf2ef89f1e60b3fc1a026ebb7bbb9",
+    "step5_metadata.csv.gz": "24655f99f16d70acde3295c270438bdc096d5d94f5b572d649a8a9bb1927e9db",
+    "step6_assignments.csv.gz": "57b4e8bcf947059dbb3ae34e39c49306b96aa86a4ad74898966e931b63a998e1",
+    "step6_split_plan.json": "7bb32486064b85568dbaf81d821cd02ec30e6b7d5bd87837c5bbc2e99600550e",
+    "step5_target.csv.gz": "84fef5775f76c456fe531c6f262a70b16853f4bdafc6c83c42b5fa010694eabb"
+  },
+  "search_protocol_sha256": "0ff8e50680bad1d27aace99bfcfc2a62f7364b4eaba4651e3c578d4b13e37614",
+  "scope": "frozen development-selected settings; no fitted estimator or final test result",
+  "step13_policy": "Refit the selected pipeline on development only, then evaluate held-out data once; never reselect from test scores."
+}

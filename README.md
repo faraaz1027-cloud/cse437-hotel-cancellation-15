@@ -2,7 +2,7 @@
 
 **CSE437: Data Science | Group 15**
 
-**Status: Step 11 completed — majority baseline and two model families compared across frozen development folds.** Responsible: **Sadat**. **Next: Step 12 — hyperparameter tuning, owned by Sadat.** Notebook 04 contains the executed comparison; report Sections 1–5 are drafted. Selected-feature logistic regression leads the untuned comparison (mean F1 0.713609). Tuning, final test evaluation and report assembly remain pending.
+**Status: Step 12 completed — hyperparameter tuning for both model families.** Responsible: **Sadat**. **Next: Step 13 — final test evaluation and error analysis, owned by Sadat.** The selected model is Logistic Regression (mean development F1 0.732102). Notebook 04 contains Steps 11–12 outputs; report Sections 1–6 are drafted. Final test performance and final report assembly remain pending.
 
 Resume checkpoint: [PROJECT_STATUS.md](PROJECT_STATUS.md) records completed work, remaining checks, and the next action.
 
@@ -33,12 +33,13 @@ The problem statement and question wording above are reproduced unchanged from t
 | --- | --- |
 | `data/raw/` | Original source data |
 | `data/processed/` | Documented outputs of data preparation |
-| `data/results/step11/` | Model-comparison protocol, measured fold scores and evidence |
+| `data/results/step11/` | Untuned model-comparison evidence |
+| `data/results/step12/` | Tuning grids, all search results and frozen selected settings |
 | `data/README.md` | Dataset acquisition and provenance |
 | `notebooks/` | Numbered analysis notebooks |
 | `models/` | Saved models and fitted pipelines |
 | `figures/` | Exported figures |
-| `report/report.md` | Sections 1–5 drafted; tuning, final test results and assembly pending |
+| `report/report.md` | Sections 1–6 drafted; final test results and assembly pending |
 | `requirements.txt` | Starter Python dependencies |
 
 Empty `.gitkeep` files preserve folders in Git.
@@ -76,7 +77,7 @@ The uploaded CSV has been audited but is not yet committed here. Obtain it from 
 
 ## Notebook order
 
-Notebook 01 contains the raw-data audit and development EDA. Notebook 02 implements Steps 5–7. Notebook 03 implements Step 9 derived features and Step 10 selection/reduction. Notebook 04 implements Step 11 modeling; Step 12 tuning remains to be added. Notebook 05 remains a starter outline:
+Notebook 01 contains the raw-data audit and development EDA. Notebook 02 implements Steps 5–7. Notebook 03 implements Step 9 derived features and Step 10 selection/reduction. Notebook 04 implements Step 11 modeling and Step 12 tuning. Notebook 05 remains a starter outline:
 
 1. [Data audit and EDA](notebooks/01_data_audit_and_eda.ipynb)
 2. [Preprocessing](notebooks/02_preprocessing.ipynb)
@@ -214,9 +215,29 @@ python -m src.model_comparison
 python -m unittest discover -s tests -v
 ```
 
-**Next: Step 12 (Sadat)** tunes both learned families using fresh pipelines from `make_model_pipeline`, the frozen forward CV indices, and mean cancellation F1. Record the search spaces and results before selecting settings. Keep the final test for Step 13. Read [PROJECT_STATUS.md](PROJECT_STATUS.md) and [HANDOFF_TO_SADAT.md](HANDOFF_TO_SADAT.md).
+**Step 12 (Sadat)** has tuned both learned families using fresh pipelines from `make_model_pipeline`, the frozen forward CV indices, and mean cancellation F1. Search spaces and results are recorded below. The final test remains reserved for Step 13. Read [PROJECT_STATUS.md](PROJECT_STATUS.md) and [HANDOFF_TO_SADAT.md](HANDOFF_TO_SADAT.md).
 
 Faraaz owns Steps 1–8; Sadat owns Steps 9–15. Assigned ownership is not a record of work already performed. Both members must review their work and record actual contributions.
+
+## Step 12 hyperparameter tuning
+
+An exhaustive grid evaluates **20 settings across three frozen folds (60 fits)**: logistic C/class weighting and forest depth/leaf size/class weighting. Selected features, threshold 0.5, seed 42 and the original split remain fixed. Every candidate uses a fresh train-fold pipeline; `refit=False` prevents a global refit.
+
+| Family | Selected search parameters | Untuned F1 | Tuned F1 | Change |
+| --- | --- | ---: | ---: | ---: |
+| Logistic Regression | C=1.0, class_weight=balanced | 0.713609 | 0.732102 | +0.018492 |
+| Random Forest | class_weight=balanced, max_depth=None, min_samples_leaf=10 | 0.657994 | 0.669294 | +0.011300 |
+
+The chosen family is **Logistic Regression**, with **C=1.0, class_weight=balanced**, mean development F1 **0.732102**. This is the best setting in the declared grid, not a final test result. Both untuned controls match Step 11 under the documented numerical tolerances; all **47 tests pass** and all 60 fits finish without convergence warnings. Notebook 04 preserves six Step 11 code cells and appends five executed Step 12 cells. Full fresh-kernel/format verification remains a final gate.
+
+See [the tuning report](report/step12_hyperparameter_tuning.md), [all results and frozen settings](data/results/step12/README.md), and [tuning figure](figures/08_hyperparameter_tuning.png).
+
+```bash
+python -m src.tuning
+python -m unittest discover -s tests -v
+```
+
+**Next: Step 13 — Sadat.** Review `final_selection.json`, construct the unfitted pipeline with `build_frozen_pipeline`, fit on development only, and evaluate the untouched test once. Save the fitted model and error analysis. Do not select settings or change the model from final test scores.
 
 ## Remaining setup
 
@@ -229,6 +250,7 @@ Faraaz owns Steps 1–8; Sadat owns Steps 9–15. Assigned ownership is not a re
 - [x] Complete Step 9 derived features, fold verification, Notebook 03 outputs, and report explanation.
 - [x] Complete Step 10 supervised selection, centered numeric PCA, reference-model comparison and justified current representation.
 - [x] Complete Step 11 majority baseline, two model families, full/selected controls, Notebook 04 outputs and report Section 5.
+- [x] Complete Step 12 exhaustive tuning, all candidate/fold results, frozen settings, Notebook 04 outputs and report Section 6.
 - [ ] Confirm exact source terms and add the raw dataset to the repository.
 - [ ] Record collaborators' actual contributions as work is completed.
 - [ ] Implement the notebooks and verify a fresh-environment run.
@@ -236,4 +258,4 @@ Faraaz owns Steps 1–8; Sadat owns Steps 9–15. Assigned ownership is not a re
 
 ## Assistance
 
-OpenAI ChatGPT/Codex assisted with repository scaffolding, transcription of user-approved project details, audit/EDA, Steps 5–10 preprocessing and feature work, and Step 11 implementation, execution, tests, model comparison, notebook outputs and documentation. Untuned development comparisons are available; tuning and final held-out results remain pending.
+OpenAI ChatGPT/Codex assisted with repository scaffolding, transcription of user-approved project details, audit/EDA, Steps 5–10 preprocessing and feature work, and Steps 11–12 implementation, execution, tests, model comparison/tuning, notebook outputs and documentation. Development comparisons and tuning are available; final held-out results remain pending.

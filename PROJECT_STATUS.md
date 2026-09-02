@@ -2,7 +2,7 @@
 
 ## Current position
 
-**Step 11 is complete. Resume at Step 12 — Sadat.** Sadat is the assigned owner of Steps 9–11; review and actual contributions remain for the members to record.
+**Step 12 is complete. Resume at Step 13 — Sadat.** Sadat is the assigned owner of Steps 9–12; review and actual contributions remain for the members to record.
 
 Repository: https://github.com/faraaz1027-cloud/cse437-hotel-cancellation-15
 
@@ -33,8 +33,8 @@ documents or verbatim faculty feedback as part of resuming.
 | 9 | Derived features | Sadat | Complete; eight features, fold verification, Notebook 03 outputs, and report explanation |
 | 10 | Feature selection and dimensionality reduction | Sadat | Complete; F-score selection, centered numeric PCA, four-way reference comparison, retained lists/components and decision |
 | 11 | Baseline and two model families | Sadat | Complete; five candidates, 15 fits, Notebook 04 outputs, metrics, figure and Section 5 |
-| 12 | Hyperparameter tuning | Sadat | **Next — not started** |
-| 13 | Final test evaluation and error analysis | Sadat | Pending |
+| 12 | Hyperparameter tuning | Sadat | Complete; 20 settings, 60 fits, frozen selection, Notebook 04 outputs and Section 6 |
+| 13 | Final test evaluation and error analysis | Sadat | **Next — not started** |
 | 14 | Answer the unchanged three questions | Sadat | Pending |
 | 15 | Report, reproducibility, and submission | Sadat + both reviewers | Pending |
 
@@ -59,7 +59,7 @@ documents or verbatim faculty feedback as part of resuming.
   vocabularies and safe unseen-category handling. Children/ADR have missing flags.
 - Encoded widths are 328, 422, and 491 for folds 1–3; each fold's train/validation
   widths match and all encoded values are finite. No test rows processed.
-- All 40 focused tests pass, including five Step 11 checks. Notebook 02's 13 code cells executed sequentially
+- All 47 focused tests pass, including seven Step 12 checks. Notebook 02's 13 code cells executed sequentially
   in a fresh Python process with IPython and real outputs saved.
 - Step 8 uses development rows only: 34,473 of 95,415 bookings canceled (36.13%).
   Lead-time and deposit relationships, non-monotonic prior cancellations,
@@ -107,34 +107,44 @@ documents or verbatim faculty feedback as part of resuming.
   Current outputs, parameters, schemas, confusion counts and hashes are in
   `data/results/step11/`. Full fresh-kernel validation remains pending.
 
-## Resume Step 12
+- Step 12 completes an exhaustive grid with 8 logistic and 12 forest settings:
+  60 fits on the same three folds, selected features and threshold 0.5.
+- Untuned threshold metrics match Step 11 within 1e−12; secondary forest AUC
+  uses 1e−7 tolerance after a documented numerical audit. All fits finish
+  with no errors/convergence warnings; no global full-development model is fitted.
+- Selected family: **Logistic Regression**; C=1.0, class_weight=balanced; mean development F1
+  **0.732102**. Exact settings and lineage are frozen in
+  `data/results/step12/final_selection.json` for Step 13, not final test selection.
+- Notebook 04 now has 11 code cells: six preserved Step 11 outputs and five new
+  sequentially Python-executed Step 12 outputs. Full fresh-kernel checks remain.
 
-1. Read this checkpoint, the Step 11 report and Notebook 04. Preserve approved
-   wording, immutable data/splits, and the development-only boundary.
-2. Use fresh `make_model_pipeline` instances from `src/modeling.py` inside the
-   search. Preprocessing and selection must fit within each training fold.
-3. Document modest search spaces before running grid/randomized search for
-   both logistic regression and random forest. Step 11's preferred within-family
-   representations are selected/selected; retain untuned scores as references.
-4. Use development-relative indices from `development_cv`, seed 42, and mean
-   cancellation F1. Explore regularization, including forest depth/leaf size.
-   Any class-weight or threshold changes must be development-selected and recorded.
-5. Save complete candidate/fold results, chosen settings, runtime and actual
-   notebook outputs. Expand Notebook 04 and report Section 6.
-6. Freeze the final pipeline/settings before full-development refitting and
-   held-out evaluation in Step 13. Do not use final test data for Step 12.
+## Resume Step 13
 
-The selected forest has higher ROC-AUC but lower recall/F1 than selected LR at
-0.5. This supports investigating regularization and decision tradeoffs; it does
-not authorize changing the primary metric after seeing results. Development
-scores have informed multiple choices and are not final performance estimates.
+1. Read the Step 12 report, Notebook 04 and `final_selection.json`. Verify
+   upstream data/split and selected-setting hashes. Preserve the original brief.
+2. Construct the selected pipeline with `build_frozen_pipeline` from `src/tuning.py`.
+   It must initially be unfitted. Do not retune model/representation/threshold.
+3. Fit that complete pipeline on development rows only. Then transform and score
+   the held-out test with the frozen probability threshold, once choices are fixed.
+4. Report final cancellation F1, accuracy, precision, recall and ROC-AUC, plus
+   confusion counts. Distinguish final test performance from reused CV scores.
+5. Analyze actual false positives/false negatives, including at least two concrete
+   wrong predictions. Examine sensible subgroups and temporal differences without
+   using them to change the selected model. Explain uncertainty and data limits.
+6. Save the fitted pipeline, actual Notebook 05 outputs, plots and report Section 7.
+   Record final test access/evaluation clearly. Step 14 answers the unchanged
+   research questions; Step 15 finalizes the report/reproducibility/submission.
+
+The winner is the best evaluated setting in a bounded grid, not necessarily
+globally optimal. Report the held-out result plainly even if lower; do not
+switch model families or optimize thresholds after viewing test outcomes.
 
 ## Files to open
 
 - [Executed Notebook 02](notebooks/02_preprocessing.ipynb)
 - [Notebook 01: raw audit and development EDA](notebooks/01_data_audit_and_eda.ipynb)
 - [Step 8 tables, figures, and reproduction](data/eda/README.md)
-- [Report Sections 1–5 draft](report/report.md)
+- [Report Sections 1–6 draft](report/report.md)
 - [Notebook 03: derived features](notebooks/03_feature_engineering.ipynb)
 - [Step 9 report](report/step9_feature_engineering.md)
 - [Step 9 evidence and schemas](data/processed/step9/README.md)
@@ -143,6 +153,9 @@ scores have informed multiple choices and are not final performance estimates.
 - [Notebook 04: model comparison](notebooks/04_modeling_and_tuning.ipynb)
 - [Step 11 comparison report](report/step11_model_comparison.md)
 - [Step 11 results and schemas](data/results/step11/README.md)
+- [Step 12 tuning report](report/step12_hyperparameter_tuning.md)
+- [Step 12 evidence and frozen settings](data/results/step12/README.md)
+- [Tuning and unfitted handoff factory](src/tuning.py)
 - [Fresh model-pipeline factory](src/modeling.py)
 - [Cloneable representation wrapper](src/representation.py)
 - [Sadat's handoff](HANDOFF_TO_SADAT.md)
@@ -160,6 +173,7 @@ python -m src.development_eda
 python -m src.feature_audit
 python -m src.representation_audit
 python -m src.model_comparison
+python -m src.tuning
 python -m unittest discover -s tests -v
 ```
 
@@ -172,18 +186,18 @@ requires the original `data/raw/hotel_bookings.csv` for its Step 5 cells.
   Its exact SHA-256 and source link are in data/README.md. Record the actual
   source version/download date and exact licence; do not invent missing details.
 - Validate a clean dependency install and separate fresh Jupyter-kernel runs;
-  the earlier IPython and Steps 8–11 Python execution checks do not establish
+  the earlier IPython and Steps 8–12 Python execution checks do not establish
   that final gate. Canonical notebook format validation is also pending.
 - Keep notebooks numbered 01–05 with saved outputs and relative paths.
 - Preserve frozen data/split hashes and the original CSE437 document.
 - Complete report/report.md and report/report.pdf to the supplied template,
-  at most 10 pages. Current report/report.md drafts Sections 1–5; later results,
+  at most 10 pages. Current report/report.md drafts Sections 1–6; later results,
   final summary, contribution records, and PDF assembly remain pending.
 - Record genuine member contributions, verified references, and AI assistance.
 - Submit the one public GitHub repository link when the full project is ready.
 
 ## Suggested message to resume
 
-“Continue my CSE437 Group 15 project from Step 12. Read PROJECT_STATUS.md and
+“Continue my CSE437 Group 15 project from Step 13. Read PROJECT_STATUS.md and
 HANDOFF_TO_SADAT.md in https://github.com/faraaz1027-cloud/cse437-hotel-cancellation-15
-first. Sadat owns Step 12; preserve the original proposal and frozen evaluation split.”
+first. Sadat owns Step 13; preserve the original proposal and frozen evaluation split.”

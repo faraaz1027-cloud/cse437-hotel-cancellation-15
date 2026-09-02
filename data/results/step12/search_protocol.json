@@ -1,0 +1,72 @@
+{
+  "step": 12,
+  "method": "exhaustive GridSearchCV",
+  "parameter_grids": {
+    "logistic_regression": {
+      "model__C": [
+        0.01,
+        0.1,
+        1.0,
+        10.0
+      ],
+      "model__class_weight": [
+        null,
+        "balanced"
+      ]
+    },
+    "random_forest": {
+      "model__max_depth": [
+        8,
+        16,
+        null
+      ],
+      "model__min_samples_leaf": [
+        1,
+        10
+      ],
+      "model__class_weight": [
+        null,
+        "balanced"
+      ]
+    }
+  },
+  "representations": {
+    "logistic_regression": "selected",
+    "random_forest": "selected"
+  },
+  "selection_percentile": 75,
+  "pca_retained": false,
+  "fixed_settings_source": "src/modeling.py MODEL_SETTINGS; only listed model parameters vary",
+  "candidate_counts": {
+    "logistic_regression": 8,
+    "random_forest": 12
+  },
+  "folds": 3,
+  "expected_fits": 60,
+  "cv": "immutable Step 6 expanding forward folds; development-relative indices",
+  "seed": 42,
+  "search_n_jobs": 1,
+  "forest_n_jobs": 2,
+  "primary_metric": "unweighted three-fold mean cancellation-class F1",
+  "secondary_metrics": [
+    "accuracy",
+    "precision",
+    "recall",
+    "roc_auc"
+  ],
+  "threshold": 0.5,
+  "threshold_rule": "class 1 when cancellation probability >= 0.5",
+  "decision_rule": "highest mean F1; exact ties use family order then ParameterGrid order",
+  "family_order": [
+    "logistic_regression",
+    "random_forest"
+  ],
+  "refit": false,
+  "error_score": "raise",
+  "return_train_score": true,
+  "resampling": null,
+  "threshold_search": false,
+  "class_weighting": "None or balanced; balanced weights computed from each training fold",
+  "budget_rationale": "Complete 20-setting grid targets linear regularization and forest capacity/imbalance; tree count remains 100 and max_features remains sqrt.",
+  "final_test_policy": "No final test fitting, transformation, scoring or label summaries; reserve for Step 13."
+}

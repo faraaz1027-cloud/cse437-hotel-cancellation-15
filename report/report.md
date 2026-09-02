@@ -9,7 +9,7 @@
 
 Repository: https://github.com/faraaz1027-cloud/cse437-hotel-cancellation-15
 
-**Working report:** Sections 1–5 are drafted from verified Steps 1–11, including the untuned model-family comparison. Model tuning, held-out results and the final PDF remain pending. Finalize to the supplied template within 10 pages.
+**Working report:** Sections 1–6 are drafted from verified Steps 1–12, including model comparison and hyperparameter tuning. Held-out results and the final PDF remain pending. Finalize to the supplied template within 10 pages.
 
 ## Summary
 
@@ -191,7 +191,7 @@ sqrt feature sampling and bootstrap with unscaled numeric inputs. Seeds are
 All five candidates use the same three frozen forward development folds.
 Preprocessing and feature selection are training-only inside each pipeline.
 Mean cancellation F1 is primary; accuracy, precision, recall and ROC-AUC are
-secondary. This is an untuned comparison; search follows in Step 12.
+secondary. This is the untuned comparison; Section 6 reports Step 12 tuning.
 
 ### 5.2 Development comparison
 
@@ -207,8 +207,8 @@ The current leader is **Logistic regression — selected** (mean F1 0.713609).
 The majority baseline has 63.82% mean accuracy but zero
 cancellation F1/recall, showing why accuracy alone is insufficient. Forest
 training F1 greatly exceeds its later-period validation F1; overfitting,
-temporal shift and repeated profiles may contribute. Step 12 should examine
-regularization rather than assume more complex models will improve the score.
+temporal shift and repeated profiles may contribute. Step 12 therefore examines
+regularization; added model complexity alone does not establish improvement.
 
 All 15 fits completed; the six logistic fits had no convergence warnings and
 reproduce Step 10's metrics. Forty tests pass. Full fold scores, confusion
@@ -219,7 +219,50 @@ global full-development model was fitted. See [the detailed comparison](step11_m
 
 ## 6. Hyperparameter Tuning
 
-Pending: report search spaces, candidate/fold counts, scoring, results, and selected configurations.
+### 6.1 Search design
+
+Exhaustive GridSearchCV evaluates 8 logistic settings (C=0.01/0.1/1/10 ×
+class_weight=None/balanced) and 12 forest settings (max_depth=8/16/None ×
+min_samples_leaf=1/10 × class_weight=None/balanced), totaling **60 fits** on
+the three frozen development folds. Each grid includes its Step 11 control.
+Forest size stays 100 trees with sqrt feature sampling; logistic uses lbfgs,
+max_iter=2000; seed 42. The fixed selected-feature rule and 0.5 threshold remain.
+
+Every candidate receives a fresh complete pipeline. Feature transformations
+and selection fit only within each training fold. Balanced weights derive
+from that training fold. Mean cancellation F1 selects settings; accuracy,
+precision, recall and ROC-AUC provide secondary context. Search uses
+`refit=False`, so no full-development estimator is fitted yet. The protocol,
+tie rule, complete candidate/fold results and actual settings are saved.
+
+### 6.2 Tuning results and decision
+
+| Family | Selected search parameters | Untuned F1 | Tuned F1 | Change |
+| --- | --- | ---: | ---: | ---: |
+| Logistic Regression | C=1.0, class_weight=balanced | 0.713609 | 0.732102 | +0.018492 |
+| Random Forest | class_weight=balanced, max_depth=None, min_samples_leaf=10 | 0.657994 | 0.669294 | +0.011300 |
+
+The selected model is **Logistic Regression** with **C=1.0, class_weight=balanced** (mean F1
+**0.732102**). This is the best evaluated grid setting, not
+proof of global optimality or final test performance. Both untuned controls
+reproduce Step 11's threshold-based metrics within 1e−12 (forest AUC tolerance
+1e−7; numerical audit documented separately). All 60 fits complete without
+convergence warnings or failed fits; all 47 tests pass. Notebook 04 adds five
+actually Python-executed tuning cells.
+
+For selected-feature logistic regression, balanced weighting raises mean recall
+from 0.659498 to 0.756772 while precision falls from 0.783364 to 0.715322;
+accuracy falls from 0.809314 to 0.800244. The F1 gain reflects this tradeoff,
+not improvement on every metric. The best forest uses balanced weights and
+leaf size 10; its training–validation F1 gap falls from 0.332209 to 0.203017,
+but it still trails logistic regression on the agreed primary metric.
+
+Development folds are reused for several choices, creating selection optimism;
+no nested validation or confidence-tested performance gain is claimed. Class
+weighting changes the precision/recall tradeoff. Final test rows remain untouched.
+`final_selection.json` freezes the complete settings and threshold for Step 13.
+See [the tuning report](step12_hyperparameter_tuning.md) and
+[complete evidence](../data/results/step12/README.md).
 
 ## 7. Results, Visualization, and Error Analysis
 
@@ -227,7 +270,7 @@ Pending: final test table/figures, at least two actual wrong predictions, and an
 
 ## 8. Limitations and Next Steps
 
-Current limitations include source timing, repeated-record weighting, small groups, temporal variation, training–validation gaps, reuse of development folds for selection, and incomplete source provenance. Extend after tuning and final evaluation.
+Current limitations include source timing, repeated-record weighting, small groups, temporal variation, training–validation gaps, reuse of development folds for selection, and incomplete source provenance. Extend after final evaluation; the finite grid and development-selection optimism also limit the conclusions.
 
 ## 9. Contributions
 
@@ -239,4 +282,4 @@ Faraaz owns Steps 1–8 and draft Sections 1–3; Sadat owns Steps 9–15 and la
 
 [2] Jesse Mostipak. Hotel Booking Demand. Kaggle. https://www.kaggle.com/datasets/jessemostipak/hotel-booking-demand . Exact version, download date, and licence pending verification.
 
-OpenAI ChatGPT/Codex assisted with scaffolding, user-approved transcription, code, testing, execution, figures, interpretation, and this draft. No predictive results have been fabricated. Notebook 01 preserves ten earlier IPython-executed audit cells and adds five Python-executed EDA cells with actual captured outputs. Notebook 03 preserves five Step 9 cells and appends five actually Python-executed Step 10 cells. Notebook 04 adds six actually Python-executed Step 11 cells. Full fresh-kernel notebook execution and canonical format validation remain final gates. Produce report.pdf after completing and checking the report.
+OpenAI ChatGPT/Codex assisted with scaffolding, user-approved transcription, code, testing, execution, figures, interpretation, and this draft. No predictive results have been fabricated. Notebook 01 preserves ten earlier IPython-executed audit cells and adds five Python-executed EDA cells with actual captured outputs. Notebook 03 preserves five Step 9 cells and appends five actually Python-executed Step 10 cells. Notebook 04 preserves six actually Python-executed Step 11 cells and adds five actually Python-executed Step 12 cells. Full fresh-kernel notebook execution and canonical format validation remain final gates. Produce report.pdf after completing and checking the report.
