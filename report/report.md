@@ -9,7 +9,7 @@
 
 Repository: https://github.com/faraaz1027-cloud/cse437-hotel-cancellation-15
 
-**Working report:** Sections 1–4 are drafted from verified Steps 1–10. Step 10 includes a fixed reference-classifier comparison; the baseline/model-family comparison, model tuning, held-out results and final PDF remain pending. Finalize to the supplied template within 10 pages.
+**Working report:** Sections 1–5 are drafted from verified Steps 1–11, including the untuned model-family comparison. Model tuning, held-out results and the final PDF remain pending. Finalize to the supplied template within 10 pages.
 
 ## Summary
 
@@ -173,13 +173,49 @@ The preferred rule is refitted on each later training fold; complete retained
 names and component coefficients are saved in [the Step 10 evidence](../data/processed/step10/README.md).
 No global full-development mask is fitted now. These are development selection
 scores, not unbiased final performance. Nonlinear interactions may be missed;
-Step 11 should retain an all-feature control for model-family comparison. All
+Step 11 retains an all-feature control for model-family comparison. All
 35 tests pass and all 12 reference fits converged. The held-out test remains
 untouched. See [the full Step 10 report](step10_selection_and_reduction.md).
 
 ## 5. Modeling and Validation
 
-Protocol fixed: chronological development/test split and three expanding validation folds; mean cancellation-class F1 is primary, with accuracy, precision, recall, and ROC-AUC secondary. Step 10 fitted a fixed logistic-regression reference to compare representations. Step 11 still must compare the majority baseline, logistic regression and random forest; Step 12 covers model tuning and Step 13 final test evaluation.
+### 5.1 Models and protocol
+
+Step 11 compares a training-majority baseline and two families: logistic
+regression and random forest. Each learned family uses full and selected
+features. Logistic regression uses C=1, lbfgs, max_iter=2000, tol=1e−4 and scaled
+numeric inputs. Random forest uses 100 trees, unlimited depth, leaf size 1,
+sqrt feature sampling and bootstrap with unscaled numeric inputs. Seeds are
+42; neither class weighting nor resampling is used. Threshold is 0.5.
+
+All five candidates use the same three frozen forward development folds.
+Preprocessing and feature selection are training-only inside each pipeline.
+Mean cancellation F1 is primary; accuracy, precision, recall and ROC-AUC are
+secondary. This is an untuned comparison; search follows in Step 12.
+
+### 5.2 Development comparison
+
+| Candidate | Mean F1 | Accuracy | Precision | Recall | ROC-AUC |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Majority baseline | 0.000000 | 0.638167 | 0.000000 | 0.000000 | 0.500000 |
+| Logistic regression — full | 0.693094 | 0.751370 | 0.681025 | 0.753386 | 0.876098 |
+| Logistic regression — selected | 0.713609 | 0.809314 | 0.783364 | 0.659498 | 0.882905 |
+| Random forest — full | 0.626504 | 0.793498 | 0.906662 | 0.481119 | 0.886473 |
+| Random forest — selected | 0.657994 | 0.803866 | 0.893717 | 0.521714 | 0.892267 |
+
+The current leader is **Logistic regression — selected** (mean F1 0.713609).
+The majority baseline has 63.82% mean accuracy but zero
+cancellation F1/recall, showing why accuracy alone is insufficient. Forest
+training F1 greatly exceeds its later-period validation F1; overfitting,
+temporal shift and repeated profiles may contribute. Step 12 should examine
+regularization rather than assume more complex models will improve the score.
+
+All 15 fits completed; the six logistic fits had no convergence warnings and
+reproduce Step 10's metrics. Forty tests pass. Full fold scores, confusion
+counts, feature names and parameters are in [the Step 11 evidence](../data/results/step11/README.md).
+The reused development folds guide selection; these are not unbiased final
+performance estimates. No final test row was transformed or scored and no
+global full-development model was fitted. See [the detailed comparison](step11_model_comparison.md).
 
 ## 6. Hyperparameter Tuning
 
@@ -191,7 +227,7 @@ Pending: final test table/figures, at least two actual wrong predictions, and an
 
 ## 8. Limitations and Next Steps
 
-Current limitations include source timing, repeated-record weighting, small groups, seasonal coverage, and incomplete source provenance. Extend after modeling.
+Current limitations include source timing, repeated-record weighting, small groups, temporal variation, training–validation gaps, reuse of development folds for selection, and incomplete source provenance. Extend after tuning and final evaluation.
 
 ## 9. Contributions
 
@@ -203,4 +239,4 @@ Faraaz owns Steps 1–8 and draft Sections 1–3; Sadat owns Steps 9–15 and la
 
 [2] Jesse Mostipak. Hotel Booking Demand. Kaggle. https://www.kaggle.com/datasets/jessemostipak/hotel-booking-demand . Exact version, download date, and licence pending verification.
 
-OpenAI ChatGPT/Codex assisted with scaffolding, user-approved transcription, code, testing, execution, figures, interpretation, and this draft. No predictive results have been fabricated. Notebook 01 preserves ten earlier IPython-executed audit cells and adds five Python-executed EDA cells with actual captured outputs. Notebook 03 preserves five Step 9 cells and appends five actually Python-executed Step 10 cells. Full fresh-kernel notebook execution and canonical format validation remain final gates. Produce report.pdf after completing and checking the report.
+OpenAI ChatGPT/Codex assisted with scaffolding, user-approved transcription, code, testing, execution, figures, interpretation, and this draft. No predictive results have been fabricated. Notebook 01 preserves ten earlier IPython-executed audit cells and adds five Python-executed EDA cells with actual captured outputs. Notebook 03 preserves five Step 9 cells and appends five actually Python-executed Step 10 cells. Notebook 04 adds six actually Python-executed Step 11 cells. Full fresh-kernel notebook execution and canonical format validation remain final gates. Produce report.pdf after completing and checking the report.

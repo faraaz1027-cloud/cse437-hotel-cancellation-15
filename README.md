@@ -2,7 +2,7 @@
 
 **CSE437: Data Science | Group 15**
 
-**Status: Step 10 completed — feature selection and numeric PCA compared in development folds.** Responsible: **Sadat**. **Next: Step 11 — majority baseline and two model families, owned by Sadat.** Notebook 03 contains Steps 9–10 with outputs. Report Sections 1–4 are drafted. Step 10 used a fixed logistic-regression reference; the baseline/model-family comparison, model tuning, final test and report assembly remain pending.
+**Status: Step 11 completed — majority baseline and two model families compared across frozen development folds.** Responsible: **Sadat**. **Next: Step 12 — hyperparameter tuning, owned by Sadat.** Notebook 04 contains the executed comparison; report Sections 1–5 are drafted. Selected-feature logistic regression leads the untuned comparison (mean F1 0.713609). Tuning, final test evaluation and report assembly remain pending.
 
 Resume checkpoint: [PROJECT_STATUS.md](PROJECT_STATUS.md) records completed work, remaining checks, and the next action.
 
@@ -33,11 +33,12 @@ The problem statement and question wording above are reproduced unchanged from t
 | --- | --- |
 | `data/raw/` | Original source data |
 | `data/processed/` | Documented outputs of data preparation |
+| `data/results/step11/` | Model-comparison protocol, measured fold scores and evidence |
 | `data/README.md` | Dataset acquisition and provenance |
 | `notebooks/` | Numbered analysis notebooks |
 | `models/` | Saved models and fitted pipelines |
 | `figures/` | Exported figures |
-| `report/report.md` | Sections 1–4 drafted; later model results and final assembly pending |
+| `report/report.md` | Sections 1–5 drafted; tuning, final test results and assembly pending |
 | `requirements.txt` | Starter Python dependencies |
 
 Empty `.gitkeep` files preserve folders in Git.
@@ -75,7 +76,7 @@ The uploaded CSV has been audited but is not yet committed here. Obtain it from 
 
 ## Notebook order
 
-Notebook 01 contains the raw-data audit and development EDA. Notebook 02 implements Steps 5–7. Notebook 03 implements Step 9 derived features and Step 10 selection/reduction. Notebooks 04–05 remain starter outlines:
+Notebook 01 contains the raw-data audit and development EDA. Notebook 02 implements Steps 5–7. Notebook 03 implements Step 9 derived features and Step 10 selection/reduction. Notebook 04 implements Step 11 modeling; Step 12 tuning remains to be added. Notebook 05 remains a starter outline:
 
 1. [Data audit and EDA](notebooks/01_data_audit_and_eda.ipynb)
 2. [Preprocessing](notebooks/02_preprocessing.ipynb)
@@ -188,9 +189,34 @@ python -m unittest discover -s tests -v
 
 Use a new `BookingRepresentation(mode="selected")` inside the model pipeline passed to CV. Fit preprocessing, ranking, selection and optional PCA only on training folds. Do not reuse a globally fitted matrix. No final full-development model is fitted and no held-out row is transformed or scored.
 
-**Next: Step 11 (Sadat)** compares the majority baseline, logistic regression and random forest, keeping an all-feature control. Read [PROJECT_STATUS.md](PROJECT_STATUS.md) and [HANDOFF_TO_SADAT.md](HANDOFF_TO_SADAT.md). Faraaz owns Steps 1–8; Sadat owns Steps 9–15. Assigned ownership is not a record of work already performed. Both members must review their work and record actual contributions.
+The Step 7 and Step 9 factories are preserved. Step 10 wraps the 32-field Step 9 schema with training-fold representation choices. Prediction-time validity is not guaranteed; the project retains its retrospective arrival-cohort scope.
 
-The Step 7 and Step 9 factories are preserved. Step 10 wraps the 32-field Step 9 schema with training-fold representation choices. Prediction-time validity is not guaranteed; the project retains its retrospective arrival-cohort scope. A fresh separate Jupyter-kernel run remains part of final submission verification.
+## Step 11 baseline and two model families
+
+Five candidates were compared on the same three frozen forward folds: a training-majority baseline and full/selected versions of logistic regression and random forest. Preprocessing and selection fit only within each training fold; threshold remains 0.5. This is an untuned development comparison.
+
+| Candidate | Mean cancellation F1 |
+| --- | ---: |
+| Majority baseline | 0.000000 |
+| Logistic regression — full | 0.693094 |
+| Logistic regression — selected | **0.713609** |
+| Random forest — full | 0.626504 |
+| Random forest — selected | 0.657994 |
+
+Selected-feature logistic regression is the current leader. Selection improves mean F1 for both learned families under these settings. The selected forest has higher ROC-AUC (0.892267) than selected logistic regression (0.882905), but lower cancellation recall (0.521714 versus 0.659498) at the fixed threshold. Its large training–validation gap warrants regularization experiments; these results do not establish a final best model.
+
+All **40 tests pass** and all **15 model fits complete**. Logistic scores reproduce Step 10's published results. Notebook 04 has six sequentially executed Python cells with real outputs. Separate fresh Jupyter-kernel execution and canonical notebook validation remain final submission gates. No held-out row is fitted, transformed or scored; no model is refitted on all development rows.
+
+See [Notebook 04](notebooks/04_modeling_and_tuning.ipynb), [the Step 11 comparison report](report/step11_model_comparison.md), [aggregate evidence](data/results/step11/README.md), and [comparison figure](figures/07_model_comparison.png). Reproduce with:
+
+```bash
+python -m src.model_comparison
+python -m unittest discover -s tests -v
+```
+
+**Next: Step 12 (Sadat)** tunes both learned families using fresh pipelines from `make_model_pipeline`, the frozen forward CV indices, and mean cancellation F1. Record the search spaces and results before selecting settings. Keep the final test for Step 13. Read [PROJECT_STATUS.md](PROJECT_STATUS.md) and [HANDOFF_TO_SADAT.md](HANDOFF_TO_SADAT.md).
+
+Faraaz owns Steps 1–8; Sadat owns Steps 9–15. Assigned ownership is not a record of work already performed. Both members must review their work and record actual contributions.
 
 ## Remaining setup
 
@@ -202,6 +228,7 @@ The Step 7 and Step 9 factories are preserved. Step 10 wraps the 32-field Step 9
 - [x] Complete Step 8 development-only EDA, three figures, report Sections 1–3 draft, and Sadat's handoff.
 - [x] Complete Step 9 derived features, fold verification, Notebook 03 outputs, and report explanation.
 - [x] Complete Step 10 supervised selection, centered numeric PCA, reference-model comparison and justified current representation.
+- [x] Complete Step 11 majority baseline, two model families, full/selected controls, Notebook 04 outputs and report Section 5.
 - [ ] Confirm exact source terms and add the raw dataset to the repository.
 - [ ] Record collaborators' actual contributions as work is completed.
 - [ ] Implement the notebooks and verify a fresh-environment run.
@@ -209,4 +236,4 @@ The Step 7 and Step 9 factories are preserved. Step 10 wraps the 32-field Step 9
 
 ## Assistance
 
-OpenAI ChatGPT/Codex assisted with repository scaffolding, transcription of user-approved project details, audit/EDA, Steps 5–9 preprocessing and features, and Step 10 selection/PCA implementation, tests, reference-model comparisons, notebook outputs and documentation. Step 10 reference-model validation results are available; final model-family and held-out results remain pending.
+OpenAI ChatGPT/Codex assisted with repository scaffolding, transcription of user-approved project details, audit/EDA, Steps 5–10 preprocessing and feature work, and Step 11 implementation, execution, tests, model comparison, notebook outputs and documentation. Untuned development comparisons are available; tuning and final held-out results remain pending.

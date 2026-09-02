@@ -2,7 +2,7 @@
 
 ## Current position
 
-**Step 10 is complete. Resume at Step 11 — Sadat.** Sadat is the assigned owner of Steps 9–10; review and actual contributions remain for the members to record.
+**Step 11 is complete. Resume at Step 12 — Sadat.** Sadat is the assigned owner of Steps 9–11; review and actual contributions remain for the members to record.
 
 Repository: https://github.com/faraaz1027-cloud/cse437-hotel-cancellation-15
 
@@ -32,8 +32,8 @@ documents or verbatim faculty feedback as part of resuming.
 | 8 | Descriptive statistics and development-only EDA | Faraaz | Complete; 14 tables, three figures, Notebook 01 outputs, report Sections 1–3 draft, and handoff |
 | 9 | Derived features | Sadat | Complete; eight features, fold verification, Notebook 03 outputs, and report explanation |
 | 10 | Feature selection and dimensionality reduction | Sadat | Complete; F-score selection, centered numeric PCA, four-way reference comparison, retained lists/components and decision |
-| 11 | Baseline and two model families | Sadat | **Next — not started** |
-| 12 | Hyperparameter tuning | Sadat | Pending |
+| 11 | Baseline and two model families | Sadat | Complete; five candidates, 15 fits, Notebook 04 outputs, metrics, figure and Section 5 |
+| 12 | Hyperparameter tuning | Sadat | **Next — not started** |
 | 13 | Final test evaluation and error analysis | Sadat | Pending |
 | 14 | Answer the unchanged three questions | Sadat | Pending |
 | 15 | Report, reproducibility, and submission | Sadat + both reviewers | Pending |
@@ -59,7 +59,7 @@ documents or verbatim faculty feedback as part of resuming.
   vocabularies and safe unseen-category handling. Children/ADR have missing flags.
 - Encoded widths are 328, 422, and 491 for folds 1–3; each fold's train/validation
   widths match and all encoded values are finite. No test rows processed.
-- All 35 focused tests pass, including six Step 10 checks. Notebook 02's 13 code cells executed sequentially
+- All 40 focused tests pass, including five Step 11 checks. Notebook 02's 13 code cells executed sequentially
   in a fresh Python process with IPython and real outputs saved.
 - Step 8 uses development rows only: 34,473 of 95,415 bookings canceled (36.13%).
   Lead-time and deposit relationships, non-monotonic prior cancellations,
@@ -72,8 +72,8 @@ documents or verbatim faculty feedback as part of resuming.
   passed. The current runtime lacks Jupyter/nbformat, so neither a full fresh-
   kernel run nor canonical nbformat validation was performed for Step 8.
 - Step 10 now has development validation results from a fixed logistic-regression
-  reference (12 fits). The Step 11 baseline/two-family comparison and final
-  held-out evaluation have not been completed.
+  reference (12 fits). The Step 11 baseline/two-family comparison is now complete; final
+  held-out evaluation remains pending.
 - Step 9 adds eight derived fields and replaces categorical month names with
   a fixed cyclic pair: 24 retained source fields plus eight derived = 32 fields.
   The Step 7 factory remains unchanged. The Step 9 fold widths are 332/421/490;
@@ -98,45 +98,52 @@ documents or verbatim faculty feedback as part of resuming.
   model or selection mask is fitted. Complete fold masks, rankings, coefficients
   and variance evidence are saved. All 12 reference fits converged.
 
-## Resume Step 11
+- Step 11 compares five fixed candidates on identical forward folds (15 fits).
+  Mean F1: majority 0; full LR 0.693094; selected LR 0.713609; full forest
+  0.626504; selected forest 0.657994. Selected LR is the untuned leader.
+- Full/selected logistic scores match Step 10 within 1e−12. No convergence
+  warnings occurred. Forests show large in-sample to validation F1 gaps.
+- Notebook 04 contains six actually executed Python cells with saved outputs.
+  Current outputs, parameters, schemas, confusion counts and hashes are in
+  `data/results/step11/`. Full fresh-kernel validation remains pending.
 
-1. Read this checkpoint, the Step 10 report, and Notebook 03. Preserve the
-   approved wording and frozen split. Step 10's preference applies to a fixed
-   logistic-regression reference and need not be optimal for random forest.
-2. Implement Notebook 04's baseline/model comparison: a majority-class
-   DummyClassifier, LogisticRegression, and RandomForestClassifier.
-3. Compare the current selected representation with a full-feature control for
-   the learned model families. Use a fresh `BookingRepresentation(mode="selected")`
-   or `BookingRepresentation(mode="full")` inside each estimator pipeline.
-   For trees, full/selected variants can omit scaling; PCA variants require it.
-4. Keep preprocessing and selection training-fold fitted. Preserve development
-   row order and use development-relative indices from `development_cv`.
-   Reuse the frozen metric/threshold policy and seed 42; do not use the test set.
-5. Report per-fold F1, accuracy, precision, recall and ROC-AUC, plus the unweighted
-   three-fold mean F1. Explain model choices, class imbalance and temporal
-   variation; do not treat the reference comparison as final model evaluation.
-6. Save actual Notebook 04 outputs and report Section 5. Model hyperparameter
-   search is Step 12; freeze all choices before final refit/evaluation in Step 13.
+## Resume Step 12
 
-For modeling later, keep preprocessing and all learned feature selection/
-reduction inside the pipeline passed to CV. Do not prefit on all development
-data before cross-validation. Primary selection metric is mean cancellation-
-class F1 over the three folds; other metrics are accuracy, precision, recall,
-and ROC-AUC. Planned models are a majority baseline, logistic regression, and
-random forest, with seed 42 for stochastic components. Reserve final test
-evaluation for Step 13 after freezing every choice.
+1. Read this checkpoint, the Step 11 report and Notebook 04. Preserve approved
+   wording, immutable data/splits, and the development-only boundary.
+2. Use fresh `make_model_pipeline` instances from `src/modeling.py` inside the
+   search. Preprocessing and selection must fit within each training fold.
+3. Document modest search spaces before running grid/randomized search for
+   both logistic regression and random forest. Step 11's preferred within-family
+   representations are selected/selected; retain untuned scores as references.
+4. Use development-relative indices from `development_cv`, seed 42, and mean
+   cancellation F1. Explore regularization, including forest depth/leaf size.
+   Any class-weight or threshold changes must be development-selected and recorded.
+5. Save complete candidate/fold results, chosen settings, runtime and actual
+   notebook outputs. Expand Notebook 04 and report Section 6.
+6. Freeze the final pipeline/settings before full-development refitting and
+   held-out evaluation in Step 13. Do not use final test data for Step 12.
+
+The selected forest has higher ROC-AUC but lower recall/F1 than selected LR at
+0.5. This supports investigating regularization and decision tradeoffs; it does
+not authorize changing the primary metric after seeing results. Development
+scores have informed multiple choices and are not final performance estimates.
 
 ## Files to open
 
 - [Executed Notebook 02](notebooks/02_preprocessing.ipynb)
 - [Notebook 01: raw audit and development EDA](notebooks/01_data_audit_and_eda.ipynb)
 - [Step 8 tables, figures, and reproduction](data/eda/README.md)
-- [Report Sections 1–3 draft](report/report.md)
+- [Report Sections 1–5 draft](report/report.md)
 - [Notebook 03: derived features](notebooks/03_feature_engineering.ipynb)
 - [Step 9 report](report/step9_feature_engineering.md)
 - [Step 9 evidence and schemas](data/processed/step9/README.md)
 - [Step 10 report and feature decision](report/step10_selection_and_reduction.md)
 - [Step 10 comparisons, rankings and PCA evidence](data/processed/step10/README.md)
+- [Notebook 04: model comparison](notebooks/04_modeling_and_tuning.ipynb)
+- [Step 11 comparison report](report/step11_model_comparison.md)
+- [Step 11 results and schemas](data/results/step11/README.md)
+- [Fresh model-pipeline factory](src/modeling.py)
 - [Cloneable representation wrapper](src/representation.py)
 - [Sadat's handoff](HANDOFF_TO_SADAT.md)
 - [Frozen split instructions](data/splits/README.md)
@@ -152,6 +159,7 @@ python -m src.preprocessing_audit
 python -m src.development_eda
 python -m src.feature_audit
 python -m src.representation_audit
+python -m src.model_comparison
 python -m unittest discover -s tests -v
 ```
 
@@ -164,18 +172,18 @@ requires the original `data/raw/hotel_bookings.csv` for its Step 5 cells.
   Its exact SHA-256 and source link are in data/README.md. Record the actual
   source version/download date and exact licence; do not invent missing details.
 - Validate a clean dependency install and separate fresh Jupyter-kernel runs;
-  the earlier IPython and Steps 8–10 Python execution checks do not establish
+  the earlier IPython and Steps 8–11 Python execution checks do not establish
   that final gate. Canonical notebook format validation is also pending.
 - Keep notebooks numbered 01–05 with saved outputs and relative paths.
 - Preserve frozen data/split hashes and the original CSE437 document.
 - Complete report/report.md and report/report.pdf to the supplied template,
-  at most 10 pages. Current report/report.md drafts Sections 1–4; later results,
+  at most 10 pages. Current report/report.md drafts Sections 1–5; later results,
   final summary, contribution records, and PDF assembly remain pending.
 - Record genuine member contributions, verified references, and AI assistance.
 - Submit the one public GitHub repository link when the full project is ready.
 
 ## Suggested message to resume
 
-“Continue my CSE437 Group 15 project from Step 11. Read PROJECT_STATUS.md and
+“Continue my CSE437 Group 15 project from Step 12. Read PROJECT_STATUS.md and
 HANDOFF_TO_SADAT.md in https://github.com/faraaz1027-cloud/cse437-hotel-cancellation-15
-first. Sadat owns Step 11; preserve the original proposal and frozen evaluation split.”
+first. Sadat owns Step 12; preserve the original proposal and frozen evaluation split.”

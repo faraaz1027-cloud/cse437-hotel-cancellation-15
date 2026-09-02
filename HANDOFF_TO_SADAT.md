@@ -1,6 +1,6 @@
 # Handoff from Faraaz's stages to Sadat
 
-**CSE437 Group 15. Step 10 complete; Step 11 is next. Owner: Sadat.**
+**CSE437 Group 15. Step 11 complete; Step 12 is next. Owner: Sadat.**
 
 This is an implementation handoff prepared with ChatGPT/Codex assistance.
 Faraaz must review/explain the earlier stages and report actual contributions;
@@ -16,7 +16,7 @@ the document does not claim he personally wrote AI-prepared code.
    inside the model pipeline so training-fold medians/scalers/vocabularies
    cannot see validation data. CV indices are relative to the development subset.
 4. Read Notebook 01's development EDA, Notebook 03's executed Steps 9–10, and
-   report Sections 1–4. The Step 10 comparison selects a current representation.
+   report Sections 1–5. Notebook 04 adds the Step 11 model-family comparison.
 
 ## Step 9: implemented derived-feature candidates
 
@@ -40,7 +40,7 @@ factory inside later model pipelines; the original Step 7 factory is preserved.
 Step 10 now compares these representations with a fixed reference classifier;
 the original feature definitions are preserved.
 
-## Step 10 completed; next is Step 11
+## Step 10 selection/reduction reference
 
 Supervised selection retains 75% of nonconstant training encoded features by
 F-score. Centered numeric PCA retains at least 95% of its input training variance.
@@ -49,12 +49,28 @@ alone has the highest mean F1 (0.713609), versus full features (0.693094), PCA
 (0.694633), and selection then PCA (0.701023). It retains 247/314/366 columns by
 fold. PCA is demonstrated but not retained in the preferred representation.
 
-Read [the Step 10 report](report/step10_selection_and_reduction.md) and use a fresh
-`BookingRepresentation(mode="selected")` inside future model pipelines. Keep
-`mode="full"` as a control: random forest may prefer a different representation.
-Step 11 implements Notebook 04's majority baseline, logistic regression and
-random forest comparison. Keep the frozen development-relative CV indices,
-metrics and final test boundary. Model tuning follows in Step 12.
+Read [the Step 10 report](report/step10_selection_and_reduction.md) for the selection/PCA evidence. Step 11 compared full and selected representations for both learned model families, using the same frozen folds.
+
+## Step 11 completed; next is Step 12
+
+The majority baseline, logistic regression and random forest are implemented
+in Notebook 04. Across three frozen folds, mean cancellation F1 is 0 for the
+baseline, 0.693094 for full LR, **0.713609 for selected LR**, 0.626504 for full
+forest and 0.657994 for selected forest. All 15 fits completed; full/selected
+logistic scores reproduce Step 10's reference.
+
+Selected LR is the current untuned leader; selected features also lead within
+the forest family. The forest's high training F1 and much lower validation F1
+warrant regularization experiments. Higher forest ROC-AUC does not override
+the agreed F1 selection metric. See [the Step 11 report](report/step11_model_comparison.md)
+and [measured evidence](data/results/step11/README.md).
+
+Step 12 should tune both families using fresh `make_model_pipeline` instances
+from `src/modeling.py`. Keep all feature learning inside CV, use development-
+relative fold indices and seed 42, document the spaces/results, and compare
+with the untuned references. Add actual search outputs to Notebook 04 and
+report Section 6. Any threshold changes use development data only. Freeze all
+choices before final refitting and test evaluation in Step 13.
 
 ## Findings to carry into model analysis
 
@@ -72,18 +88,19 @@ metrics and final test boundary. Model tuning follows in Step 12.
 ## Later gates
 
 Step 10 has demonstrated selection and reduction with complete fold lists and
-components. Step 11 compares the majority baseline plus logistic
+components. Step 11 has compared the majority baseline plus logistic
 regression and random forest. Step 12 tunes with the same three forward folds.
 Primary metric is mean cancellation-class F1; secondary metrics are accuracy,
 precision, recall, and ROC-AUC. Preserve seed 42 for stochastic components.
 Only after choosing the full pipeline may it be refitted on all development
 rows and evaluated on the final test in Step 13.
 
-The Step 10 fixed logistic-regression reference has been trained in development
-folds; final model-family and held-out comparisons remain pending. The 35 tests pass. Notebook 01
+Step 11 model-family comparisons are complete; tuning and final held-out
+results remain pending. All 40 tests pass. Notebook 01
 has ten preserved executed audit cells plus five newly executed EDA cells;
 Notebook 02 has thirteen executed cells; Notebook 03 has ten executed Python
-cells with saved outputs (five Step 9 and five Step 10). Full fresh-kernel runs, canonical
+cells with saved outputs (five Step 9 and five Step 10); Notebook 04 adds six
+executed Python cells. Full fresh-kernel runs, canonical
 notebook validation, clean-install dependencies, raw CSV/provenance completion,
 and the final 10-page Markdown/PDF report remain submission tasks.
 

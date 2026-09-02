@@ -1,0 +1,76 @@
+{
+  "candidates": [
+    {
+      "candidate": "majority",
+      "family": "majority",
+      "representation": "none"
+    },
+    {
+      "candidate": "lr_full",
+      "family": "logistic_regression",
+      "representation": "full"
+    },
+    {
+      "candidate": "lr_selected",
+      "family": "logistic_regression",
+      "representation": "selected"
+    },
+    {
+      "candidate": "rf_full",
+      "family": "random_forest",
+      "representation": "full"
+    },
+    {
+      "candidate": "rf_selected",
+      "family": "random_forest",
+      "representation": "selected"
+    }
+  ],
+  "model_settings": {
+    "logistic_regression": {
+      "C": 1.0,
+      "solver": "lbfgs",
+      "max_iter": 2000,
+      "tol": 0.0001,
+      "class_weight": null,
+      "random_state": 42
+    },
+    "random_forest": {
+      "n_estimators": 100,
+      "criterion": "gini",
+      "max_depth": null,
+      "min_samples_split": 2,
+      "min_samples_leaf": 1,
+      "max_features": "sqrt",
+      "bootstrap": true,
+      "class_weight": null,
+      "random_state": 42,
+      "n_jobs": 2
+    }
+  },
+  "majority_settings": {
+    "strategy": "most_frequent",
+    "random_state": 42
+  },
+  "selection": {
+    "percentile": 75,
+    "training_variance_threshold": 1e-12,
+    "score": "ANOVA F"
+  },
+  "logistic_numeric_scaling": true,
+  "forest_numeric_scaling": false,
+  "threshold": 0.5,
+  "threshold_rule": "class 1 when probability >= 0.5",
+  "primary_metric": "unweighted mean cancellation-class F1 over three frozen forward folds",
+  "secondary_metrics": [
+    "accuracy",
+    "precision",
+    "recall",
+    "roc_auc"
+  ],
+  "decision_rule": "highest mean validation F1; exact ties prefer lower mean width then declared candidate order",
+  "class_weighting": null,
+  "resampling": null,
+  "parameter_search": false,
+  "scope": "untuned development model-family comparison; no final test evaluation"
+}
