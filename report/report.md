@@ -9,7 +9,7 @@
 
 Repository: https://github.com/faraaz1027-cloud/cse437-hotel-cancellation-15
 
-**Working report:** Sections 1–3 and the derived-feature part of Section 4 are drafted from verified Steps 1–9. Selection/reduction, modeling/results, and the final PDF are pending. Finalize to the supplied template within 10 pages.
+**Working report:** Sections 1–4 are drafted from verified Steps 1–10. Step 10 includes a fixed reference-classifier comparison; the baseline/model-family comparison, model tuning, held-out results and final PDF remain pending. Finalize to the supplied template within 10 pages.
 
 ## Summary
 
@@ -142,14 +142,44 @@ generalization. Full formulas and diagnostics are in [the Step 9 report](step9_f
 
 ### 4.2 Selection and dimensionality reduction
 
-Pending Step 10: demonstrate both methods, assess redundancy, and justify the
-final feature set or representation using training-fold fitting and the frozen
-development evaluation policy. Policy exclusions and feature construction alone
-do not satisfy this requirement.
+Step 10 removes training-constant encoded columns (variance ≤1e−12), ranks
+remaining fields by training-label ANOVA F, and retains the top 75% rounded
+upward. Ties follow encoded order. Scores are selection heuristics; no p-values
+or causal effects are inferred. Centered full-SVD PCA separately reduces the
+scaled numeric block to at least 95% cumulative training variance; categorical
+and missing-indicator columns bypass PCA.
+
+Four fixed representations use the same logistic-regression reference (C=1,
+lbfgs, max_iter=2000, tol=1e−4, no class weights, seed=42, threshold=0.5) and the
+three frozen forward folds. All preprocessing, selection and PCA fit within
+each training fold. The protocol is stored with the results.
+
+| Representation | Mean development F1 | Output columns across folds |
+| --- | ---: | --- |
+| All Step 9 features | 0.693094 | 332 / 421 / 490 |
+| Selection only | **0.713609** | 247 / 314 / 366 |
+| Numeric PCA | 0.694633 | 325 / 413 / 483 |
+| Selection then PCA | 0.701023 | 242 / 308 / 360 |
+
+Selection alone is the current choice: its mean F1 is highest, although its
+third-fold F1 is slightly lower than all features. PCA was demonstrated but
+not retained in the preferred pipeline because its validation result was worse.
+PCA reduces 23 numeric fields to 16/15/16 components, retaining 95.88%/95.00%/
+95.69% numeric variance. After selection, PCA reduces 20/21/21 numeric fields
+to 15 components per fold. Variance retention does not guarantee predictive
+information retention.
+
+The preferred rule is refitted on each later training fold; complete retained
+names and component coefficients are saved in [the Step 10 evidence](../data/processed/step10/README.md).
+No global full-development mask is fitted now. These are development selection
+scores, not unbiased final performance. Nonlinear interactions may be missed;
+Step 11 should retain an all-feature control for model-family comparison. All
+35 tests pass and all 12 reference fits converged. The held-out test remains
+untouched. See [the full Step 10 report](step10_selection_and_reduction.md).
 
 ## 5. Modeling and Validation
 
-Protocol fixed: chronological development/test split and three expanding validation folds; mean cancellation-class F1 is primary, with accuracy, precision, recall, and ROC-AUC secondary. Majority baseline, logistic regression, and random forest are planned. Model fitting remains pending.
+Protocol fixed: chronological development/test split and three expanding validation folds; mean cancellation-class F1 is primary, with accuracy, precision, recall, and ROC-AUC secondary. Step 10 fitted a fixed logistic-regression reference to compare representations. Step 11 still must compare the majority baseline, logistic regression and random forest; Step 12 covers model tuning and Step 13 final test evaluation.
 
 ## 6. Hyperparameter Tuning
 
@@ -173,4 +203,4 @@ Faraaz owns Steps 1–8 and draft Sections 1–3; Sadat owns Steps 9–15 and la
 
 [2] Jesse Mostipak. Hotel Booking Demand. Kaggle. https://www.kaggle.com/datasets/jessemostipak/hotel-booking-demand . Exact version, download date, and licence pending verification.
 
-OpenAI ChatGPT/Codex assisted with scaffolding, user-approved transcription, code, testing, execution, figures, interpretation, and this draft. No predictive results have been fabricated. Notebook 01 preserves ten earlier IPython-executed audit cells and adds five Python-executed EDA cells with actual captured outputs. Notebook 03 adds five sequentially Python-executed Step 9 cells with actual outputs. Full fresh-kernel notebook execution and canonical format validation remain final gates. Produce report.pdf after completing and checking the report.
+OpenAI ChatGPT/Codex assisted with scaffolding, user-approved transcription, code, testing, execution, figures, interpretation, and this draft. No predictive results have been fabricated. Notebook 01 preserves ten earlier IPython-executed audit cells and adds five Python-executed EDA cells with actual captured outputs. Notebook 03 preserves five Step 9 cells and appends five actually Python-executed Step 10 cells. Full fresh-kernel notebook execution and canonical format validation remain final gates. Produce report.pdf after completing and checking the report.

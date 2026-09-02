@@ -1,0 +1,77 @@
+{
+  "step": 10,
+  "status": "completed",
+  "responsible_member": "Sadat",
+  "next_step": 11,
+  "next_owner": "Sadat",
+  "development_rows": 95415,
+  "test_rows_fitted_transformed_or_scored": 0,
+  "test_target_distribution_computed": false,
+  "training_label_use": "F-score selection and fixed reference classifier fitting",
+  "validation_label_use": "representation comparison only; no selector/reducer fitting",
+  "reference_model_fits": 12,
+  "model_family_comparison_completed": false,
+  "hyperparameter_tuning_completed": false,
+  "rows_removed": 0,
+  "input_sha256": {
+    "step5_candidates.csv.gz": "1721717023e4f27371e37c8e05fefccda4fbf2ef89f1e60b3fc1a026ebb7bbb9",
+    "step5_metadata.csv.gz": "24655f99f16d70acde3295c270438bdc096d5d94f5b572d649a8a9bb1927e9db",
+    "step6_assignments.csv.gz": "57b4e8bcf947059dbb3ae34e39c49306b96aa86a4ad74898966e931b63a998e1",
+    "step6_split_plan.json": "7bb32486064b85568dbaf81d821cd02ec30e6b7d5bd87837c5bbc2e99600550e",
+    "step5_target.csv.gz": "84fef5775f76c456fe531c6f262a70b16853f4bdafc6c83c42b5fa010694eabb"
+  },
+  "protocol": {
+    "modes": [
+      "full",
+      "selected",
+      "pca",
+      "selected_pca"
+    ],
+    "selection_percentile": 75,
+    "constant_variance_threshold": 1e-12,
+    "pca_numeric_variance_target": 0.95,
+    "pca_svd_solver": "full",
+    "reference_model": {
+      "family": "LogisticRegression",
+      "C": 1.0,
+      "solver": "lbfgs",
+      "max_iter": 2000,
+      "tol": 0.0001,
+      "class_weight": null,
+      "random_state": 42
+    },
+    "threshold": 0.5,
+    "primary_metric": "unweighted mean cancellation-class F1 across the three frozen folds",
+    "decision_rule": "highest mean F1; exact ties prefer lower mean output width, then declared mode order",
+    "scope": "representation selection with one fixed reference classifier; not final model-family evaluation or tuning"
+  },
+  "preferred_mode": "selected",
+  "decision_scope": "reference-logistic-regression development choice; not final best-model claim",
+  "mean_f1": 0.7136094599372149,
+  "all_feature_reference_mean_f1": 0.6930938270607898,
+  "final_feature_rule": "Refit chosen representation on each model-training fold; retain its learned names/components. Refit on all development only after final choices are frozen.",
+  "max_dense_numeric_training_bytes": 13149744,
+  "runtime": {
+    "python": "3.12.13",
+    "numpy": "2.3.5",
+    "pandas": "2.2.3",
+    "scikit_learn": "1.8.0"
+  },
+  "limitations": [
+    "F statistics are ranking heuristics, not p-values, causal effects, or independent evidence for repeated bookings.",
+    "Supervised univariate selection can miss nonlinear interactions and rare-category signal.",
+    "PCA preserves input numeric variance, not predictive information; category/indicator features are not reduced by PCA.",
+    "Selection and reduction are fitted within each training fold; retained feature identities can vary by fold.",
+    "The same development folds choose the representation, so reported CV scores are selection estimates, not unbiased final performance.",
+    "Representation rankings may differ for random forest; Step 11 must compare model families and retain a full-feature control.",
+    "No final full-development selector/PCA/model is fitted at this stage; final refit and held-out evaluation remain Step 13."
+  ],
+  "output_sha256": {
+    "data/processed/step10/comparison_protocol.json": "a3730dcaac29c6d1e25425c8631179de3070b18dee678af04ab7f4dbd8646a76",
+    "data/processed/step10/fold_results.csv": "c671941fa10311586864def13caf7c2e60b177cd448f371be8e693ef61e5cb99",
+    "data/processed/step10/representation_comparison.csv": "c964b25028792ae253a079726c3fe3e78f12f38d73a26af2e275434378097397",
+    "data/processed/step10/feature_rankings.csv": "15264197adf023b45faacbdd047c4575a3a017565767c3342025ed5645cb6311",
+    "data/processed/step10/representation_schemas.json": "636be245424773d2e4704730c8bdd9d143f86585b8006d1ddb567381c8b0a262",
+    "figures/06_numeric_pca_variance.png": "fc909c7b7ef4cd22210eab60257752b1c1c6006f0c84386bf9f94d01241825a3"
+  }
+}

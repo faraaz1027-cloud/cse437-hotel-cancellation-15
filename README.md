@@ -2,7 +2,7 @@
 
 **CSE437: Data Science | Group 15**
 
-**Status: Step 9 completed — derived features verified in development folds.** Responsible: **Sadat**. **Next: Step 10 — feature selection and dimensionality reduction, owned by Sadat.** Notebook 01 contains the audit/EDA; Notebook 02 contains Steps 5–7; Notebook 03 contains Step 9 with outputs. Report Sections 1–3 and the Step 9 part of Section 4 are drafted. Statistical selection/reduction, modeling, and the final report remain pending.
+**Status: Step 10 completed — feature selection and numeric PCA compared in development folds.** Responsible: **Sadat**. **Next: Step 11 — majority baseline and two model families, owned by Sadat.** Notebook 03 contains Steps 9–10 with outputs. Report Sections 1–4 are drafted. Step 10 used a fixed logistic-regression reference; the baseline/model-family comparison, model tuning, final test and report assembly remain pending.
 
 Resume checkpoint: [PROJECT_STATUS.md](PROJECT_STATUS.md) records completed work, remaining checks, and the next action.
 
@@ -37,7 +37,7 @@ The problem statement and question wording above are reproduced unchanged from t
 | `notebooks/` | Numbered analysis notebooks |
 | `models/` | Saved models and fitted pipelines |
 | `figures/` | Exported figures |
-| `report/report.md` | Sections 1–3 and Step 9 feature engineering drafted; later results pending |
+| `report/report.md` | Sections 1–4 drafted; later model results and final assembly pending |
 | `requirements.txt` | Starter Python dependencies |
 
 Empty `.gitkeep` files preserve folders in Git.
@@ -75,7 +75,7 @@ The uploaded CSV has been audited but is not yet committed here. Obtain it from 
 
 ## Notebook order
 
-Notebook 01 contains the raw-data audit and development EDA. Notebook 02 implements Steps 5–7. Notebook 03 implements Step 9 derived features; its Step 10 selection/reduction work is pending. Notebooks 04–05 remain starter outlines:
+Notebook 01 contains the raw-data audit and development EDA. Notebook 02 implements Steps 5–7. Notebook 03 implements Step 9 derived features and Step 10 selection/reduction. Notebooks 04–05 remain starter outlines:
 
 1. [Data audit and EDA](notebooks/01_data_audit_and_eda.ipynb)
 2. [Preprocessing](notebooks/02_preprocessing.ipynb)
@@ -119,7 +119,7 @@ python -m src.splitting
 python -m unittest discover -s tests -v
 ```
 
-The split command works with the committed processed data and rejects changes to a frozen plan. The Step 6 split remains unchanged. With Step 7 included, nineteen focused tests and all thirteen Notebook 02 code cells passed. No predictive model has been fitted or evaluated.
+The split command works with the committed processed data and rejects changes to a frozen plan. The Step 6 split remains unchanged. At Step 7, nineteen focused tests and all thirteen Notebook 02 code cells passed; no predictive model had yet been fitted or evaluated.
 
 ## Step 7 preprocessing
 
@@ -166,9 +166,31 @@ python -m unittest discover -s tests -v
 
 The four unknown guest totals stay missing before fold-fitted imputation; 604 zero-night bookings remain. No-history is distinguishable from an observed zero cancellation share. The company indicator means a code is recorded, not verified corporate payment. Calendar encoding does not establish seasonal generalization. No target values are read by the Step 9 audit and no test rows are fitted/transformed.
 
-**Next: Step 10 (Sadat)** demonstrates both feature selection and dimensionality reduction, with training-fold fitting and a justified feature-set decision. Read [PROJECT_STATUS.md](PROJECT_STATUS.md) and [HANDOFF_TO_SADAT.md](HANDOFF_TO_SADAT.md). Faraaz owns Steps 1–8; Sadat owns Steps 9–15. Assigned ownership is not a record of work already performed. Both members must review their work and record actual contributions.
+## Step 10 feature selection and dimensionality reduction
 
-The Step 7 factory preserves its 25-field baseline schema; the new Step 9 factory uses 24 retained source fields and eight derived fields. Prediction-time validity is not guaranteed; the project retains its retrospective arrival-cohort scope. Step 10 selection/reduction remains pending. A fresh separate Jupyter-kernel run remains part of final submission verification.
+Four fixed representations were compared with the same logistic-regression reference across the three frozen forward folds. Supervised selection retains the top 75% of nonconstant training features by ANOVA F ranking. Centered PCA reduces only scaled numeric fields, keeping at least 95% of their training variance; categories remain sparse.
+
+| Representation | Mean development F1 | Output widths by fold |
+| --- | ---: | --- |
+| All Step 9 features | 0.693094 | 332 / 421 / 490 |
+| Selection only — current preference | **0.713609** | 247 / 314 / 366 |
+| Numeric PCA | 0.694633 | 325 / 413 / 483 |
+| Selection then PCA | 0.701023 | 242 / 308 / 360 |
+
+Selection alone has the highest mean F1, although fold 3 is slightly worse than all features. PCA is demonstrated and documented but is not retained in the preferred representation. These are development selection scores, not final test performance or proof that this representation is best for every model family.
+
+See [the Step 10 report](report/step10_selection_and_reduction.md), [evidence and full retained lists](data/processed/step10/README.md), and [PCA variance figure](figures/06_numeric_pca_variance.png). All **35 tests** pass; all 12 reference fits converged. Notebook 03 now contains ten executed Python cells (five Step 9 outputs preserved, five new Step 10 outputs). A full fresh Jupyter-kernel run and canonical format validation remain final gates.
+
+```bash
+python -m src.representation_audit
+python -m unittest discover -s tests -v
+```
+
+Use a new `BookingRepresentation(mode="selected")` inside the model pipeline passed to CV. Fit preprocessing, ranking, selection and optional PCA only on training folds. Do not reuse a globally fitted matrix. No final full-development model is fitted and no held-out row is transformed or scored.
+
+**Next: Step 11 (Sadat)** compares the majority baseline, logistic regression and random forest, keeping an all-feature control. Read [PROJECT_STATUS.md](PROJECT_STATUS.md) and [HANDOFF_TO_SADAT.md](HANDOFF_TO_SADAT.md). Faraaz owns Steps 1–8; Sadat owns Steps 9–15. Assigned ownership is not a record of work already performed. Both members must review their work and record actual contributions.
+
+The Step 7 and Step 9 factories are preserved. Step 10 wraps the 32-field Step 9 schema with training-fold representation choices. Prediction-time validity is not guaranteed; the project retains its retrospective arrival-cohort scope. A fresh separate Jupyter-kernel run remains part of final submission verification.
 
 ## Remaining setup
 
@@ -179,6 +201,7 @@ The Step 7 factory preserves its 25-field baseline schema; the new Step 9 factor
 - [x] Complete Step 7 fold-fitted preprocessing and before/after verification.
 - [x] Complete Step 8 development-only EDA, three figures, report Sections 1–3 draft, and Sadat's handoff.
 - [x] Complete Step 9 derived features, fold verification, Notebook 03 outputs, and report explanation.
+- [x] Complete Step 10 supervised selection, centered numeric PCA, reference-model comparison and justified current representation.
 - [ ] Confirm exact source terms and add the raw dataset to the repository.
 - [ ] Record collaborators' actual contributions as work is completed.
 - [ ] Implement the notebooks and verify a fresh-environment run.
@@ -186,4 +209,4 @@ The Step 7 factory preserves its 25-field baseline schema; the new Step 9 factor
 
 ## Assistance
 
-OpenAI ChatGPT/Codex assisted with repository scaffolding, transcription of user-approved project details, the initial data-audit code, execution, figures, and interpretation, Steps 5–7 policy documentation, implementation, execution, and verification, Step 8 statistical analysis, figures, notebook outputs, report drafting and handoff, and Step 9 feature implementation, verification, notebook execution and documentation. Predictive model results have not been produced.
+OpenAI ChatGPT/Codex assisted with repository scaffolding, transcription of user-approved project details, audit/EDA, Steps 5–9 preprocessing and features, and Step 10 selection/PCA implementation, tests, reference-model comparisons, notebook outputs and documentation. Step 10 reference-model validation results are available; final model-family and held-out results remain pending.

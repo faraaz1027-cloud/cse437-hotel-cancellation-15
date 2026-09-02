@@ -1,0 +1,25 @@
+{
+  "modes": [
+    "full",
+    "selected",
+    "pca",
+    "selected_pca"
+  ],
+  "selection_percentile": 75,
+  "constant_variance_threshold": 1e-12,
+  "pca_numeric_variance_target": 0.95,
+  "pca_svd_solver": "full",
+  "reference_model": {
+    "family": "LogisticRegression",
+    "C": 1.0,
+    "solver": "lbfgs",
+    "max_iter": 2000,
+    "tol": 0.0001,
+    "class_weight": null,
+    "random_state": 42
+  },
+  "threshold": 0.5,
+  "primary_metric": "unweighted mean cancellation-class F1 across the three frozen folds",
+  "decision_rule": "highest mean F1; exact ties prefer lower mean output width, then declared mode order",
+  "scope": "representation selection with one fixed reference classifier; not final model-family evaluation or tuning"
+}
