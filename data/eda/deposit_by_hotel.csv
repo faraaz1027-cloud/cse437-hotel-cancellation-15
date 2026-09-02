@@ -1,0 +1,7 @@
+hotel,deposit_type,bookings,canceled,not_canceled,cancellation_percent
+City Hotel,No Deposit,52130,15351,36779,29.447535008632265
+City Hotel,Non Refund,10688,10664,24,99.77544910179641
+City Hotel,Refundable,9,4,5,44.44444444444444
+Resort Hotel,No Deposit,30849,6903,23946,22.376738305941846
+Resort Hotel,Non Refund,1608,1540,68,95.77114427860697
+Resort Hotel,Refundable,131,11,120,8.396946564885496

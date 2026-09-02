@@ -1,0 +1,4 @@
+deposit_type,bookings,duplicate_groups,weight_sum,weighted_canceled,equal_group_cancellation_percent
+No Deposit,82979,67054,67054.0,16395.957951340693,24.45187155328645
+Non Refund,12296,820,820.0,766.65,93.4939024390244
+Refundable,140,87,87.0,7.142857142857142,8.210180623973727

@@ -1,0 +1,11 @@
+field,distinct_categories,most_frequent,most_frequent_count
+hotel,2,City Hotel,62827
+arrival_date_month,12,October,11147
+meal,5,BB,74920
+country,166,PRT,41405
+market_segment,8,Online TA,42516
+distribution_channel,5,TA/TO,77561
+reserved_room_type,9,A,70463
+deposit_type,3,No Deposit,82979
+agent,313,9,23794
+customer_type,4,Transient,69368

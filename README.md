@@ -2,7 +2,7 @@
 
 **CSE437: Data Science | Group 15**
 
-**Status: Step 7 completed — preprocessing verified inside development training folds.** Responsible: **Faraaz**. **Next: Step 8 — development-data statistical analysis and EDA.** Notebook 01 contains the raw audit; Notebook 02 contains executed Steps 5–7. Feature engineering, selection/reduction, modeling, and the final report remain pending.
+**Status: Step 8 completed — development-data descriptive statistics and EDA.** Responsible: **Faraaz**. **Next: Step 9 — derived features, owned by Sadat.** Notebook 01 contains the raw audit and development EDA; Notebook 02 contains executed Steps 5–7. Report Sections 1–3 are drafted. Feature engineering, selection/reduction, modeling, and the final report remain pending.
 
 Resume checkpoint: [PROJECT_STATUS.md](PROJECT_STATUS.md) records completed work, remaining checks, and the next action.
 
@@ -37,7 +37,7 @@ The problem statement and question wording above are reproduced unchanged from t
 | `notebooks/` | Numbered analysis notebooks |
 | `models/` | Saved models and fitted pipelines |
 | `figures/` | Exported figures |
-| `report/report.md` | Draft report placeholder |
+| `report/report.md` | Report Sections 1–3 drafted; later sections pending |
 | `requirements.txt` | Starter Python dependencies |
 
 Empty `.gitkeep` files preserve folders in Git.
@@ -75,7 +75,7 @@ The uploaded CSV has been audited but is not yet committed here. Obtain it from 
 
 ## Notebook order
 
-Notebook 01 contains the completed raw-data audit; its development-only relationship analysis is still pending. Notebook 02 implements Steps 5–7, including verified preprocessing in the frozen development folds. Notebooks 03-05 remain starter outlines:
+Notebook 01 contains the completed raw-data audit and development-only relationship analysis. Notebook 02 implements Steps 5–7, including verified preprocessing in the frozen development folds. Notebooks 03-05 remain starter outlines:
 
 1. [Data audit and EDA](notebooks/01_data_audit_and_eda.ipynb)
 2. [Preprocessing](notebooks/02_preprocessing.ipynb)
@@ -136,7 +136,22 @@ python -m unittest discover -s tests -v
 
 Place the factory inside the model pipeline used for CV; do not prefit a transformer on all development rows. The first fold lacks several validation months, a documented limitation for Step 9 calendar-feature work. These policy exclusions do not replace Step 10 statistical feature selection/dimensionality reduction.
 
-**Next: Step 8 (Faraaz)** produces descriptive statistics, plots, and observations using development data only. Faraaz owns Steps 1–8; Sadat owns Steps 9–15. Assigned ownership is not a record of work already performed. Both members must review their work and record actual contributions.
+## Step 8 statistical analysis and EDA
+
+Descriptive statistics and relationships use only the **95,415 development bookings**. There are **34,473 cancellations (36.13%)**. Fourteen aggregate tables, three relationship figures, and five supported observations are saved in [the EDA evidence](data/eda/README.md) and [report Sections 1–3](report/report.md).
+
+- Cancellation rises from **9.43%** for lead times of 0–7 days to **80.81%** for 366+ days.
+- Non Refund bookings have a **99.25%** cancellation rate, compared with **26.82%** for No Deposit. These are observed associations; the data do not establish a causal effect of deposit policy.
+- Previous cancellations have a non-monotonic relationship with cancellation. Repeated profiles materially affect the rates: equal total weight per profile group changes the overall development rate to **25.26%**. This sensitivity analysis does not change the dataset, split, or model-training weights.
+
+See [lead time](figures/03_lead_time_cancellation.png), [deposit type](figures/04_deposit_cancellation.png), and [previous cancellations and repetition](figures/05_prior_cancellations_sensitivity.png). All 22 focused tests pass. The five new Notebook 01 EDA cells have actual Python-generated outputs; its earlier ten audit cells retain their previously executed outputs. This session did not run all cells in a fresh Jupyter kernel or perform canonical nbformat validation because those packages were unavailable. Those checks remain final gates.
+
+```bash
+python -m src.development_eda
+python -m unittest discover -s tests -v
+```
+
+**Next: Step 9 (Sadat)** implements justified derived features in Notebook 03. Read [HANDOFF_TO_SADAT.md](HANDOFF_TO_SADAT.md) first. Faraaz owns Steps 1–8; Sadat owns Steps 9–15. Assigned ownership is not a record of work already performed. Both members must review their work and record actual contributions.
 
 The initial model input schema now retains 25 source fields. Prediction-time validity is not guaranteed; the project retains its retrospective arrival-cohort scope. Step 9 derived features and Step 10 selection/reduction remain pending. A fresh separate Jupyter-kernel run remains part of final submission verification.
 
@@ -147,6 +162,7 @@ The initial model input schema now retains 25 source fields. Prediction-time val
 - [x] Complete Step 5 eligibility, direct leakage removal, grouping, and reproducible output generation.
 - [x] Complete Step 6 holdout, forward CV, metric commitments, and overlap checks.
 - [x] Complete Step 7 fold-fitted preprocessing and before/after verification.
+- [x] Complete Step 8 development-only EDA, three figures, report Sections 1–3 draft, and Sadat's handoff.
 - [ ] Confirm exact source terms and add the raw dataset to the repository.
 - [ ] Record collaborators' actual contributions as work is completed.
 - [ ] Implement the notebooks and verify a fresh-environment run.
@@ -154,4 +170,4 @@ The initial model input schema now retains 25 source fields. Prediction-time val
 
 ## Assistance
 
-OpenAI ChatGPT/Codex assisted with repository scaffolding, transcription of user-approved project details, the initial data-audit code, execution, figures, and interpretation, and Steps 5–7 policy documentation, implementation, execution, and verification. The audit reports computed data-quality findings; predictive model results have not been produced.
+OpenAI ChatGPT/Codex assisted with repository scaffolding, transcription of user-approved project details, the initial data-audit code, execution, figures, and interpretation, Steps 5–7 policy documentation, implementation, execution, and verification, and Step 8 statistical analysis, figures, notebook outputs, report drafting, and handoff documentation. Predictive model results have not been produced.
