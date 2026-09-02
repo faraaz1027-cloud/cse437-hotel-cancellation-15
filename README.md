@@ -2,7 +2,9 @@
 
 **CSE437: Data Science | Group 15**
 
-**Status: Step 6 completed — chronological holdout and forward validation frozen.** Responsible: **Faraaz**. **Next: Step 7 — fitted preprocessing.** Notebook 01 contains the raw audit; Notebook 02 contains executed Steps 5–6. Fitted preprocessing, development-only EDA, modeling, and the final report remain pending.
+**Status: Step 7 completed — preprocessing verified inside development training folds.** Responsible: **Faraaz**. **Next: Step 8 — development-data statistical analysis and EDA.** Notebook 01 contains the raw audit; Notebook 02 contains executed Steps 5–7. Feature engineering, selection/reduction, modeling, and the final report remain pending.
+
+Resume checkpoint: [PROJECT_STATUS.md](PROJECT_STATUS.md) records completed work, remaining checks, and the next action.
 
 ## Project
 
@@ -73,7 +75,7 @@ The uploaded CSV has been audited but is not yet committed here. Obtain it from 
 
 ## Notebook order
 
-Notebook 01 contains the completed raw-data audit; its development-only relationship analysis is still pending. Notebook 02 implements Steps 5–6; fitted preprocessing is pending. Notebooks 03-05 remain starter outlines:
+Notebook 01 contains the completed raw-data audit; its development-only relationship analysis is still pending. Notebook 02 implements Steps 5–7, including verified preprocessing in the frozen development folds. Notebooks 03-05 remain starter outlines:
 
 1. [Data audit and EDA](notebooks/01_data_audit_and_eda.ipynb)
 2. [Preprocessing](notebooks/02_preprocessing.ipynb)
@@ -93,9 +95,9 @@ The audit's 10 code cells were executed sequentially with real outputs in a fres
 
 ## Step 5 eligibility results
 
-Step 5 retained **119,210 bookings with 29 candidate predictors**, excluded **180 known-zero-guest records**, and separated the target from the predictors. Both reservation-status columns are absent from predictors. Retained values are unchanged; anomalies are flagged and duplicates are grouped. No learned transformations have been fitted.
+Step 5 retained **119,210 bookings with 29 candidate predictors**, excluded **180 known-zero-guest records**, and separated the target from the predictors. Both reservation-status columns are absent from predictors. Retained values are unchanged; anomalies are flagged and duplicates are grouped. Step 7 now fits separate preprocessing components within development training folds.
 
-The four verified row-level processed files are published in `data/processed/`, alongside the code, aggregate results, and output hashes. Step 6 now supplies separate frozen evaluation assignments; imputation, encoding, and scaling remain pending.
+The four verified row-level processed files are published in `data/processed/`, alongside the code, aggregate results, and output hashes. Step 6 supplies frozen evaluation assignments, and Step 7 supplies reusable fold-fitted imputation, encoding, and scaling.
 
 See the [Step 5 decision report](report/step5_eligibility.md), [executed Notebook 02](notebooks/02_preprocessing.ipynb), and [processed data instructions](data/processed/README.md). To regenerate from the original CSV:
 
@@ -117,11 +119,26 @@ python -m src.splitting
 python -m unittest discover -s tests -v
 ```
 
-The split command works with the committed processed data and rejects changes to a frozen plan. Eleven focused tests and all nine Notebook 02 code cells passed. No predictive model has been fitted or evaluated.
+The split command works with the committed processed data and rejects changes to a frozen plan. The Step 6 split remains unchanged. With Step 7 included, nineteen focused tests and all thirteen Notebook 02 code cells passed. No predictive model has been fitted or evaluated.
 
-**Next: Step 7 (Faraaz)** implements preprocessing inside each training fold. Faraaz owns Steps 1–8; Sadat owns Steps 9–15. Assigned ownership is not a record of work already performed. Both members must review their work and record actual contributions.
+## Step 7 preprocessing
 
-The 29 fields remain candidate features; prediction-time availability and the final feature set still require review. A fresh separate Jupyter-kernel run remains part of final submission verification.
+Step 7 uses **25 initial source fields** after excluding the sparse company ID and three fields with uncertain post-booking timing. Numeric medians, scaling statistics, and one-hot vocabularies are learned separately within each training fold. Negative ADR is treated as missing; zero/high positive prices remain and ADR is log-transformed. Unknown country and no-agent values remain distinct. Missing children/ADR receive fixed indicators.
+
+All three train/validation pairs contain finite encoded values. Output widths are **328, 422, and 491** as the training vocabularies grow; each fold's training and validation widths match. Test rows are not fitted or transformed. Both scaled and tree-compatible unscaled variants passed checks.
+
+See the [Step 7 report](report/step7_preprocessing.md), [summary and schemas](data/processed/step7/README.md), and [preprocessing factory](src/preprocessing.py). Reproduce from the committed data:
+
+```bash
+python -m src.preprocessing_audit
+python -m unittest discover -s tests -v
+```
+
+Place the factory inside the model pipeline used for CV; do not prefit a transformer on all development rows. The first fold lacks several validation months, a documented limitation for Step 9 calendar-feature work. These policy exclusions do not replace Step 10 statistical feature selection/dimensionality reduction.
+
+**Next: Step 8 (Faraaz)** produces descriptive statistics, plots, and observations using development data only. Faraaz owns Steps 1–8; Sadat owns Steps 9–15. Assigned ownership is not a record of work already performed. Both members must review their work and record actual contributions.
+
+The initial model input schema now retains 25 source fields. Prediction-time validity is not guaranteed; the project retains its retrospective arrival-cohort scope. Step 9 derived features and Step 10 selection/reduction remain pending. A fresh separate Jupyter-kernel run remains part of final submission verification.
 
 ## Remaining setup
 
@@ -129,6 +146,7 @@ The 29 fields remain candidate features; prediction-time availability and the fi
 - [x] Audit the supplied CSV and record source identity, dimensions, and quality findings.
 - [x] Complete Step 5 eligibility, direct leakage removal, grouping, and reproducible output generation.
 - [x] Complete Step 6 holdout, forward CV, metric commitments, and overlap checks.
+- [x] Complete Step 7 fold-fitted preprocessing and before/after verification.
 - [ ] Confirm exact source terms and add the raw dataset to the repository.
 - [ ] Record collaborators' actual contributions as work is completed.
 - [ ] Implement the notebooks and verify a fresh-environment run.
@@ -136,4 +154,4 @@ The 29 fields remain candidate features; prediction-time availability and the fi
 
 ## Assistance
 
-OpenAI ChatGPT/Codex assisted with repository scaffolding, transcription of user-approved project details, the initial data-audit code, execution, figures, and interpretation, and Steps 5–6 policy documentation, implementation, execution, and verification. The audit reports computed data-quality findings; predictive model results have not been produced.
+OpenAI ChatGPT/Codex assisted with repository scaffolding, transcription of user-approved project details, the initial data-audit code, execution, figures, and interpretation, and Steps 5–7 policy documentation, implementation, execution, and verification. The audit reports computed data-quality findings; predictive model results have not been produced.

@@ -1,6 +1,6 @@
 # Step 5 outputs
 
-Steps 5 and 6 are complete. The verified split assignments, frozen plan, and loading instructions are in [../splits/](../splits/README.md). Next: Step 7, fitted preprocessing (Faraaz).
+Steps 5–7 are complete. The original Step 5 files below are preserved. Frozen splits are in [../splits/](../splits/README.md); Step 7 preprocessing evidence and reuse instructions are in [step7/](step7/README.md). Next: Step 8, development-data statistical analysis and EDA (Faraaz).
 
 **Publication status:** all four verified row-level data files are committed
 in this repository, with the aggregate summary, hashes, code, and notebook
@@ -46,10 +46,12 @@ metadata = pd.read_csv(data_dir / 'step5_metadata.csv.gz')
 assert len(X) == len(y) == len(metadata)
 ```
 
-The negative ADR remains negative here and is flagged for the documented
-Step 7 treatment. Missing fields and sparse company codes also remain.
-Drop or transform these only through the later documented preprocessing.
-Candidate availability at the intended prediction time still needs review.
+The original Step 5 candidate file retains its negative ADR, missing values,
+and company codes. Step 7 applies documented domain rules and training-fitted
+preprocessing through the pipeline without modifying this source copy. Its
+initial schema uses 25 source fields; the three post-booking-timing fields and
+company ID are excluded. Candidate availability at booking creation is still
+not established by these retrospective source snapshots.
 
 Duplicate groups are defined by the 29 candidate columns, excluding target
 and outcome-status fields, with missing values grouped consistently. A group's
