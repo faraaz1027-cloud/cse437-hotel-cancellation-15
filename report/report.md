@@ -29,9 +29,9 @@ Hotel booking cancellations can cause loss of money and make room planning diffi
 
 ### 1.2 Dataset
 
-The supplied Hotel Booking Demand CSV has 119,390 rows, 32 columns and 16,855,599 bytes, covering arrivals from 1 July 2015 to 31 August 2017. It contains 79,330 City Hotel and 40,060 Resort Hotel records. Antonio et al. describe extraction from hotel property-management databases [1]. The Kaggle distribution by Jesse Mostipak acknowledges earlier preparation by Thomas Mock and Antoine Bichat [2]. This project uses that supplied combined CSV; it does not scrape or merge another dataset.
+The supplied Hotel Booking Demand CSV has 119,390 rows, 32 columns and 16,855,599 bytes, covering arrivals from 1 July 2015 to 31 August 2017. It contains 79,330 City Hotel and 40,060 Resort Hotel records. The Kaggle distribution by Jesse Mostipak acknowledges earlier preparation by Thomas Mock and Antoine Bichat [1]. This project uses that supplied combined CSV; it does not scrape or merge another dataset.
 
-Kaggle's public metadata lists CC BY 4.0, which permits redistribution subject to attribution and other terms [2,3]. The current metadata version is 1; the original acquisition date and acquired version remain unknown, as confirmed by the user. The unchanged source checksum and acquisition instructions are in [data/README.md](../data/README.md). The original CSV is publicly committed; its Git blob matches the checksum-verified source. Its size is below the faculty's 50 MB threshold.
+Kaggle's public metadata lists the dataset licence as CC BY 4.0 [1]. The current metadata version is 1; the original acquisition date and acquired version remain unknown, as confirmed by the user. The licence information, unchanged source checksum and acquisition instructions are in [data/README.md](../data/README.md). The original CSV is publicly committed; its Git blob matches the checksum-verified source. Its size is below the faculty's 50 MB threshold.
 
 ### 1.3 Target variable
 
@@ -64,7 +64,7 @@ Both reservation_status and reservation_status_date encode outcomes and are excl
 
 ### 2.2 Missing values
 
-Mechanisms are unverified. Agent/company NULLs are treated as potentially structural under the source convention [1]. Country/children/invalid ADR have unknown mechanisms; missing completely at random is not assumed.
+Mechanisms are unverified. Agent/company NULLs are treated as potentially structural, for example when no agent or company is associated with a booking; this is a working interpretation, not a confirmed missingness mechanism. Country/children/invalid ADR have unknown mechanisms; missing completely at random is not assumed.
 
 | Field | Treatment and rationale |
 | --- | --- |
@@ -335,15 +335,7 @@ The group confirms that both members completed their assigned responsibilities b
 
 ## References
 
-[1] Antonio, N., de Almeida, A., and Nunes, L. (2019). Hotel booking demand datasets. Data in Brief, 22, 41-49. [Original article](https://doi.org/10.1016/j.dib.2018.11.126).
-
-[2] Mostipak, J. Hotel booking demand. [Kaggle dataset](https://www.kaggle.com/datasets/jessemostipak/hotel-booking-demand). [Public metadata](https://www.kaggle.com/api/v1/datasets/view/jessemostipak/hotel-booking-demand), verified 2 September 2026: CC BY 4.0; current version 1. Original acquired version/date unknown. Metadata credits earlier preparation by Thomas Mock and Antoine Bichat for TidyTuesday.
-
-[3] Creative Commons. [Attribution 4.0 International licence](https://creativecommons.org/licenses/by/4.0/). Source attribution is retained; raw bytes are unchanged and project preprocessing is documented separately. No endorsement by the original authors or distributor is implied.
-
-[4] Pedregosa, F., et al. (2011). Scikit-learn: Machine Learning in Python. Journal of Machine Learning Research, 12, 2825-2830. [Article](https://jmlr.org/papers/v12/pedregosa11a.html). Implementation: scikit-learn 1.8.0.
-
-[5] [NumPy](https://numpy.org/), [pandas](https://pandas.pydata.org/), [SciPy](https://scipy.org/), [Matplotlib](https://matplotlib.org/), [seaborn](https://seaborn.pydata.org/), [joblib](https://joblib.readthedocs.io/), [Jupyter](https://jupyter.org/), and [ReportLab](https://www.reportlab.com/). Direct versions are pinned in requirements.txt; the resolved Linux/Python 3.12 environment is recorded in data/processed/reference_environment.txt.
+[1] Mostipak, J. Hotel booking demand. [Kaggle dataset](https://www.kaggle.com/datasets/jessemostipak/hotel-booking-demand). Original dataset authors: Antonio, N., de Almeida, A., and Nunes, L. Metadata credits earlier preparation by Thomas Mock and Antoine Bichat for TidyTuesday. Public dataset metadata was verified on 2 September 2026: CC BY 4.0; current version 1. Original acquired version/date unknown. Raw bytes are unchanged; project preprocessing is documented separately. No endorsement by the original authors or distributor is implied.
 
 ### AI assistance declaration
 
