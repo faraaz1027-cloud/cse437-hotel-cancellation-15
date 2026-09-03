@@ -12,7 +12,7 @@ import sys
 
 
 SOURCE_URL = 'https://github.com/faraaz1027-cloud/cse437-hotel-cancellation-15.git'
-SOURCE_COMMIT = '__CLEAN_LAYOUT_COMMIT__'
+SOURCE_COMMIT = '77ae899ba79f4f78a4d1c551fae1d08ea42c4765'
 ANALYSIS_PACKAGES = {
     'numpy': ('numpy', '2.3.5'),
     'pandas': ('pandas', '2.2.3'),
