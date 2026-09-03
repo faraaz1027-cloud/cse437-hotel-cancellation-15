@@ -74,8 +74,8 @@ Random Forest achieves test F1 **0.723115**; the majority baseline has F1 **0**.
 
 ## Reproducibility status
 
-The previous dependency check and 58-test suite passed. Existing notebook outputs retain their original execution provenance; presentation cleanup is not a new execution.
+The supplied Step 15.3 Windows run passed dependency checks, 70 unit tests and all five fresh-kernel notebooks with zero cell errors. Existing published notebook outputs retain their original execution provenance; the supplied executed copies are separate verification evidence.
 
-A subsequent local audit completed notebooks 01–04 but failed notebook 05 with **`Frozen Step 12 model settings changed.`** The workflow now separates the new development selection from the published evaluation. It reports score/selection differences rather than bypassing model-integrity checks. The underlying numerical cause remains unconfirmed, and fresh-kernel verification of this repair is pending. See [repair notes](report/reproducibility_repair.md). Historical verification records describe their original runs, not the currently edited files.
+A previous audit failed notebook 05 with **`Frozen Step 12 model settings changed.`** The repaired workflow passed execution by isolating new development evidence from frozen evaluation, without bypassing integrity checks. The rerun still selected balanced LR with C=0.1 instead of C=1; the numerical cause is unconfirmed. Final-test evidence was checked from cache, not retrained. The supplied archive does not establish the full checkout's exact commit. See the [verification review](report/verification_review.md) and [repair notes](report/reproducibility_repair.md). Historical verification records describe their original runs, not the currently edited files.
 
-Final verification, the raw-publication recheck, member-confirmed contributions and the required author declaration remain pending. See [FINAL_CHECKS.md](FINAL_CHECKS.md). This repository is not yet declared submission-ready.
+Both members' assigned responsibilities are user-confirmed and recorded in the report. The author-supplied AI declaration is provisional. Final declaration review, raw-publication recheck, attributable commit checks and joint submission review remain pending. See [FINAL_CHECKS.md](FINAL_CHECKS.md). This repository is not yet declared submission-ready.

@@ -9,7 +9,7 @@ A leakage-aware, chronological comparison of Logistic Regression and Random Fore
 | Faraaz Jamil Chowdhury | 24241205 |
 | Ihfaz Rashid Sadat | 23301499 |
 
-**Report date:** 2 September 2026
+**Report date:** 3 September 2026
 
 **Repository:** [cse437-hotel-cancellation-15](https://github.com/faraaz1027-cloud/cse437-hotel-cancellation-15)
 
@@ -17,7 +17,7 @@ A leakage-aware, chronological comparison of Logistic Regression and Random Fore
 
 Hotel cancellations complicate revenue planning and room allocation. This project uses the Hotel Booking Demand dataset, containing 119,390 city and resort hotel reservations, to predict the binary target is_canceled. After excluding 180 confirmed zero-guest records, a chronological design reserves 95,415 bookings for development and 23,795 later bookings for testing. Missing-value handling, encoding, feature selection and numeric transformations are fitted only within training partitions. Logistic Regression and Random Forest are compared with a majority baseline; numeric PCA is evaluated but not retained because selection alone performs better in development. Grid search selects balanced Logistic Regression with C=1 and a fixed 0.5 threshold. It achieves test F1 of 0.7506, accuracy of 76.09% and recall of 88.03%. The most important finding is that deposit type has a pronounced association with cancellation, although retrospective recording and repeated booking profiles prevent a causal interpretation. Random Forest and baseline test scores are disclosed as a later reporting supplement, not a new selection exercise. False alerts, weaker short-lead performance and uncalibrated probabilities limit operational use.
 
-**Submission status:** Technical report assembled from recorded evidence. Fresh-kernel verification, raw-data repository publication and member-confirmed contributions remain open. The original CSE437 document and frozen selected-model results are unchanged.
+**Submission status:** Five-notebook execution passed with numerical reproduction differences. Assigned contributions are user-confirmed; final declaration review, raw-publication recheck and joint submission review remain open. The original CSE437 document and frozen selected-model results are unchanged.
 
 <!-- pagebreak -->
 
@@ -31,7 +31,7 @@ Hotel booking cancellations can cause loss of money and make room planning diffi
 
 The supplied Hotel Booking Demand CSV has 119,390 rows, 32 columns and 16,855,599 bytes, covering arrivals from 1 July 2015 to 31 August 2017. It contains 79,330 City Hotel and 40,060 Resort Hotel records. Antonio et al. describe extraction from hotel property-management databases [1]. The Kaggle distribution by Jesse Mostipak acknowledges earlier preparation by Thomas Mock and Antoine Bichat [2]. This project uses that supplied combined CSV; it does not scrape or merge another dataset.
 
-Kaggle's public metadata lists CC BY 4.0, which permits redistribution subject to attribution and other terms [2,3]. The current metadata version is 1; the original acquisition date and acquired version remain unknown, as confirmed by the user. The unchanged source checksum and acquisition instructions are in [data/README.md](../data/README.md). Raw CSV publication is still pending; its size is below the faculty's 50 MB threshold.
+Kaggle's public metadata lists CC BY 4.0, which permits redistribution subject to attribution and other terms [2,3]. The current metadata version is 1; the original acquisition date and acquired version remain unknown, as confirmed by the user. The unchanged source checksum and acquisition instructions are in [data/README.md](../data/README.md). Raw CSV publication is reported complete by the group; an independent recheck remains pending. Its size is below the faculty's 50 MB threshold.
 
 ### 1.3 Target variable
 
@@ -316,6 +316,7 @@ The [Step 14 synthesis](step14_research_answers.md) and the frozen Step 10/12/13
 - One later-arrival holdout has partial seasonal coverage and higher cancellation prevalence. Reused development folds, finite search and reference-LR-only PCA comparisons limit generalization and claims of improvement.
 - The supplementary RF/baseline test comparison was authorized after LR results were known. Its timing is disclosed, and no choice was changed in response.
 - Model outputs are not calibrated probabilities; costs of false alerts and misses are not measured. Automated overbooking or production deployment is not justified.
+- Numerical reproduction is incomplete: the Windows development rerun selected balanced LR with C=0.1 rather than the original C=1. The numerical cause is unconfirmed. Rerun evidence is isolated; the published selection and cached test results were not replaced or retrained.
 
 Future work should first verify predictor availability at the intended decision time. Deposit ablation, calibration, cost-sensitive thresholds and evaluation across additional hotels/time periods require a new predeclared design with fresh evaluation data. These are proposed experiments, not completed improvements.
 
@@ -323,14 +324,14 @@ Future work should first verify predictor availability at the intended decision 
 
 ## 9. Contributions
 
-Each member's actual implementation and review contributions require confirmation before submission. These pending records do not assert unverified personal authorship.
+The group confirms that both members completed their assigned responsibilities below. This is a member-reported contribution record, not an independent authorship audit.
 
 | Member | Student ID | Contribution record |
 | --- | --- | --- |
-| Faraaz Jamil Chowdhury | 24241205 | Actual implementation, review work and attributable commit links: pending member confirmation. |
-| Ihfaz Rashid Sadat | 23301499 | Actual implementation, review work and attributable commit links: pending member confirmation. |
+| Faraaz Jamil Chowdhury | 24241205 | First half: planning, dataset preparation and provenance, data audit, cleaning/preprocessing, split design, descriptive statistics and EDA. |
+| Ihfaz Rashid Sadat | 23301499 | Second half: feature engineering, selection/PCA, model comparison and tuning, evaluation/error analysis, reproduction checks and report assembly. |
 
-**Open sign-off:** Both members must review the analysis and replace these unconfirmed records with truthful contribution statements. Commit account identity alone does not establish personal authorship.
+**Joint review:** Both members must review, compare and be able to explain the whole project before submission. Final joint sign-off and attributable commit checks remain pending; account identity alone does not establish authorship.
 
 ## References
 
@@ -344,6 +345,10 @@ Each member's actual implementation and review contributions require confirmatio
 
 [5] [NumPy](https://numpy.org/), [pandas](https://pandas.pydata.org/), [SciPy](https://scipy.org/), [Matplotlib](https://matplotlib.org/), [seaborn](https://seaborn.pydata.org/), [joblib](https://joblib.readthedocs.io/), [Jupyter](https://jupyter.org/), and [ReportLab](https://www.reportlab.com/). Direct versions are pinned in requirements.txt; the resolved Linux/Python 3.12 environment is recorded in requirements-lock.txt.
 
-**Required declaration:** Pending author completion before submission.
+### AI assistance declaration
 
-**Reproducibility and submission status:** The 58-test suite and all five notebooks' canonical-format checks pass; the dependency consistency check passes. Existing notebook outputs retain their original execution provenance. Fresh-kernel execution was blocked on the original host. A subsequent local audit completed notebooks 01-04 but failed notebook 05 with 'Frozen Step 12 model settings changed.' This unresolved mismatch prevents an end-to-end reproducibility claim. The local runner and [final-check instructions](../FINAL_CHECKS.md) are supplied. The raw CSV still needs publication in data/raw/ after source attribution; the source link and checksum are available. The PDF is within the 10-page limit, but the repository is not declared submission-ready until these checks and contribution sign-off are complete.
+ChatGPT assisted with project planning and work division. Antigravity assisted with diagnostic and verification runs.
+
+**Declaration status:** Author-supplied provisional wording; final review pending.
+
+**Reproducibility and submission status:** The supplied Windows verification passed dependency checks, 70 tests and all five fresh-kernel notebooks with zero cell errors. Original and frozen evidence remained unchanged; final-test evaluation verified cached results, not a refit. Development tuning differed: C=1 balanced mean F1 changed from 0.732102 to 0.731371, below C=0.1 balanced at 0.731697. Execution passed with a numerical warning, not exact reproduction. Notebook sources match the repair, but the supplied archive does not establish the full checkout's exact commit. See the [verification review](verification_review.md) and [final checks](../FINAL_CHECKS.md). Existing published outputs retain their original provenance. This 10-page report is not a submission-readiness certification; the declaration, raw-publication recheck and joint final review remain open.

@@ -1,6 +1,6 @@
 # Reproducibility and submission requirements
 
-The Step 15.1 workflow repair is implemented; full fresh-kernel verification is the next check. Unit tests do not certify the complete notebook run.
+The Step 15.1 workflow repair is implemented. The supplied Step 15.3 run completed all five notebooks in fresh kernels with zero errors and passed 70 tests. Execution passed with numerical reproduction differences, not an unqualified reproduction pass. See [verification review](report/verification_review.md).
 
 ## Diagnosed execution issue and repair
 
@@ -45,14 +45,14 @@ Interpret the result explicitly:
 | 2 | All five notebooks executed, but development evidence differs. `status` is `passed_with_reproduction_differences`; review is still required. |
 | 1 | Execution or integrity failed; retain diagnostics and do not mark verification complete. |
 
-Require five completed notebooks, zero cell errors, `original_repository_unchanged: true` and `frozen_evidence_unchanged: true`. A changed winner must be reported, never promoted to the original test evaluation. Do not change tolerances, settings or assertions merely to obtain exit code 0. Fresh-kernel validation of this repair remains pending until a real run is reviewed.
+Require five completed notebooks, zero cell errors, `original_repository_unchanged: true` and `frozen_evidence_unchanged: true`. These conditions are present in the reviewed Step 15.3 bundle. A changed winner must be reported, never promoted to the original test evaluation. Do not change tolerances, settings or assertions merely to obtain exit code 0. The supplied archive lacks exact checkout commit provenance; a final exact-commit check remains pending. The numerical warning is documented, not resolved.
 
 `report/final_verification.json` is a historical snapshot. Its earlier hashes and execution status do not certify files edited during cleanup.
 
 ## Report and authorship
 
-- Confirm each member's actual implementation/review work and attributable commits; replace pending contribution records with truthful statements.
-- Complete the required declaration before submission.
+- Assigned responsibilities are confirmed by the group and recorded in the report; verify attributable commits and complete joint review of the whole project.
+- Review and finalize the author-supplied provisional declaration before submission, ensuring it accurately covers the assistance used.
 - Rebuild the PDF after report changes with `python scripts/build_report_pdf.py`; inspect every page and retain the 10-page limit.
 - Preserve late-comparison timing, source limitations and unresolved checks.
 - Confirm that raw data, five executed notebooks, code, dependencies, figures, saved model and both report formats are publicly accessible.

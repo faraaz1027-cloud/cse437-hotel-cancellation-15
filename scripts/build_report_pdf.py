@@ -150,7 +150,7 @@ def page_chrome(canvas, doc):
     canvas.drawString(44, A4[1] - 26, 'CSE437  /  DATA SCIENCE  /  GROUP 15')
     canvas.drawRightString(A4[0] - 44, A4[1] - 26, 'SECTION 05  |  SUMMER 2026')
     canvas.setFillColor(colors.HexColor('#647487'))
-    canvas.drawString(44, 26, 'Technical report - final verification and member sign-off pending')
+    canvas.drawString(44, 26, 'Technical report - final declaration and submission review pending')
     canvas.drawRightString(A4[0] - 44, 26, str(doc.page))
     canvas.restoreState()
 
