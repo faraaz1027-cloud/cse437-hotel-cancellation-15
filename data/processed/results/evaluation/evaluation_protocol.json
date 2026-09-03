@@ -1,0 +1,64 @@
+{
+  "analysis": "evaluation",
+  "official_evaluation": "fit frozen tuning pipeline on development; score final test once",
+  "selection_source": "data/processed/results/tuning/final_selection.json",
+  "family": "logistic_regression",
+  "representation": "selected",
+  "model_parameters": {
+    "C": 1.0,
+    "class_weight": "balanced"
+  },
+  "threshold": 0.5,
+  "threshold_rule": "class 1 when probability >= 0.5",
+  "metrics": [
+    "f1",
+    "accuracy",
+    "precision",
+    "recall",
+    "roc_auc"
+  ],
+  "additional_probability_diagnostic": "Brier score",
+  "subgroups": [
+    "hotel",
+    "lead_time_band",
+    "deposit_type",
+    "market_segment",
+    "customer_type"
+  ],
+  "lead_time_bands": {
+    "edges": [
+      -1,
+      7,
+      30,
+      90,
+      180,
+      365,
+      null
+    ],
+    "labels": [
+      "0–7",
+      "8–30",
+      "31–90",
+      "91–180",
+      "181–365",
+      "366+"
+    ]
+  },
+  "probability_bins": [
+    0,
+    0.1,
+    0.2,
+    0.3,
+    0.4,
+    0.5,
+    0.6,
+    0.7,
+    0.8,
+    0.9,
+    1.0
+  ],
+  "error_examples": "per FP/FN: five most confident plus five closest to threshold among remaining errors",
+  "subgroup_policy": "descriptive post-evaluation diagnostics only; no model, feature or threshold changes",
+  "test_policy": "report results plainly; never reselect or retune from held-out scores",
+  "saved_model": "models/final_logistic_regression.joblib"
+}

@@ -1,4 +1,4 @@
-"""Step 6: fixed arrival-date holdout and forward development validation.
+"""validation: fixed arrival-date holdout and forward development validation.
 
 Run from the repository root with: python -m src.splitting
 Only dates, row identities, and duplicate-group identities determine the split.
@@ -48,7 +48,7 @@ def check_assignments(assignments: pd.DataFrame) -> dict:
     """Validate time ordering, row/group separation, and forward fold roles."""
     a = assignments
     if not np.array_equal(a["cohort_row"].to_numpy(), np.arange(len(a))):
-        raise ValueError("Cohort row order must match the Step 5 files exactly.")
+        raise ValueError("Cohort row order must match the eligibility files exactly.")
     if a["source_row_id"].isna().any() or not a["source_row_id"].is_unique:
         raise ValueError("Source row IDs must be present and unique.")
     if a["duplicate_group_id"].isna().any():
@@ -143,8 +143,7 @@ def make_assignments(metadata: pd.DataFrame):
             "excluded_test_rows": int((~dev).sum())})
     checks = check_assignments(a)
     plan = {
-        "step": 6, "status": "completed", "responsible_member": "Faraaz", "next_step": 7,
-        "policy_version": POLICY_VERSION,
+        'analysis': 'validation', "status": "completed", "policy_version": POLICY_VERSION,
         "design": "retrospective_arrival_cohort_holdout_with_expanding_forward_validation",
         "boundary_rule": "nearest prefix row count at whole dates; earlier date wins ties",
         "development_fraction_requested": DEVELOPMENT_FRACTION,
@@ -164,14 +163,14 @@ def make_assignments(metadata: pd.DataFrame):
                            "default_probability_threshold": 0.5, "zero_division": 0},
         "secondary_metrics": ["accuracy", "precision", "recall", "ROC-AUC"],
         "planned_models": ["DummyClassifier(strategy=most_frequent)", "LogisticRegression", "RandomForestClassifier"],
-        "selection_policy": "Select features, transformations, hyperparameters and any threshold using development folds only; freeze choices, refit on all development rows, evaluate test once in Step 13.",
+        "selection_policy": "Select features, transformations, hyperparameters and any threshold using development folds only; freeze choices, refit on all development rows, evaluate test once in evaluation.",
         "limitations": [
             "Arrival-date cohorts are not booking-creation snapshots or verified real-time label availability.",
             "All source rows and basic quality summaries were available before holdout construction.",
             "No temporal embargo is applied; this is retrospective evaluation, not simulated live retraining.",
             "Later-season holdout performance may reflect seasonality and distribution changes.",
             "Previously inspected candidate feature availability must be reviewed before modeling.",
-            "Duplicate protection covers the recorded Step 5 candidate groups; no guest or real booking ID is available.",
+            "Duplicate protection covers the recorded eligibility candidate groups; no guest or real booking ID is available.",
         ],
     }
     return a, plan
@@ -191,11 +190,11 @@ def development_cv(assignments: pd.DataFrame):
              np.flatnonzero(dev[f"cv_fold_{fold}"].eq("validation"))) for fold in range(1, 4)]
 
 
-def run_step6(processed_dir: Path, output_dir: Path):
-    metadata_path = processed_dir / "step5_metadata.csv.gz"
+def run_validation(processed_dir: Path, output_dir: Path):
+    metadata_path = processed_dir / "eligibility_metadata.csv.gz"
     if hashlib.sha256(metadata_path.read_bytes()).hexdigest() != METADATA_SHA256:
-        raise ValueError("Step 5 metadata changed; review the cohort before revising the frozen split.")
-    upstream = json.loads((processed_dir / "step5_summary.json").read_text(encoding="utf-8"))
+        raise ValueError("eligibility metadata changed; review the cohort before revising the frozen split.")
+    upstream = json.loads((processed_dir / "eligibility_summary.json").read_text(encoding="utf-8"))
     inputs = {}
     # Hash for lineage only: do not parse target values or compute test statistics.
     for name, record in upstream["outputs"].items():
@@ -212,7 +211,7 @@ def run_step6(processed_dir: Path, output_dir: Path):
     with gzip.GzipFile(filename="", mode="wb", fileobj=buffer, mtime=0) as archive:
         archive.write(csv_bytes)
     assignment_bytes = buffer.getvalue()
-    plan["assignment_file"] = "step6_assignments.csv.gz"
+    plan["assignment_file"] = "validation_assignments.csv.gz"
     path = output_dir / plan["assignment_file"]
     # Compare logical CSV bytes across compression/runtime versions and retain
     # the original compressed artifact whenever the assignments are unchanged.
@@ -226,7 +225,7 @@ def run_step6(processed_dir: Path, output_dir: Path):
     plan["upstream_output_sha256"] = inputs
     plan["source_sha256"] = upstream["source_sha256"]
     plan["runtime"] = {"python": platform.python_version(), "pandas": pd.__version__, "numpy": np.__version__}
-    plan_path = output_dir / "step6_split_plan.json"
+    plan_path = output_dir / "validation_split_plan.json"
     if plan_path.exists():
         frozen_plan = json.loads(plan_path.read_text(encoding="utf-8"))
         if ({k: v for k, v in frozen_plan.items() if k != "runtime"} !=
@@ -245,9 +244,9 @@ def main():
     root = Path(__file__).resolve().parents[1]
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--processed", type=Path, default=root / "data/processed")
-    parser.add_argument("--output", type=Path, default=root / "data/splits")
+    parser.add_argument("--output", type=Path, default=root / "data/processed/splits")
     args = parser.parse_args()
-    _, plan = run_step6(args.processed, args.output)
+    _, plan = run_validation(args.processed, args.output)
     print(json.dumps({k: plan[k] for k in ["partitions", "folds", "checks", "assignment_sha256"]}, indent=2))
 
 

@@ -1,4 +1,4 @@
-"""Step 11 unfitted baseline/classifier pipelines and consistent metrics."""
+"""model comparison unfitted baseline/classifier pipelines and consistent metrics."""
 from __future__ import annotations
 import numpy as np
 from sklearn.dummy import DummyClassifier
@@ -36,7 +36,7 @@ def make_model_pipeline(family, representation='selected'):
         if representation!='none': raise ValueError('The majority baseline requires representation="none".')
         return Pipeline([('model',DummyClassifier(strategy='most_frequent',random_state=42))])
     if family not in MODEL_SETTINGS or representation not in ('full','selected'):
-        raise ValueError('Unknown Step 11 model family or representation.')
+        raise ValueError('Unknown model comparison model family or representation.')
     model = (LogisticRegression(**MODEL_SETTINGS[family]) if family=='logistic_regression'
              else RandomForestClassifier(**MODEL_SETTINGS[family]))
     features=BookingRepresentation(mode=representation,percentile=75,variance_target=.95,

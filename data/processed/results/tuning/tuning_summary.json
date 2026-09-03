@@ -1,0 +1,59 @@
+{
+  "analysis": "tuning",
+  "status": "completed",
+  "development_rows": 95415,
+  "candidates": 20,
+  "model_fits": 60,
+  "folds": 3,
+  "preferred_candidate": "lr_06",
+  "preferred_family": "logistic_regression",
+  "mean_f1": 0.7321017246390454,
+  "untuned_controls_match_model_comparison": true,
+  "control_parity_policy": {
+    "threshold_metrics_and_logistic_auc_atol": 1e-12,
+    "forest_auc_atol": 1e-07,
+    "note": "First strict audit detected forest AUC drift up to 1.14e-8; only the numerical check was relaxed, not scoring or selection."
+  },
+  "convergence_warnings": 0,
+  "failed_fits": 0,
+  "test_rows_fitted_transformed_or_scored": 0,
+  "test_target_distribution_computed": false,
+  "full_development_model_fitted": false,
+  "threshold_tuned": false,
+  "input_sha256": {
+    "eligibility_candidates.csv.gz": "1721717023e4f27371e37c8e05fefccda4fbf2ef89f1e60b3fc1a026ebb7bbb9",
+    "eligibility_metadata.csv.gz": "24655f99f16d70acde3295c270438bdc096d5d94f5b572d649a8a9bb1927e9db",
+    "validation_assignments.csv.gz": "57b4e8bcf947059dbb3ae34e39c49306b96aa86a4ad74898966e931b63a998e1",
+    "validation_split_plan.json": "399e6c5c3e71d45e7d43b775185dfc3402d51ebfe9399b53846085adf21cd7a3",
+    "eligibility_target.csv.gz": "84fef5775f76c456fe531c6f262a70b16853f4bdafc6c83c42b5fa010694eabb"
+  },
+  "source_code_sha256": {
+    "src/tuning.py": "1ddf7cf330d0c386df5230c03055d760d0977698c4bac526a848c25d78eaa8ab",
+    "src/modeling.py": "cd20026aa6add31778f3a5894f57c8413665fdedd5a9f2e3d83318abec0af04f",
+    "src/representation.py": "e0385ee11f12411d54b45959a66abb6d4d032913846ba2d0bf126dc93dfa1d46"
+  },
+  "runtime": {
+    "python": "3.12.13",
+    "numpy": "2.3.5",
+    "pandas": "2.2.3",
+    "scikit_learn": "1.8.0"
+  },
+  "limitations": [
+    "Reused development folds create selection optimism; no nested CV or final test estimate.",
+    "The bounded grid is not proof of global optimality; winning boundary values need not be expanded.",
+    "Feature selection and threshold stay fixed; class weighting changes the precision/recall tradeoff.",
+    "Temporal shift, repeated profiles and retrospective feature-timing limitations remain."
+  ],
+  "output_sha256": {
+    "data/processed/results/tuning/candidate_parameters.json": "ca05a461409e531b6280a6ad086411c9cbd31a4b56e268664d224f0d0931f6a4",
+    "data/processed/results/tuning/candidate_results.csv": "6915b086f032dbc1d07990aa0806054159bb92d4175ddedab9ee9da61e4af406",
+    "data/processed/results/tuning/control_parity.csv": "75e349172c72979efe488385a932aafec237019d87b99b4acda112e02fd456ef",
+    "data/processed/results/tuning/final_selection.json": "68c4072f5c95e3a9f927a8b70a9e96aea8adbd4f7509f4d1c30ba6f7889f3b1b",
+    "data/processed/results/tuning/fold_results.csv": "9bb32a31df121f466acb173a68c1075fb4c56b943e7ef4567cc7e8b6e9e39339",
+    "data/processed/results/tuning/logistic_regression_cv_results.csv": "412ef75dacffa41189f06548a7f57e79b3eb3687f6d45a13ae7f0e081091c706",
+    "data/processed/results/tuning/random_forest_cv_results.csv": "3357be6d1a272f518fc767c5478422c63cf6c3157ae078bf676e68352a7e6ff2",
+    "data/processed/results/tuning/search_protocol.json": "391e6365ec0c8370950a20e6aace9cc0a172e13eecacecf5caa962f8c7a19de4",
+    "data/processed/results/tuning/tuning_comparison.csv": "6933272d1683f7c90cb92a22eab5afb22fac181e0d813054588c1bbe077930aa",
+    "figures/08_hyperparameter_tuning.png": "4f72501677390d997bed878fa6358a89c0f0d3416c2a29e0f6eb065652257a9d"
+  }
+}

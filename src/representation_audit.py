@@ -1,4 +1,4 @@
-"""Step 10 fixed representation comparisons; final test remains untouched."""
+"""representation comparison fixed representation comparisons; final test remains untouched."""
 from __future__ import annotations
 import argparse
 import hashlib
@@ -61,15 +61,15 @@ def plot_evidence(root, scores, schemas):
 
 
 def run_representation_audit(root):
-    root=Path(root); output=root/'data/processed/step10'; output.mkdir(parents=True,exist_ok=True)
+    root=Path(root); output=root/'data/processed/representations'; output.mkdir(parents=True,exist_ok=True)
     # Persist choices before evaluating any candidate; do not revise from scores.
     protocol_path=output/'comparison_protocol.json'
     if protocol_path.exists() and json.loads(protocol_path.read_text()) != PROTOCOL:
         raise ValueError('Comparison protocol changed; version and justify explicitly.')
     protocol_path.write_text(json.dumps(PROTOCOL,indent=2)+'\n')
     X, assignments, hashes=load_development(root)
-    plan=json.loads((root/'data/splits/step6_split_plan.json').read_text())
-    target_path=root/'data/processed/step5_target.csv.gz'
+    plan=json.loads((root/'data/processed/splits/validation_split_plan.json').read_text())
+    target_path=root/'data/processed/eligibility_target.csv.gz'
     digest=hashlib.sha256(target_path.read_bytes()).hexdigest()
     if digest!=plan['upstream_output_sha256'][target_path.name]: raise ValueError('Target checksum changed.')
     hashes[target_path.name]=digest
@@ -135,7 +135,7 @@ def run_representation_audit(root):
                             'training_variance':float(rep.variances_[index]),
                             'f_score':None if np.isnan(rep.scores_[index]) else float(rep.scores_[index]),
                             'selected':index in support})
-                print(f'Step 10 fold {fold} {mode}: F1={rows[-1]["f1"]:.6f}, width={rows[-1]["output_columns"]}',flush=True)
+                print(f'representation comparison fold {fold} {mode}: F1={rows[-1]["f1"]:.6f}, width={rows[-1]["output_columns"]}',flush=True)
     scores=pd.DataFrame(rows)
     comparison=scores.groupby('mode',sort=False).agg(mean_f1=('f1','mean'),fold_sd_f1=('f1','std'),
         mean_accuracy=('accuracy','mean'),mean_precision=('precision','mean'),mean_recall=('recall','mean'),
@@ -148,8 +148,7 @@ def run_representation_audit(root):
     pd.DataFrame(ranking_rows).to_csv(output/'feature_rankings.csv',index=False)
     (output/'representation_schemas.json').write_text(json.dumps(schemas,indent=2,allow_nan=False)+'\n')
     figure=plot_evidence(root,scores,schemas)
-    summary={'step':10,'status':'completed','responsible_member':'Sadat','next_step':11,'next_owner':'Sadat',
-        'development_rows':len(X),'test_rows_fitted_transformed_or_scored':0,'test_target_distribution_computed':False,
+    summary={'analysis': 'representations','status':'completed','development_rows':len(X),'test_rows_fitted_transformed_or_scored':0,'test_target_distribution_computed':False,
         'training_label_use':'F-score selection and fixed reference classifier fitting',
         'validation_label_use':'representation comparison only; no selector/reducer fitting',
         'reference_model_fits':12,'model_family_comparison_completed':False,'hyperparameter_tuning_completed':False,
@@ -165,8 +164,8 @@ def run_representation_audit(root):
             'PCA preserves input numeric variance, not predictive information; category/indicator features are not reduced by PCA.',
             'Selection and reduction are fitted within each training fold; retained feature identities can vary by fold.',
             'The same development folds choose the representation, so reported CV scores are selection estimates, not unbiased final performance.',
-            'Representation rankings may differ for random forest; Step 11 must compare model families and retain a full-feature control.',
-            'No final full-development selector/PCA/model is fitted at this stage; final refit and held-out evaluation remain Step 13.']}
+            'Representation rankings may differ for random forest; model comparison must compare model families and retain a full-feature control.',
+            'No final full-development selector/PCA/model is fitted at this stage; final refit and held-out evaluation remain evaluation.']}
     artifacts=[output/name for name in ['comparison_protocol.json','fold_results.csv','representation_comparison.csv',
                'feature_rankings.csv','representation_schemas.json']]+[figure]
     summary['output_sha256']={str(p.relative_to(root)):hashlib.sha256(p.read_bytes()).hexdigest() for p in artifacts}

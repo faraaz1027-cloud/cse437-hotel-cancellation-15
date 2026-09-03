@@ -1,0 +1,55 @@
+{
+  "analysis": "test_comparison",
+  "status": "report_checks_passed_submission_signoff_pending",
+  "python": "3.12.13",
+  "report_pages": 10,
+  "summary_words": 168,
+  "report_markdown_sha256": "870f2968a5b7c9d46d2057b141e4f7e2cfbc5c71733f3ce886a1eca1d29adec8",
+  "report_pdf_sha256": "5fa9e1c162a9b99d38994a5284a38967407c78afca6239b209970f978995533c",
+  "required_sections_and_unchanged_questions": "passed",
+  "internal_report_links": "passed",
+  "test_table_matches_frozen_metrics": true,
+  "frozen_artifact_hashes_checked": 26,
+  "selection_sha256": "e495222d6050492784b334110973b219dce2d3e9deaf516d311878462c6e47b6",
+  "notebooks": [
+    {
+      "path": "notebooks/01_data_audit_and_eda.ipynb",
+      "sha256": "00125d825ea017cd703a4dd71ad5ae579e050ba1b05bd573eb7b5cd84eeebfeb",
+      "canonical_format": "passed",
+      "code_cells": 15
+    },
+    {
+      "path": "notebooks/02_preprocessing.ipynb",
+      "sha256": "0c363947c664693e07550de143ee5624e925d8aa226ed863a5cbe0bd2c731548",
+      "canonical_format": "passed",
+      "code_cells": 13
+    },
+    {
+      "path": "notebooks/03_feature_engineering.ipynb",
+      "sha256": "ceaccd30fb666a28ea3a0ffdd4895ac21a89965d46568cc20c0c5dd75fdaf06e",
+      "canonical_format": "passed",
+      "code_cells": 10
+    },
+    {
+      "path": "notebooks/04_modeling_and_tuning.ipynb",
+      "sha256": "0ecb6ce532a1782d956ed0ffcf725a0fff65db0691cd02c695fdfe296189bdc3",
+      "canonical_format": "passed",
+      "code_cells": 11
+    },
+    {
+      "path": "notebooks/05_evaluation_and_error_analysis.ipynb",
+      "sha256": "57499f57db400fe87b4fc06d09edfe2f5211cb74d3df701e7a7e5122c037daa8",
+      "canonical_format": "passed",
+      "code_cells": 7
+    }
+  ],
+  "unit_tests_passed": 58,
+  "dependency_consistency": "No broken requirements found.",
+  "private_original_docx_hash_checked": true,
+  "raw_dataset_present_locally": true,
+  "fresh_kernel_status": "pending - host startup permission restriction; local check required",
+  "raw_publication_status": "pending - local presence is not proof of GitHub publication",
+  "member_contributions": "unconfirmed - assigned responsibilities only",
+  "visual_review": "All 10 rendered pages separately reviewed",
+  "submission_ready": false
+}

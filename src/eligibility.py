@@ -1,10 +1,11 @@
-"""Step 5: deterministic eligibility and separation, with no fitted transforms.
+"""eligibility: deterministic eligibility and separation, with no fitted transforms.
 
 Run from the repository root: python -m src.eligibility
 """
 from __future__ import annotations
 
 import argparse
+import gzip
 import hashlib
 import json
 import platform
@@ -77,8 +78,7 @@ def prepare_records(raw: pd.DataFrame):
                              "reason": "known_total_guests_zero"})
     labels_by_group = y[TARGET].groupby(group_id).nunique()
     summary = {
-        "step": 5, "status": "completed", "responsible_member": "Faraaz",
-        "next_step": 6, "policy_version": "1.0",
+        'analysis': 'eligibility', "status": "completed", "policy_version": "1.0",
         "input_rows": len(raw), "input_columns": raw.shape[1],
         "excluded_known_zero_guest_rows": int(exclude.sum()),
         "retained_rows": len(X), "candidate_predictor_count": X.shape[1],
@@ -103,7 +103,20 @@ def prepare_records(raw: pd.DataFrame):
     return X, y, metadata, excluded, summary
 
 
-def run_step5(raw_path: Path, output_dir: Path):
+def preserve_csv(frame: pd.DataFrame, path: Path):
+    """Retain frozen bytes when logical CSV content is unchanged."""
+    content = frame.to_csv(index=False, lineterminator="\n").encode("utf-8")
+    compressed = path.suffix == ".gz"
+    if path.exists():
+        existing = path.read_bytes()
+        logical = gzip.decompress(existing) if compressed else existing
+        if logical != content:
+            raise ValueError(f"Frozen CSV content differs: {path.name}; no overwrite performed.")
+        return
+    path.write_bytes(gzip.compress(content, mtime=0) if compressed else content)
+
+
+def run_eligibility(raw_path: Path, output_dir: Path):
     source_hash = hashlib.sha256(raw_path.read_bytes()).hexdigest()
     if source_hash != SOURCE_SHA256:
         raise ValueError("Source differs from the audited CSV. Re-audit this version first.")
@@ -112,16 +125,12 @@ def run_step5(raw_path: Path, output_dir: Path):
         raise ValueError("Source dimensions do not match the audited input.")
     X, y, metadata, excluded, summary = prepare_records(raw)
     output_dir.mkdir(parents=True, exist_ok=True)
-    frames = {"step5_candidates.csv.gz": X, "step5_target.csv.gz": y,
-              "step5_metadata.csv.gz": metadata, "step5_exclusions.csv": excluded}
+    frames = {"eligibility_candidates.csv.gz": X, "eligibility_target.csv.gz": y,
+              "eligibility_metadata.csv.gz": metadata, "eligibility_exclusions.csv": excluded}
     records = {}
     for name, frame in frames.items():
         path = output_dir / name
-        if name.endswith(".gz"):
-            frame.to_csv(path, index=False, lineterminator="\n",
-                         compression={"method": "gzip", "mtime": 0})
-        else:
-            frame.to_csv(path, index=False, lineterminator="\n")
+        preserve_csv(frame, path)
         records[name] = {"rows": len(frame), "columns": frame.shape[1],
                          "bytes": path.stat().st_size,
                          "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
@@ -131,7 +140,7 @@ def run_step5(raw_path: Path, output_dir: Path):
     summary["runtime"] = {"python": platform.python_version(),
                            "pandas": pd.__version__, "numpy": np.__version__}
     summary["outputs"] = records
-    (output_dir / "step5_summary.json").write_text(
+    (output_dir / "eligibility_summary.json").write_text(
         json.dumps(summary, indent=2) + "\n", encoding="utf-8")
     return X, y, metadata, excluded, summary
 
@@ -142,7 +151,7 @@ def main():
     parser.add_argument("--raw", type=Path, default=root / "data/raw/hotel_bookings.csv")
     parser.add_argument("--output", type=Path, default=root / "data/processed")
     args = parser.parse_args()
-    result = run_step5(args.raw, args.output)
+    result = run_eligibility(args.raw, args.output)
     print(json.dumps(result[-1], indent=2))
 
 

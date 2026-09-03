@@ -17,7 +17,7 @@ A leakage-aware, chronological comparison of Logistic Regression and Random Fore
 
 Hotel cancellations complicate revenue planning and room allocation. This project uses the Hotel Booking Demand dataset, containing 119,390 city and resort hotel reservations, to predict the binary target is_canceled. After excluding 180 confirmed zero-guest records, a chronological design reserves 95,415 bookings for development and 23,795 later bookings for testing. Missing-value handling, encoding, feature selection and numeric transformations are fitted only within training partitions. Logistic Regression and Random Forest are compared with a majority baseline; numeric PCA is evaluated but not retained because selection alone performs better in development. Grid search selects balanced Logistic Regression with C=1 and a fixed 0.5 threshold. It achieves test F1 of 0.7506, accuracy of 76.09% and recall of 88.03%. The most important finding is that deposit type has a pronounced association with cancellation, although retrospective recording and repeated booking profiles prevent a causal interpretation. Random Forest and baseline test scores are disclosed as a later reporting supplement, not a new selection exercise. False alerts, weaker short-lead performance and uncalibrated probabilities limit operational use.
 
-**Submission status:** Five-notebook execution passed with numerical reproduction differences. Assigned contributions are user-confirmed; final declaration review, raw-publication recheck and joint submission review remain open. The original CSE437 document and frozen selected-model results are unchanged.
+**Submission status:** Recorded evidence supports the analysis, with numerical reproduction limitations disclosed. The original data, model and numerical results are preserved. Repository reorganization changes paths and metadata only; current notebook execution and final author review remain to be verified.
 
 <!-- pagebreak -->
 
@@ -31,7 +31,7 @@ Hotel booking cancellations can cause loss of money and make room planning diffi
 
 The supplied Hotel Booking Demand CSV has 119,390 rows, 32 columns and 16,855,599 bytes, covering arrivals from 1 July 2015 to 31 August 2017. It contains 79,330 City Hotel and 40,060 Resort Hotel records. Antonio et al. describe extraction from hotel property-management databases [1]. The Kaggle distribution by Jesse Mostipak acknowledges earlier preparation by Thomas Mock and Antoine Bichat [2]. This project uses that supplied combined CSV; it does not scrape or merge another dataset.
 
-Kaggle's public metadata lists CC BY 4.0, which permits redistribution subject to attribution and other terms [2,3]. The current metadata version is 1; the original acquisition date and acquired version remain unknown, as confirmed by the user. The unchanged source checksum and acquisition instructions are in [data/README.md](../data/README.md). Raw CSV publication is reported complete by the group; an independent recheck remains pending. Its size is below the faculty's 50 MB threshold.
+Kaggle's public metadata lists CC BY 4.0, which permits redistribution subject to attribution and other terms [2,3]. The current metadata version is 1; the original acquisition date and acquired version remain unknown, as confirmed by the user. The unchanged source checksum and acquisition instructions are in [data/README.md](../data/README.md). The original CSV is publicly committed; its Git blob matches the checksum-verified source. Its size is below the faculty's 50 MB threshold.
 
 ### 1.3 Target variable
 
@@ -107,7 +107,7 @@ Training ADR medians are 76.50/80.75/90.00; fold 3's negative validation ADR use
 | Previous cancellations | 0.106 | 0 | 0-0 | 26 |
 | Weekday nights | 2.45 | 2 | 1-3 | 50 |
 
-Lead time and ADR are right-skewed; prior cancellations concentrate at zero. Development has 62,827 City and 32,588 Resort bookings. Deposit frequencies are 82,979 No Deposit, 12,296 Non Refund and 140 Refundable. Full frequency/spread tables are in [development EDA](../data/eda/README.md).
+Lead time and ADR are right-skewed; prior cancellations concentrate at zero. Development has 62,827 City and 32,588 Resort bookings. Deposit frequencies are 82,979 No Deposit, 12,296 Non Refund and 140 Refundable. Full frequency/spread tables are in [development EDA](../data/README.md).
 
 <!-- pagebreak -->
 
@@ -168,7 +168,7 @@ Training-constant encoded columns (variance at most 1e-12) are removed. Remainin
 
 The 32 pre-encoding inputs are: lead_time; previous_cancellations; previous_bookings_not_canceled; adr; total_nights; total_guests; previous_bookings_total; arrival_date_year; arrival_date_week_number; arrival_date_day_of_month; stays_in_weekend_nights; stays_in_week_nights; adults; children; babies; is_repeated_guest; required_car_parking_spaces; total_of_special_requests; has_booking_history; previous_cancellation_share; company_code_recorded; arrival_month_sin; arrival_month_cos; hotel; meal; country; market_segment; distribution_channel; reserved_room_type; deposit_type; agent; customer_type.
 
-The final training-fitted selection retains 406 encoded features, listed completely in [feature_coefficients.csv](../data/results/step13/feature_coefficients.csv). The rule, not a global pre-CV mask, is refitted within each training partition. Dropped fields are the two outcome-status columns, raw company ID, assigned room, booking changes, waiting-list days and replaced month names. Selection is justified by the development comparison, not test performance; no isolated benefit is claimed for every engineered field.
+The final training-fitted selection retains 406 encoded features, listed completely in [feature_coefficients.csv](../data/processed/results/evaluation/feature_coefficients.csv). The rule, not a global pre-CV mask, is refitted within each training partition. Dropped fields are the two outcome-status columns, raw company ID, assigned room, booking changes, waiting-list days and replaced month names. Selection is justified by the development comparison, not test performance; no isolated benefit is claimed for every engineered field.
 
 <!-- pagebreak -->
 
@@ -237,27 +237,27 @@ GridSearchCV evaluates 8 LR and 12 RF candidates over 3 frozen folds: 60 fits. E
 | LR: C=1, balanced weights | 0.713609 | 0.732102 | +0.018492 |
 | RF: depth=None, leaf=10, balanced weights | 0.657994 | 0.669294 | +0.011300 |
 
-Balanced LR improves recall from 0.6595 to 0.7568 while precision falls from 0.7834 to 0.7153. Stronger/deeper models are not uniformly better: balanced LR declines at C=10; unrestricted RF with leaf=1 shows a larger training-validation gap than the selected leaf=10 forest. Full 20-candidate results, fold scores and settings are in [Step 12 evidence](../data/results/step12/README.md).
+Balanced LR improves recall from 0.6595 to 0.7568 while precision falls from 0.7834 to 0.7153. Stronger/deeper models are not uniformly better: balanced LR declines at C=10; unrestricted RF with leaf=1 shows a larger training-validation gap than the selected leaf=10 forest. Full 20-candidate results, fold scores and settings are in [tuning evidence](../data/README.md).
 
-The selected LR setting is best among the evaluated choices, not globally optimal. Reusing the same development folds for feature, family and parameter decisions creates selection optimism; no significance claim is made. All 60 fits completed without convergence failures. The selected family, parameters and threshold were frozen before Step 13 testing.
+The selected LR setting is best among the evaluated choices, not globally optimal. Reusing the same development folds for feature, family and parameter decisions creates selection optimism; no significance claim is made. All 60 fits completed without convergence failures. The selected family, parameters and threshold were frozen before evaluation testing.
 
 ## 7. Results, Visualization and Error Analysis
 
 ### 7.1 Test set performance
 
-The selected LR pipeline was fitted on all 95,415 development rows and evaluated on 23,795 later bookings. Step 15 subsequently added the development-selected RF and baseline with user approval. This late addition occurred after LR test results were known; it is not a preregistered simultaneous three-model test. No model, feature or threshold was reselected. Saved LR predictions and fitted model remain unchanged.
+The selected LR pipeline was fitted on all 95,415 development rows and evaluated on 23,795 later bookings. verification subsequently added the development-selected RF and baseline with user approval. This late addition occurred after LR test results were known; it is not a preregistered simultaneous three-model test. No model, feature or threshold was reselected. Saved LR predictions and fitted model remain unchanged.
 
-| Model | F1 | Accuracy | Precision | Recall | ROC-AUC |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| Majority baseline | 0.000000 | 0.591259 | 0.000000 | 0.000000 | 0.500000 |
-| Logistic Regression, selected | 0.750592 | 0.760874 | 0.654187 | 0.880321 | 0.875977 |
-| Random Forest, supplement | 0.723115 | 0.789325 | 0.781239 | 0.673041 | 0.878190 |
+| Model | F1 | Accuracy | Precision | Recall | ROC-AUC | Brier |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Majority baseline | 0.000000 | 0.591259 | 0.000000 | 0.000000 | 0.500000 | 0.408741 |
+| Logistic Regression, selected | 0.750592 | 0.760874 | 0.654187 | 0.880321 | 0.875977 | 0.160007 |
+| Random Forest, supplement | 0.723115 | 0.789325 | 0.781239 | 0.673041 | 0.878190 | 0.145476 |
 
-| Model | TN | FP | FN | TP | Brier score |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| Majority baseline | 14,069 | 0 | 9,726 | 0 | 0.408741 |
-| Logistic Regression | 9,543 | 4,526 | 1,164 | 8,562 | 0.160007 |
-| Random Forest | 12,236 | 1,833 | 3,180 | 6,546 | 0.145476 |
+| Model | TN | FP | FN | TP |
+| --- | ---: | ---: | ---: | ---: |
+| Majority baseline | 14,069 | 0 | 9,726 | 0 |
+| Logistic Regression | 9,543 | 4,526 | 1,164 | 8,562 |
+| Random Forest | 12,236 | 1,833 | 3,180 | 6,546 |
 
 All rows use identical test membership and threshold 0.5. LR has higher F1/recall; RF has higher precision/accuracy and slightly higher ROC-AUC. Lower Brier error does not establish calibration. The baseline predicts no cancellations, so precision is zero by convention. A test F1 above the development mean is a period-specific outcome, not proof of improvement.
 
@@ -288,7 +288,7 @@ Two concrete errors illustrate what the recorded predictors cannot reliably reso
 | 14,182 | Not canceled / canceled; 0.999603 | Direct, No Deposit, lead time 80 days, one prior cancellation. A strong score did not determine this customer's outcome; combinations of historical associations cannot recover unrecorded intent. |
 | 94,387 | Canceled / not canceled; 0.006030 | Lead time 1 day, Complementary segment, Transient-Party, four prior cancellations and three special requests. The rare combination received a low score despite cancellation history; the actual reason for cancellation is not observed. |
 
-These are plausible interpretations of model difficulty, not known causal explanations. Twenty distinct confident and near-threshold errors, full group metrics and probability-bin diagnostics are preserved in [Step 13 evidence](../data/results/step13/README.md).
+These are plausible interpretations of model difficulty, not known causal explanations. Twenty distinct confident and near-threshold errors, full group metrics and probability-bin diagnostics are preserved in [evaluation evidence](../data/README.md).
 
 <!-- pagebreak -->
 
@@ -306,7 +306,7 @@ The selected LR achieves test F1 0.750592, accuracy 76.09%, precision 65.42%, re
 
 Selected-feature LR with C=1 and balanced weights is best evaluated under the predeclared development F1 objective: 0.732102 versus 0.669294 for the best RF. Selection beats the full representation with the reference LR; numeric PCA and selection-plus-PCA do not beat selection alone, so PCA is not in the final pipeline. The late test comparison also reports higher LR F1, but it does not determine model choice. RF is better on some secondary test metrics. No universal superiority or global optimum is claimed.
 
-The [Step 14 synthesis](step14_research_answers.md) and the frozen Step 10/12/13/15 tables provide the detailed question-to-evidence mapping.
+The [supporting methods](../data/README.md) and the preserved representation, tuning and evaluation tables provide the detailed question-to-evidence mapping.
 
 ## 8. Limitations and Next Steps
 
@@ -328,10 +328,10 @@ The group confirms that both members completed their assigned responsibilities b
 
 | Member | Student ID | Contribution record |
 | --- | --- | --- |
-| Faraaz Jamil Chowdhury | 24241205 | First half: planning, dataset preparation and provenance, data audit, cleaning/preprocessing, split design, descriptive statistics and EDA. |
-| Ihfaz Rashid Sadat | 23301499 | Second half: feature engineering, selection/PCA, model comparison and tuning, evaluation/error analysis, reproduction checks and report assembly. |
+| Faraaz Jamil Chowdhury | 24241205 | Planning, dataset preparation and provenance, data audit, cleaning/preprocessing, split design, descriptive statistics and EDA. |
+| Ihfaz Rashid Sadat | 23301499 | Feature engineering, selection/PCA, model comparison and tuning, evaluation/error analysis, reproduction checks and report assembly. |
 
-**Joint review:** Both members must review, compare and be able to explain the whole project before submission. Final joint sign-off and attributable commit checks remain pending; account identity alone does not establish authorship.
+**Joint review:** Both members are responsible for reviewing, comparing and explaining the whole project. Both accounts appear in the repository history; account identity alone does not establish personal authorship. Final joint sign-off remains open.
 
 ## References
 
@@ -343,7 +343,7 @@ The group confirms that both members completed their assigned responsibilities b
 
 [4] Pedregosa, F., et al. (2011). Scikit-learn: Machine Learning in Python. Journal of Machine Learning Research, 12, 2825-2830. [Article](https://jmlr.org/papers/v12/pedregosa11a.html). Implementation: scikit-learn 1.8.0.
 
-[5] [NumPy](https://numpy.org/), [pandas](https://pandas.pydata.org/), [SciPy](https://scipy.org/), [Matplotlib](https://matplotlib.org/), [seaborn](https://seaborn.pydata.org/), [joblib](https://joblib.readthedocs.io/), [Jupyter](https://jupyter.org/), and [ReportLab](https://www.reportlab.com/). Direct versions are pinned in requirements.txt; the resolved Linux/Python 3.12 environment is recorded in requirements-lock.txt.
+[5] [NumPy](https://numpy.org/), [pandas](https://pandas.pydata.org/), [SciPy](https://scipy.org/), [Matplotlib](https://matplotlib.org/), [seaborn](https://seaborn.pydata.org/), [joblib](https://joblib.readthedocs.io/), [Jupyter](https://jupyter.org/), and [ReportLab](https://www.reportlab.com/). Direct versions are pinned in requirements.txt; the resolved Linux/Python 3.12 environment is recorded in data/processed/reference_environment.txt.
 
 ### AI assistance declaration
 
@@ -351,4 +351,4 @@ ChatGPT assisted with project planning and work division. Antigravity assisted w
 
 **Declaration status:** Author-supplied provisional wording; final review pending.
 
-**Reproducibility and submission status:** The supplied Windows verification passed dependency checks, 70 tests and all five fresh-kernel notebooks with zero cell errors. Original and frozen evidence remained unchanged; final-test evaluation verified cached results, not a refit. Development tuning differed: C=1 balanced mean F1 changed from 0.732102 to 0.731371, below C=0.1 balanced at 0.731697. Execution passed with a numerical warning, not exact reproduction. Notebook sources match the repair, but the supplied archive does not establish the full checkout's exact commit. See the [verification review](verification_review.md) and [final checks](../FINAL_CHECKS.md). Existing published outputs retain their original provenance. This 10-page report is not a submission-readiness certification; the declaration, raw-publication recheck and joint final review remain open.
+**Reproducibility and submission status:** The prior Windows verification passed dependency checks, 70 tests and all five fresh-kernel notebooks with zero cell errors; cached final results were verified, not refitted. Development tuning differed: C=1 balanced mean F1 changed from 0.732102 to 0.731371, below C=0.1 balanced at 0.731697. The archive does not establish the complete checkout's exact commit. Repository cleanup preserves numerical evidence, rebases integrity manifests and retains pre-cleanup digests; it is not a new execution. Colab setup can require a session restart after installation. The reorganized notebooks still require fresh-kernel verification with saved outputs. See [methods and verification](../data/README.md). Final declaration review and joint author sign-off remain open.

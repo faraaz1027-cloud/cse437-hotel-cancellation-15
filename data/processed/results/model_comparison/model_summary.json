@@ -1,0 +1,131 @@
+{
+  "analysis": "model_comparison",
+  "status": "completed",
+  "development_rows": 95415,
+  "candidate_count": 5,
+  "fold_count": 3,
+  "model_fits": 15,
+  "learned_model_families": [
+    "logistic_regression",
+    "random_forest"
+  ],
+  "baseline": "training-majority class",
+  "preferred_candidate": "lr_selected",
+  "preferred_family": "logistic_regression",
+  "preferred_representation": "selected",
+  "mean_f1": 0.7136094599372149,
+  "decision_scope": "untuned development candidate for further tuning; not final best-model or test claim",
+  "protocol": {
+    "candidates": [
+      {
+        "candidate": "majority",
+        "family": "majority",
+        "representation": "none"
+      },
+      {
+        "candidate": "lr_full",
+        "family": "logistic_regression",
+        "representation": "full"
+      },
+      {
+        "candidate": "lr_selected",
+        "family": "logistic_regression",
+        "representation": "selected"
+      },
+      {
+        "candidate": "rf_full",
+        "family": "random_forest",
+        "representation": "full"
+      },
+      {
+        "candidate": "rf_selected",
+        "family": "random_forest",
+        "representation": "selected"
+      }
+    ],
+    "model_settings": {
+      "logistic_regression": {
+        "C": 1.0,
+        "solver": "lbfgs",
+        "max_iter": 2000,
+        "tol": 0.0001,
+        "class_weight": null,
+        "random_state": 42
+      },
+      "random_forest": {
+        "n_estimators": 100,
+        "criterion": "gini",
+        "max_depth": null,
+        "min_samples_split": 2,
+        "min_samples_leaf": 1,
+        "max_features": "sqrt",
+        "bootstrap": true,
+        "class_weight": null,
+        "random_state": 42,
+        "n_jobs": 2
+      }
+    },
+    "majority_settings": {
+      "strategy": "most_frequent",
+      "random_state": 42
+    },
+    "selection": {
+      "percentile": 75,
+      "training_variance_threshold": 1e-12,
+      "score": "ANOVA F"
+    },
+    "logistic_numeric_scaling": true,
+    "forest_numeric_scaling": false,
+    "threshold": 0.5,
+    "threshold_rule": "class 1 when probability >= 0.5",
+    "primary_metric": "unweighted mean cancellation-class F1 over three frozen forward folds",
+    "secondary_metrics": [
+      "accuracy",
+      "precision",
+      "recall",
+      "roc_auc"
+    ],
+    "decision_rule": "highest mean validation F1; exact ties prefer lower mean width then declared candidate order",
+    "class_weighting": null,
+    "resampling": null,
+    "parameter_search": false,
+    "scope": "untuned development model-family comparison; no final test evaluation"
+  },
+  "input_sha256": {
+    "eligibility_candidates.csv.gz": "1721717023e4f27371e37c8e05fefccda4fbf2ef89f1e60b3fc1a026ebb7bbb9",
+    "eligibility_metadata.csv.gz": "24655f99f16d70acde3295c270438bdc096d5d94f5b572d649a8a9bb1927e9db",
+    "validation_assignments.csv.gz": "57b4e8bcf947059dbb3ae34e39c49306b96aa86a4ad74898966e931b63a998e1",
+    "validation_split_plan.json": "399e6c5c3e71d45e7d43b775185dfc3402d51ebfe9399b53846085adf21cd7a3",
+    "eligibility_target.csv.gz": "84fef5775f76c456fe531c6f262a70b16853f4bdafc6c83c42b5fa010694eabb"
+  },
+  "representations_reference_sha256": "c671941fa10311586864def13caf7c2e60b177cd448f371be8e693ef61e5cb99",
+  "logistic_results_match_representations": true,
+  "convergence_warnings": 0,
+  "test_rows_fitted_transformed_or_scored": 0,
+  "test_target_distribution_computed": false,
+  "full_development_model_fitted": false,
+  "model_hyperparameter_tuning_completed": false,
+  "rows_removed": 0,
+  "row_level_predictions_published": false,
+  "runtime": {
+    "python": "3.12.13",
+    "numpy": "2.3.5",
+    "pandas": "2.2.3",
+    "scikit_learn": "1.8.0"
+  },
+  "limitations": [
+    "Development scores are reused for representation/model selection; they are not unbiased final performance estimates.",
+    "Training scores are resubstitution diagnostics; train-validation gaps mix capacity, temporal shift and recorded repetition.",
+    "Class weighting and threshold optimization are not performed; comparisons use the fixed cancellation-class F1 policy.",
+    "No nested validation or final held-out result is reported; model hyperparameter tuning remains tuning.",
+    "Source timing and repeated-record limitations from earlier analyses still apply."
+  ],
+  "output_sha256": {
+    "data/processed/results/model_comparison/comparison_protocol.json": "bc9f31fc428df630f7fb582406522ab9270b4df4fa2df5b047a3444757f8429c",
+    "data/processed/results/model_comparison/fold_results.csv": "9f12cbb33d642ec103e04e2c666523300518fd5a236fb17162da9c52c714a126",
+    "data/processed/results/model_comparison/model_comparison.csv": "609ad5e10307050cadd659ab9c4a97a1380521e1ca8f4edad653d1d257e90022",
+    "data/processed/results/model_comparison/feature_schemas.json": "f8dcad06e6efd25e51f0b71415c99453214248edf121dfec7b86c88c423e2fc1",
+    "data/processed/results/model_comparison/estimator_parameters.json": "d9c457238c7ef13bad4ccdb7d454ff845fb317e62017a92aee08b61dc28518fe",
+    "figures/07_model_comparison.png": "8d2af49185b027a5bb132faa32393cd47c7b412d6eb090ed958a2656883449e0"
+  }
+}

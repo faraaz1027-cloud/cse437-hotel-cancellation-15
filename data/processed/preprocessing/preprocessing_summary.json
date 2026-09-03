@@ -1,0 +1,310 @@
+{
+  "analysis": "preprocessing",
+  "status": "completed",
+  "scope": "preprocessing of frozen development train/validation folds only",
+  "development_rows": 95415,
+  "test_rows_fitted_or_transformed": 0,
+  "target_file_read_by_audit": false,
+  "predictive_models_trained": 0,
+  "rows_removed": 0,
+  "input_candidate_columns": 29,
+  "retained_source_fields": [
+    "lead_time",
+    "previous_cancellations",
+    "previous_bookings_not_canceled",
+    "adr",
+    "arrival_date_year",
+    "arrival_date_week_number",
+    "arrival_date_day_of_month",
+    "stays_in_weekend_nights",
+    "stays_in_week_nights",
+    "adults",
+    "children",
+    "babies",
+    "is_repeated_guest",
+    "required_car_parking_spaces",
+    "total_of_special_requests",
+    "hotel",
+    "arrival_date_month",
+    "meal",
+    "country",
+    "market_segment",
+    "distribution_channel",
+    "reserved_room_type",
+    "deposit_type",
+    "agent",
+    "customer_type"
+  ],
+  "retained_source_field_count": 25,
+  "excluded_fields": {
+    "company": "Sparse company identifier; possible presence feature deferred to feature engineering.",
+    "assigned_room_type": "Assignment can change after reservation; exclude from primary inputs.",
+    "booking_changes": "Accumulated post-reservation changes; timing is uncertain.",
+    "days_in_waiting_list": "Accumulated waiting time; timing is uncertain."
+  },
+  "log1p_fields": [
+    "lead_time",
+    "previous_cancellations",
+    "previous_bookings_not_canceled",
+    "adr"
+  ],
+  "regular_numeric_fields": [
+    "arrival_date_year",
+    "arrival_date_week_number",
+    "arrival_date_day_of_month",
+    "stays_in_weekend_nights",
+    "stays_in_week_nights",
+    "adults",
+    "children",
+    "babies",
+    "is_repeated_guest",
+    "required_car_parking_spaces",
+    "total_of_special_requests"
+  ],
+  "categorical_fields": [
+    "hotel",
+    "arrival_date_month",
+    "meal",
+    "country",
+    "market_segment",
+    "distribution_channel",
+    "reserved_room_type",
+    "deposit_type",
+    "agent",
+    "customer_type"
+  ],
+  "fixed_missing_indicators": [
+    "children",
+    "adr"
+  ],
+  "rules": {
+    "numeric_missing": "training-fold median; zero fallback for an entirely missing training field",
+    "adr_negative": "convert to missing before train-fitted imputation",
+    "adr_nonnegative": "retain zeros and high values; log1p instead of clipping",
+    "country_missing": "Unknown",
+    "agent_missing": "NoAgent (source NULL convention)",
+    "explicit_undefined_category": "preserve as a category distinct from Unknown",
+    "unseen_categories": "all-zero one-hot block with handle_unknown=ignore",
+    "scaled_variant": "training-fold StandardScaler after imputation/log1p",
+    "tree_variant": "same rules without numeric StandardScaler"
+  },
+  "folds": [
+    {
+      "fold": 1,
+      "training": {
+        "rows": 23797,
+        "columns": 328,
+        "nonzero": 594929,
+        "nonfinite_values": 0,
+        "density": 0.07622002465980032
+      },
+      "validation": {
+        "rows": 23893,
+        "columns": 328,
+        "nonzero": 572143,
+        "nonfinite_values": 0,
+        "density": 0.07300625348989856
+      },
+      "training_missing_numeric_before_imputation": {
+        "children": 4
+      },
+      "validation_missing_numeric_before_imputation": {},
+      "training_negative_adr_to_missing": 0,
+      "validation_negative_adr_to_missing": 0,
+      "training_zero_adr_retained": 607,
+      "validation_zero_adr_retained": 402,
+      "training_adr_above_1000_retained": 0,
+      "validation_adr_above_1000_retained": 1,
+      "training_country_missing_to_unknown": 158,
+      "validation_country_missing_to_unknown": 123,
+      "training_agent_missing_to_no_agent": 3471,
+      "validation_agent_missing_to_no_agent": 3359,
+      "training_company_nulls_in_excluded_column": 22361,
+      "validation_company_nulls_in_excluded_column": 22335,
+      "validation_unseen_category_rows_by_field": {
+        "hotel": 0,
+        "arrival_date_month": 23475,
+        "meal": 0,
+        "country": 114,
+        "market_segment": 62,
+        "distribution_channel": 0,
+        "reserved_room_type": 0,
+        "deposit_type": 0,
+        "agent": 1531,
+        "customer_type": 0
+      },
+      "training_medians": {
+        "lead_time": 50.0,
+        "previous_cancellations": 0.0,
+        "previous_bookings_not_canceled": 0.0,
+        "adr": 76.5,
+        "arrival_date_year": 2015.0,
+        "arrival_date_week_number": 39.0,
+        "arrival_date_day_of_month": 16.0,
+        "stays_in_weekend_nights": 1.0,
+        "stays_in_week_nights": 2.0,
+        "adults": 2.0,
+        "children": 0.0,
+        "babies": 0.0,
+        "is_repeated_guest": 0.0,
+        "required_car_parking_spaces": 0.0,
+        "total_of_special_requests": 0.0
+      },
+      "numeric_scaler_rows_seen": 23797,
+      "validation_did_not_change_fitted_state": true,
+      "unscaled_tree_variant_verified": true
+    },
+    {
+      "fold": 2,
+      "training": {
+        "rows": 47690,
+        "columns": 422,
+        "nonzero": 1192254,
+        "nonfinite_values": 0,
+        "density": 0.05924190491712372
+      },
+      "validation": {
+        "rows": 23776,
+        "columns": 422,
+        "nonzero": 594020,
+        "nonfinite_values": 0,
+        "density": 0.05920383293041531
+      },
+      "training_missing_numeric_before_imputation": {
+        "children": 4
+      },
+      "validation_missing_numeric_before_imputation": {},
+      "training_negative_adr_to_missing": 0,
+      "validation_negative_adr_to_missing": 0,
+      "training_zero_adr_retained": 1009,
+      "validation_zero_adr_retained": 261,
+      "training_adr_above_1000_retained": 1,
+      "validation_adr_above_1000_retained": 0,
+      "training_country_missing_to_unknown": 281,
+      "validation_country_missing_to_unknown": 72,
+      "training_agent_missing_to_no_agent": 6830,
+      "validation_agent_missing_to_no_agent": 2434,
+      "training_company_nulls_in_excluded_column": 44696,
+      "validation_company_nulls_in_excluded_column": 22829,
+      "validation_unseen_category_rows_by_field": {
+        "hotel": 0,
+        "arrival_date_month": 0,
+        "meal": 0,
+        "country": 31,
+        "market_segment": 0,
+        "distribution_channel": 0,
+        "reserved_room_type": 0,
+        "deposit_type": 0,
+        "agent": 349,
+        "customer_type": 0
+      },
+      "training_medians": {
+        "lead_time": 55.0,
+        "previous_cancellations": 0.0,
+        "previous_bookings_not_canceled": 0.0,
+        "adr": 80.75,
+        "arrival_date_year": 2016.0,
+        "arrival_date_week_number": 25.0,
+        "arrival_date_day_of_month": 16.0,
+        "stays_in_weekend_nights": 1.0,
+        "stays_in_week_nights": 2.0,
+        "adults": 2.0,
+        "children": 0.0,
+        "babies": 0.0,
+        "is_repeated_guest": 0.0,
+        "required_car_parking_spaces": 0.0,
+        "total_of_special_requests": 0.0
+      },
+      "numeric_scaler_rows_seen": 47690,
+      "validation_did_not_change_fitted_state": true,
+      "unscaled_tree_variant_verified": true
+    },
+    {
+      "fold": 3,
+      "training": {
+        "rows": 71466,
+        "columns": 491,
+        "nonzero": 1786654,
+        "nonfinite_values": 0,
+        "density": 0.05091661093823089
+      },
+      "validation": {
+        "rows": 23949,
+        "columns": 491,
+        "nonzero": 598098,
+        "nonfinite_values": 0,
+        "density": 0.05086317589847877
+      },
+      "training_missing_numeric_before_imputation": {
+        "children": 4
+      },
+      "validation_missing_numeric_before_imputation": {
+        "adr": 1
+      },
+      "training_negative_adr_to_missing": 0,
+      "validation_negative_adr_to_missing": 1,
+      "training_zero_adr_retained": 1270,
+      "validation_zero_adr_retained": 352,
+      "training_adr_above_1000_retained": 1,
+      "validation_adr_above_1000_retained": 0,
+      "training_country_missing_to_unknown": 353,
+      "validation_country_missing_to_unknown": 120,
+      "training_agent_missing_to_no_agent": 9264,
+      "validation_agent_missing_to_no_agent": 4481,
+      "training_company_nulls_in_excluded_column": 67525,
+      "validation_company_nulls_in_excluded_column": 21990,
+      "validation_unseen_category_rows_by_field": {
+        "hotel": 0,
+        "arrival_date_month": 0,
+        "meal": 0,
+        "country": 15,
+        "market_segment": 0,
+        "distribution_channel": 0,
+        "reserved_room_type": 0,
+        "deposit_type": 0,
+        "agent": 613,
+        "customer_type": 0
+      },
+      "training_medians": {
+        "lead_time": 68.0,
+        "previous_cancellations": 0.0,
+        "previous_bookings_not_canceled": 0.0,
+        "adr": 90.0,
+        "arrival_date_year": 2016.0,
+        "arrival_date_week_number": 32.0,
+        "arrival_date_day_of_month": 16.0,
+        "stays_in_weekend_nights": 1.0,
+        "stays_in_week_nights": 2.0,
+        "adults": 2.0,
+        "children": 0.0,
+        "babies": 0.0,
+        "is_repeated_guest": 0.0,
+        "required_car_parking_spaces": 0.0,
+        "total_of_special_requests": 0.0
+      },
+      "numeric_scaler_rows_seen": 71466,
+      "validation_did_not_change_fitted_state": true,
+      "unscaled_tree_variant_verified": true
+    }
+  ],
+  "input_sha256": {
+    "eligibility_candidates.csv.gz": "1721717023e4f27371e37c8e05fefccda4fbf2ef89f1e60b3fc1a026ebb7bbb9",
+    "eligibility_metadata.csv.gz": "24655f99f16d70acde3295c270438bdc096d5d94f5b572d649a8a9bb1927e9db",
+    "validation_assignments.csv.gz": "57b4e8bcf947059dbb3ae34e39c49306b96aa86a4ad74898966e931b63a998e1",
+    "validation_split_plan.json": "399e6c5c3e71d45e7d43b775185dfc3402d51ebfe9399b53846085adf21cd7a3"
+  },
+  "runtime": {
+    "python": "3.12.13",
+    "numpy": "2.3.5",
+    "pandas": "2.2.3",
+    "scipy": "1.17.0",
+    "scikit_learn": "1.8.0"
+  },
+  "limitations": [
+    "Candidate-field timing is not guaranteed by source snapshots; this remains retrospective evaluation.",
+    "Medians/log transforms are fixed preprocessing choices, not proven best by predictive performance.",
+    "Unseen categories map to zeros, so category-specific information can be lost.",
+    "Feature engineering, statistical feature selection, and dimensionality reduction remain additional analyses.",
+    "Do not reuse these fold diagnostics as a preprocessed full-cohort matrix for model selection."
+  ]
+}

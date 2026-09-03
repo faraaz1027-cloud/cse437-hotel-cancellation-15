@@ -1,4 +1,4 @@
-"""Step 10 fold-fitted supervised selection and centered numeric-block PCA."""
+"""representation comparison fold-fitted supervised selection and centered numeric-block PCA."""
 from __future__ import annotations
 
 import math

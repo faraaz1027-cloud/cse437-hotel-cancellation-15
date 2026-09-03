@@ -1,4 +1,4 @@
-"""Verify Step 9 in frozen development folds; export aggregate evidence only."""
+"""Verify feature engineering in frozen development folds; export aggregate evidence only."""
 from __future__ import annotations
 import argparse
 import hashlib
@@ -24,23 +24,23 @@ def load_development(root):
     test features are not transformed, summarized, fitted, or exported.
     """
     root = Path(root)
-    processed, splits = root/'data/processed', root/'data/splits'
-    plan_path = splits/'step6_split_plan.json'
+    processed, splits = root/'data/processed', root/'data/processed/splits'
+    plan_path = splits/'validation_split_plan.json'
     plan = json.loads(plan_path.read_text())
-    paths = {name: processed/name for name in ['step5_candidates.csv.gz', 'step5_metadata.csv.gz']}
-    paths['step6_assignments.csv.gz'] = splits/plan['assignment_file']
-    expected = {**plan['upstream_output_sha256'], 'step6_assignments.csv.gz': plan['assignment_sha256']}
+    paths = {name: processed/name for name in ['eligibility_candidates.csv.gz', 'eligibility_metadata.csv.gz']}
+    paths['validation_assignments.csv.gz'] = splits/plan['assignment_file']
+    expected = {**plan['upstream_output_sha256'], 'validation_assignments.csv.gz': plan['assignment_sha256']}
     hashes = {}
     for name, path in paths.items():
         hashes[name] = hashlib.sha256(path.read_bytes()).hexdigest()
         if hashes[name] != expected[name]:
             raise ValueError(f'Frozen input changed: {name}')
-    hashes['step6_split_plan.json'] = hashlib.sha256(plan_path.read_bytes()).hexdigest()
-    assignments = pd.read_csv(paths['step6_assignments.csv.gz'])
+    hashes['validation_split_plan.json'] = hashlib.sha256(plan_path.read_bytes()).hexdigest()
+    assignments = pd.read_csv(paths['validation_assignments.csv.gz'])
     check_assignments(assignments)
     mask = assignments.partition.eq('development').to_numpy()
-    X = read_selected_rows(paths['step5_candidates.csv.gz'], mask)
-    meta = read_selected_rows(paths['step5_metadata.csv.gz'], mask)
+    X = read_selected_rows(paths['eligibility_candidates.csv.gz'], mask)
+    meta = read_selected_rows(paths['eligibility_metadata.csv.gz'], mask)
     dev = assignments.loc[mask].reset_index(drop=True)
     if len(X) != 95415 or meta.source_row_id.tolist() != dev.source_row_id.tolist():
         raise ValueError('Development cohort or row alignment changed.')
@@ -103,8 +103,7 @@ def run_feature_audit(root):
             'unseen_months_have_valid_cyclic_coordinates': True,
             'training_only_statistics_verified': True, 'validation_did_not_change_fitted_state': True,
             'scaled_and_unscaled_variants_verified': True})
-    summary = {'step': 9, 'status': 'completed', 'responsible_member': 'Sadat', 'next_step': 10,
-        'next_owner': 'Sadat', 'development_rows': len(X), 'input_candidate_fields': X.shape[1],
+    summary = {'analysis': 'features', 'status': 'completed', 'development_rows': len(X), 'input_candidate_fields': X.shape[1],
         'retained_source_fields': 24, 'derived_fields': list(DERIVED_COLUMNS),
         'fields_before_encoding': len(FEATURE_COLUMNS), 'fixed_missing_indicators': list(FEATURE_MISSING_COLUMNS),
         'month_names_replaced_by_cyclic_pair': True,
@@ -121,8 +120,8 @@ def run_feature_audit(root):
             'Company-code presence is a recording indicator, not proof of corporate payment or booking-time availability.',
             'Cyclic month coordinates encode proximity but do not establish observed seasonal coverage or solve temporal drift.',
             'Source history and other feature timing remain retrospective; no live prediction claim is made.',
-            'Statistical feature selection, dimensionality reduction, and performance comparisons remain for later steps.']}
-    output = root/'data/processed/step9'; output.mkdir(parents=True, exist_ok=True)
+            'Statistical feature selection, dimensionality reduction, and performance comparisons remain for additional analyses.']}
+    output = root/'data/processed/features'; output.mkdir(parents=True, exist_ok=True)
     stats.to_csv(output/'derived_feature_statistics.csv', index=False)
     (output/'feature_schemas.json').write_text(json.dumps(schemas, indent=2)+'\n')
     summary['output_sha256'] = {p.name: hashlib.sha256(p.read_bytes()).hexdigest()

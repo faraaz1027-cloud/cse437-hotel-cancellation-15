@@ -1,4 +1,4 @@
-"""Step 9 deterministic derived features and a fold-fitted encoding factory.
+"""feature engineering deterministic derived features and a fold-fitted encoding factory.
 
 Use make_feature_preprocessor() inside a modeling pipeline passed to the frozen
 development CV. No target, group identity, fitted full-cohort matrix, or held-out
@@ -34,7 +34,7 @@ FEATURE_COLUMNS = FEATURE_LOG_COLUMNS + FEATURE_NUMERIC_COLUMNS + FEATURE_CATEGO
 class BookingFeatureEngineer(TransformerMixin, BaseEstimator):
     """Apply existing fixed domain rules, then derive eight explicit fields.
 
-    Retain 24 Step 7 source fields and replace month names with a sine/cosine
+    Retain 24 preprocessing source fields and replace month names with a sine/cosine
     pair. Aggregate missing values propagate before training-only imputation.
     Company presence means only a recorded code, not verified corporate payment.
     """
@@ -42,7 +42,7 @@ class BookingFeatureEngineer(TransformerMixin, BaseEstimator):
     def _derive(self, X, cleaner):
         out = cleaner.transform(X)
         if "company" not in X:
-            raise ValueError("Step 9 requires the original company column to derive code presence.")
+            raise ValueError("feature engineering requires the original company column to derive code presence.")
         company = pd.to_numeric(X["company"], errors="raise")
         present = company.dropna()
         if not np.isfinite(present).all() or present.lt(0).any() or present.mod(1).ne(0).any():
@@ -82,7 +82,7 @@ class BookingFeatureEngineer(TransformerMixin, BaseEstimator):
 
 
 def make_feature_preprocessor(*, scale_numeric: bool = True) -> Pipeline:
-    """New unfitted Step 9 pipeline, explicitly extending Step 7's schema.
+    """New unfitted feature engineering pipeline, explicitly extending preprocessing's schema.
 
     Missing numeric values use training medians (zero if entirely missing).
     Sine/cosine and ratios are never logged. The unscaled variant suits trees.

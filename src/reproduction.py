@@ -14,12 +14,12 @@ from contextlib import redirect_stdout
 from pathlib import Path
 
 
-FROZEN_FOLDERS = ('data/results/step12', 'data/results/step13',
-                  'data/results/step15', 'models')
+FROZEN_FOLDERS = ('data/processed/results/tuning', 'data/processed/results/evaluation',
+                  'data/processed/results/test_comparison', 'models')
 FROZEN_FIGURES = ('figures/08_hyperparameter_tuning.png',
                   'figures/09_final_test_performance.png',
                   'figures/10_final_error_analysis.png')
-SELECTION = 'data/results/step12/final_selection.json'
+SELECTION = 'data/processed/results/tuning/final_selection.json'
 
 
 def digest(path):
@@ -78,12 +78,12 @@ def start_development_run(root, parent=None):
         'environment': environment_record(),
         'scope': 'development-only rerun; never promote its selection to final evaluation',
     })
-    for relative in ('data/processed', 'data/splits', 'src'):
+    for relative in ('data/processed', 'src'):
         source = root / relative
         if not source.is_dir():
             raise FileNotFoundError(source)
         shutil.copytree(source, run / relative,
-                        ignore=shutil.ignore_patterns('__pycache__', '*.pyc'))
+                        ignore=shutil.ignore_patterns('__pycache__', '*.pyc', 'results', 'verification'))
     (run / 'figures').mkdir()
     assert_frozen_unchanged(root, before)
     return run
@@ -132,7 +132,7 @@ def compare_tuning(original, rerun):
                      'estimator_parameters', 'threshold')
     published = {k: a[k] for k in selected_keys}
     repeated = {k: b[k] for k in selected_keys}
-    prefix = 'data/results/step12/'
+    prefix = 'data/processed/results/tuning/'
     left = _read_json(original, prefix + 'tuning_summary.json')
     right = _read_json(rerun, prefix + 'tuning_summary.json')
     fields = ('f1', 'accuracy', 'precision', 'recall', 'roc_auc')
@@ -165,7 +165,7 @@ def compare_tuning(original, rerun):
         'search_protocol_bytes_equal': digest(original / prefix / 'search_protocol.json') ==
                                        digest(rerun / prefix / 'search_protocol.json'),
         'published_runtime': left['runtime'], 'rerun_runtime': right['runtime'],
-        'scope': 'Step 12 development evidence only; not full-pipeline numerical certification',
+        'scope': 'tuning development evidence only; not full-pipeline numerical certification',
         'cause': 'Not established by this comparison; inspect environment and solver diagnostics.',
     }
 

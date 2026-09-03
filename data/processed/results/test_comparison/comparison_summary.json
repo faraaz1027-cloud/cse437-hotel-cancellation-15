@@ -1,0 +1,49 @@
+{
+  "analysis": "test_comparison",
+  "status": "comparison supplement complete; overall verification remains open",
+  "development_rows_fitted": 95415,
+  "test_rows_evaluated": 23795,
+  "selected_model": "logistic_regression",
+  "model_reselected_from_test": false,
+  "threshold_changed": false,
+  "frozen_evaluation_artifacts_unchanged": true,
+  "forest_unchanged_after_prediction": true,
+  "test_timing": "Authorized after evaluation Logistic Regression test results were known; not a preregistered simultaneous three-model test.",
+  "baseline_rule": "Development majority is class 0; every test cancellation probability is 0.",
+  "input_sha256": {
+    "eligibility_candidates.csv.gz": "1721717023e4f27371e37c8e05fefccda4fbf2ef89f1e60b3fc1a026ebb7bbb9",
+    "eligibility_metadata.csv.gz": "24655f99f16d70acde3295c270438bdc096d5d94f5b572d649a8a9bb1927e9db",
+    "validation_assignments.csv.gz": "57b4e8bcf947059dbb3ae34e39c49306b96aa86a4ad74898966e931b63a998e1",
+    "validation_split_plan.json": "399e6c5c3e71d45e7d43b775185dfc3402d51ebfe9399b53846085adf21cd7a3",
+    "eligibility_target.csv.gz": "84fef5775f76c456fe531c6f262a70b16853f4bdafc6c83c42b5fa010694eabb"
+  },
+  "protected_sha256": {
+    "data/processed/results/evaluation/evaluation_protocol.json": "dfb8b0505fbf440e785e397b74152b426a62d8b7eaf1128a3012196496ad5919",
+    "data/processed/results/evaluation/final_metrics.csv": "51e622d79193c0c031d68bb6d88195aad11110f7c6d41f58e7a500a860db4896",
+    "data/processed/results/evaluation/subgroup_metrics.csv": "b73af78729d91f3c293d9c703ba325dad6a7aa5b5771f4a6aa98bd903bd8c3ab",
+    "data/processed/results/evaluation/probability_diagnostics.csv": "ce8e14042f8cab63d263e763461116e977dbb3a1c854e1df8c5f21bf6a339e20",
+    "data/processed/results/evaluation/error_examples.csv": "45051eef307e9c632f7bdd197065d6659e64d3f3f8d3e061b18eaefab421e3e3",
+    "data/processed/results/evaluation/feature_coefficients.csv": "357a986c11190361d50adf3848fafb989cb3a75940b914c3fb244a63fb977bb4",
+    "models/final_logistic_regression.joblib": "498112adf28d66f22f84f76101187c7a94eefeda62b7a92b45f1f9152790e097",
+    "figures/09_final_test_performance.png": "b02d065b37dd9f54f5db7d3085f636f9e6a842e41babcdc1662311f9df9ebfac",
+    "figures/10_final_error_analysis.png": "774149f7920c35cdac5d673dd33c98b0386dd8cfe937b376c8c6ba30d1c1cd03",
+    "data/processed/results/evaluation/test_predictions_01.csv.gz": "31cfe50cca13e1216afbd158a9f7119bee1c5afa99734e9e877cc3c778abd78c",
+    "data/processed/results/evaluation/test_predictions_02.csv.gz": "febcc3739a2a47852eb0e213061dc02b8cfccf8695bc72f69d66102be754636b",
+    "data/processed/results/evaluation/test_predictions_03.csv.gz": "7b6b54f8361043661f089600a85dad3e13ef76789a3d34dadc3299152171ce4b",
+    "data/processed/results/evaluation/test_predictions_04.csv.gz": "e64629cce51e65c346fd8a1ec150ff8c33b9b76476286adc5ccbb3c92aacd8fb",
+    "data/processed/results/evaluation/evaluation_summary.json": "2dfede5497d6acfad92189ac6c866b543b490bda7424b914451cc6f9aae6f276",
+    "data/processed/results/tuning/final_selection.json": "68c4072f5c95e3a9f927a8b70a9e96aea8adbd4f7509f4d1c30ba6f7889f3b1b"
+  },
+  "runtime": {
+    "python": "3.12.13",
+    "numpy": "2.3.5",
+    "pandas": "2.2.3",
+    "scikit_learn": "1.8.0",
+    "joblib": "1.5.3"
+  },
+  "output_sha256": {
+    "data/processed/results/test_comparison/comparison_protocol.json": "de4cfc6b6853e9189ca2099947ff12b182808d1f03e74b8eedf09f248f1c68cd",
+    "data/processed/results/test_comparison/test_comparison.csv": "ec45e08e7d66ab64450392e97b8b09ea078262ba615139c7c5e6aca75c10a275",
+    "data/processed/results/test_comparison/random_forest_test_probabilities.csv.gz": "b4c48e2d65c688cd7493c6f5776b0b1fcf46a8bb57216b3e97c3ff52c5870cae"
+  }
+}

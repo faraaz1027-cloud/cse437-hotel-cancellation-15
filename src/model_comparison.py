@@ -1,4 +1,4 @@
-"""Step 11 baseline and two-family comparison on frozen development folds."""
+"""model comparison baseline and two-family comparison on frozen development folds."""
 from __future__ import annotations
 import argparse
 import hashlib
@@ -70,14 +70,14 @@ def plot_comparison(root,fold_results,comparison):
 
 
 def run_model_comparison(root):
-    root=Path(root);output=root/'data/results/step11';output.mkdir(parents=True,exist_ok=True)
+    root=Path(root);output=root/'data/processed/results/model_comparison';output.mkdir(parents=True,exist_ok=True)
     protocol_path=output/'comparison_protocol.json'
     if protocol_path.exists() and json.loads(protocol_path.read_text())!=PROTOCOL:
-        raise ValueError('Step 11 protocol changed; version and justify explicitly.')
+        raise ValueError('model comparison protocol changed; version and justify explicitly.')
     protocol_path.write_text(json.dumps(PROTOCOL,indent=2)+'\n')
     X,assignments,hashes=load_development(root)
-    plan=json.loads((root/'data/splits/step6_split_plan.json').read_text())
-    target_path=root/'data/processed/step5_target.csv.gz'
+    plan=json.loads((root/'data/processed/splits/validation_split_plan.json').read_text())
+    target_path=root/'data/processed/eligibility_target.csv.gz'
     digest=hashlib.sha256(target_path.read_bytes()).hexdigest()
     if digest!=plan['upstream_output_sha256'][target_path.name]:raise ValueError('Frozen target changed.')
     hashes[target_path.name]=digest
@@ -92,7 +92,7 @@ def run_model_comparison(root):
             schemas[f'fold_{fold}']={}
             membership_hash=hashlib.sha256(dev_assignments.iloc[val_idx].source_row_id.to_csv(index=False).encode()).hexdigest()
             for name,family,mode in CANDIDATES:
-                print(f'Step 11: fitting {name}, fold {fold} ({len(train):,} training rows)',flush=True)
+                print(f'model comparison: fitting {name}, fold {fold} ({len(train):,} training rows)',flush=True)
                 pipe=make_model_pipeline(family,mode)
                 configured[name]=pipe.named_steps['model'].get_params(deep=False)
                 start=time.perf_counter()
@@ -138,16 +138,16 @@ def run_model_comparison(root):
         mean_precision=('precision','mean'),mean_recall=('recall','mean'),mean_roc_auc=('roc_auc','mean'),
         mean_training_f1=('training_f1','mean'),mean_f1_gap=('f1_train_minus_validation','mean'),
         mean_fit_seconds=('fit_seconds','mean'),mean_encoded_columns=('encoded_columns','mean')).reset_index()
-    # Check integration parity against the already-published Step 10 reference.
-    old_path=root/'data/processed/step10/fold_results.csv'
-    old_summary=json.loads((root/'data/processed/step10/representation_summary.json').read_text())
+    # Check integration parity against the already-published representation comparison reference.
+    old_path=root/'data/processed/representations/fold_results.csv'
+    old_summary=json.loads((root/'data/processed/representations/representation_summary.json').read_text())
     old_digest=hashlib.sha256(old_path.read_bytes()).hexdigest()
     # Earlier run-local summaries may use Windows separators. Normalize keys only;
     # keep the stored digest and strict numerical comparisons unchanged.
     old_hashes={key.replace('\\', '/'): value
                 for key,value in old_summary['output_sha256'].items()}
-    if old_digest!=old_hashes['data/processed/step10/fold_results.csv']:
-        raise ValueError('Step 10 reference evidence changed.')
+    if old_digest!=old_hashes['data/processed/representations/fold_results.csv']:
+        raise ValueError('representation comparison reference evidence changed.')
     old=pd.read_csv(old_path)
     for mode in ['full','selected']:
         previous=old.loc[old['mode'].eq(mode)].sort_values('fold')
@@ -163,14 +163,13 @@ def run_model_comparison(root):
     (output/'feature_schemas.json').write_text(json.dumps(schemas,indent=2)+'\n')
     (output/'estimator_parameters.json').write_text(json.dumps(configured,indent=2)+'\n')
     figure=plot_comparison(root,results,comparison)
-    summary={'step':11,'status':'completed','responsible_member':'Sadat','next_step':12,'next_owner':'Sadat',
-        'development_rows':len(X),'candidate_count':5,'fold_count':3,'model_fits':15,
+    summary={'analysis': 'model_comparison','status':'completed','development_rows':len(X),'candidate_count':5,'fold_count':3,'model_fits':15,
         'learned_model_families':['logistic_regression','random_forest'],'baseline':'training-majority class',
         'preferred_candidate':str(preferred.candidate),'preferred_family':str(preferred.family),
         'preferred_representation':str(preferred.representation),'mean_f1':float(preferred.mean_f1),
         'decision_scope':'untuned development candidate for further tuning; not final best-model or test claim',
-        'protocol':PROTOCOL,'input_sha256':hashes,'step10_reference_sha256':old_digest,
-        'logistic_results_match_step10':True,'convergence_warnings':0,
+        'protocol':PROTOCOL,'input_sha256':hashes,'representations_reference_sha256':old_digest,
+        'logistic_results_match_representations':True,'convergence_warnings':0,
         'test_rows_fitted_transformed_or_scored':0,'test_target_distribution_computed':False,
         'full_development_model_fitted':False,'model_hyperparameter_tuning_completed':False,
         'rows_removed':0,'row_level_predictions_published':False,
@@ -178,8 +177,8 @@ def run_model_comparison(root):
         'limitations':['Development scores are reused for representation/model selection; they are not unbiased final performance estimates.',
             'Training scores are resubstitution diagnostics; train-validation gaps mix capacity, temporal shift and recorded repetition.',
             'Class weighting and threshold optimization are not performed; comparisons use the fixed cancellation-class F1 policy.',
-            'No nested validation or final held-out result is reported; model hyperparameter tuning remains Step 12.',
-            'Source timing and repeated-record limitations from earlier steps still apply.']}
+            'No nested validation or final held-out result is reported; model hyperparameter tuning remains tuning.',
+            'Source timing and repeated-record limitations from earlier analyses still apply.']}
     artifacts=[output/name for name in ['comparison_protocol.json','fold_results.csv','model_comparison.csv',
         'feature_schemas.json','estimator_parameters.json']]+[figure]
     summary['output_sha256']={str(p.relative_to(root)):hashlib.sha256(p.read_bytes()).hexdigest() for p in artifacts}

@@ -1,4 +1,4 @@
-"""Step 13: frozen-pipeline refit, one official held-out evaluation and errors."""
+"""evaluation: frozen-pipeline refit, one official held-out evaluation and errors."""
 from __future__ import annotations
 
 import argparse
@@ -28,9 +28,9 @@ ERROR_FEATURES = ['hotel', 'lead_time', 'deposit_type', 'market_segment',
                   'total_of_special_requests']
 METRICS = ['f1', 'accuracy', 'precision', 'recall', 'roc_auc']
 PROTOCOL = {
-    'step': 13,
-    'official_evaluation': 'fit frozen Step 12 pipeline on development; score final test once',
-    'selection_source': 'data/results/step12/final_selection.json',
+    'analysis': 'evaluation',
+    'official_evaluation': 'fit frozen tuning pipeline on development; score final test once',
+    'selection_source': 'data/processed/results/tuning/final_selection.json',
     'family': 'logistic_regression', 'representation': 'selected',
     'model_parameters': {'C': 1.0, 'class_weight': 'balanced'},
     'threshold': .5, 'threshold_rule': 'class 1 when probability >= 0.5',
@@ -53,23 +53,23 @@ def sha256(path):
 def write_protocol(path):
     path = Path(path)
     if path.exists() and json.loads(path.read_text()) != PROTOCOL:
-        raise ValueError('Frozen Step 13 protocol changed; do not overwrite after test access.')
+        raise ValueError('Frozen evaluation protocol changed; do not overwrite after test access.')
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(PROTOCOL, indent=2) + '\n')
 
 
 def checked_selection(root):
     root = Path(root)
-    summary = json.loads((root/'data/results/step12/tuning_summary.json').read_text())
+    summary = json.loads((root/'data/processed/results/tuning/tuning_summary.json').read_text())
     for relative, expected in summary['output_sha256'].items():
         if sha256(root/relative) != expected:
-            raise ValueError('Step 12 output changed: ' + relative)
-    selection_path = root/'data/results/step12/final_selection.json'
+            raise ValueError('tuning output changed: ' + relative)
+    selection_path = root/'data/processed/results/tuning/final_selection.json'
     selection = json.loads(selection_path.read_text())
     if selection['family'] != PROTOCOL['family'] or selection['representation'] != PROTOCOL['representation']:
-        raise ValueError('Step 13 protocol does not match frozen selection.')
+        raise ValueError('evaluation protocol does not match frozen selection.')
     if selection['search_parameters'] != {'model__C': 1.0, 'model__class_weight': 'balanced'}:
-        raise ValueError('Frozen Step 12 model settings changed.')
+        raise ValueError('Frozen tuning model settings changed.')
     if selection['threshold'] != PROTOCOL['threshold']:
         raise ValueError('Frozen threshold changed.')
     return selection, summary, sha256(selection_path)
@@ -184,7 +184,7 @@ def plot_results(root, metrics, diagnostics, groups, probability):
     axes[1].set_xticks([0,1],['Predicted 0','Predicted 1']);axes[1].set_yticks([0,1],['Actual 0','Actual 1'])
     axes[1].set_title('Confusion matrix',loc='left')
     for ax in axes: ax.spines[['top','right']].set_visible(False)
-    fig.text(.08,.02,'Frozen Step 12 pipeline • Threshold 0.5 • 23,795 later-arrival bookings',fontsize=9)
+    fig.text(.08,.02,'Frozen tuning pipeline • Threshold 0.5 • 23,795 later-arrival bookings',fontsize=9)
     fig.subplots_adjust(left=.08,right=.98,top=.88,bottom=.18,wspace=.32)
     final_path=root/'figures/09_final_test_performance.png';fig.savefig(final_path,dpi=150,facecolor='white');plt.close(fig)
     # Probability reliability view and error counts by hotel.
@@ -207,13 +207,13 @@ def plot_results(root, metrics, diagnostics, groups, probability):
 
 
 def run_final_evaluation(root):
-    root=Path(root);out=root/'data/results/step13';write_protocol(out/'evaluation_protocol.json')
-    selection,step12,selection_hash=checked_selection(root)
+    root=Path(root);out=root/'data/processed/results/evaluation';write_protocol(out/'evaluation_protocol.json')
+    selection,tuning,selection_hash=checked_selection(root)
     X_dev,assignments,input_hashes=load_development(root)
     check_assignments(assignments)
     dev_mask=assignments.partition.eq('development').to_numpy();test_mask=assignments.partition.eq('test').to_numpy()
     if (dev_mask.sum(),test_mask.sum())!=(95415,23795): raise ValueError('Frozen partition sizes changed.')
-    target_path=root/'data/processed/step5_target.csv.gz'
+    target_path=root/'data/processed/eligibility_target.csv.gz'
     if sha256(target_path)!=selection['input_sha256'][target_path.name]: raise ValueError('Frozen target changed.')
     y_dev=read_selected_rows(target_path,dev_mask).is_canceled.reset_index(drop=True)
     pipeline=build_frozen_pipeline(selection)
@@ -225,7 +225,7 @@ def run_final_evaluation(root):
     if pipeline.named_steps['representation'].preprocessor_.named_steps['columns'] is None:
         raise AssertionError('Representation did not fit.')
     # Test features can now be transformed; choices are fixed and fit is complete.
-    X_test=read_selected_rows(root/'data/processed/step5_candidates.csv.gz',test_mask).reset_index(drop=True)
+    X_test=read_selected_rows(root/'data/processed/eligibility_candidates.csv.gz',test_mask).reset_index(drop=True)
     test_assignments=assignments.loc[test_mask,['cohort_row','source_row_id','arrival_date']].reset_index(drop=True)
     state=joblib.hash(pipeline.named_steps['representation'])
     probability=cancellation_probability(pipeline,X_test)
@@ -254,8 +254,7 @@ def run_final_evaluation(root):
     model_path=root/PROTOCOL['saved_model'];model_path.parent.mkdir(parents=True,exist_ok=True)
     joblib.dump(pipeline,model_path,compress=3)
     figures=plot_results(root,metrics,diagnostics,groups,prob_diag)
-    summary={'step':13,'status':'completed','responsible_member':'Sadat','next_step':14,'next_owner':'Sadat',
-             'official_test_evaluations':1,'selection_sha256':selection_hash,
+    summary={'analysis': 'evaluation','status':'completed','official_test_evaluations':1,'selection_sha256':selection_hash,
              'selection':{'family':selection['family'],'representation':selection['representation'],
                           'search_parameters':selection['search_parameters'],'threshold':selection['threshold'],
                           'mean_development_f1':selection['mean_development_f1']},
@@ -266,11 +265,11 @@ def run_final_evaluation(root):
              'subgroup_dimensions':PROTOCOL['subgroups'],'published_error_examples':len(examples),
              'model_reselected_from_test':False,'threshold_changed_after_test':False,
              'input_sha256':{**input_hashes,target_path.name:sha256(target_path)},
-             'step12_output_hashes_verified':True,
+             'tuning_output_hashes_verified':True,
              'runtime':{'python':platform.python_version(),'numpy':np.__version__,'pandas':pd.__version__,
                         'scikit_learn':sklearn.__version__,'joblib':joblib.__version__},
              'limitations':['A single chronological holdout gives one period-specific estimate, not a confidence interval.',
-                            'Development folds informed representation, model and parameters; only the final test was untouched until this step.',
+                            'Development folds informed representation, model and parameters; only the final test was untouched until this analysis.',
                             'Subgroup metrics and selected errors are descriptive after test access and do not authorize model changes.',
                             'Coefficient magnitude is not causal importance; encoded/scaled features differ in interpretation.',
                             'Retrospective feature timing, repeated profiles, partial seasonal coverage and source-provenance limits remain.']}

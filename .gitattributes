@@ -1,3 +1,0 @@
-# Preserve committed bytes: scientific evidence and source files have SHA-256 checks.
-# Fresh run-local files may use platform-specific serialization; compare separately.
-* -text

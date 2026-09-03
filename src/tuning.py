@@ -1,4 +1,4 @@
-"""Step 12 exhaustive, development-only hyperparameter search; no global refit."""
+"""tuning exhaustive, development-only hyperparameter search; no global refit."""
 from __future__ import annotations
 
 import argparse
@@ -30,13 +30,13 @@ GRIDS = {
 METRICS = ['f1', 'accuracy', 'precision', 'recall', 'roc_auc']
 COUNTS = ['tn', 'fp', 'fn', 'tp']
 PROTOCOL = {
-    'step': 12, 'method': 'exhaustive GridSearchCV', 'parameter_grids': GRIDS,
+    'analysis': 'tuning', 'method': 'exhaustive GridSearchCV', 'parameter_grids': GRIDS,
     'representations': {'logistic_regression': 'selected', 'random_forest': 'selected'},
     'selection_percentile': 75, 'pca_retained': False,
     'fixed_settings_source': 'src/modeling.py MODEL_SETTINGS; only listed model parameters vary',
     'candidate_counts': {'logistic_regression': 8, 'random_forest': 12},
     'folds': 3, 'expected_fits': 60,
-    'cv': 'immutable Step 6 expanding forward folds; development-relative indices',
+    'cv': 'immutable validation expanding forward folds; development-relative indices',
     'seed': 42, 'search_n_jobs': 1, 'forest_n_jobs': 2,
     'primary_metric': 'unweighted three-fold mean cancellation-class F1',
     'secondary_metrics': METRICS[1:],
@@ -46,7 +46,7 @@ PROTOCOL = {
     'return_train_score': True, 'resampling': None, 'threshold_search': False,
     'class_weighting': 'None or balanced; balanced weights computed from each training fold',
     'budget_rationale': 'Complete 20-setting grid targets linear regularization and forest capacity/imbalance; tree count remains 100 and max_features remains sqrt.',
-    'final_test_policy': 'No final test fitting, transformation, scoring or label summaries; reserve for Step 13.',
+    'final_test_policy': 'No final test fitting, transformation, scoring or label summaries; reserve for evaluation.',
 }
 
 
@@ -57,7 +57,7 @@ def sha256(path):
 def write_protocol(path):
     path = Path(path)
     if path.exists() and json.loads(path.read_text()) != PROTOCOL:
-        raise ValueError('Frozen Step 12 protocol changed; version and justify explicitly.')
+        raise ValueError('Frozen tuning protocol changed; version and justify explicitly.')
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(PROTOCOL, indent=2) + '\n')
 
@@ -79,7 +79,7 @@ def run_search(family, X, y, cv, param_grid=None, verbose=0):
         warnings.simplefilter('error', ConvergenceWarning)
         search.fit(X, y)
     if hasattr(search, 'best_estimator_'):
-        raise AssertionError('Step 12 must not refit a model on all development rows.')
+        raise AssertionError('tuning must not refit a model on all development rows.')
     return search
 
 
@@ -104,15 +104,15 @@ def check_untuned_control(old, current, family):
         np.testing.assert_allclose(old[metric], current[metric], atol=tolerance, rtol=0)
         for fold, before, after in zip([1, 2, 3], old[metric], current[metric]):
             checks.append({'family': family, 'fold': fold, 'metric': metric,
-                           'step11_value': float(before), 'step12_value': float(after),
+                           'model_comparison_value': float(before), 'tuning_value': float(after),
                            'absolute_difference': float(abs(before - after)),
                            'absolute_tolerance': tolerance})
     return checks
 
 
 def build_frozen_pipeline(selection):
-    """Construct, but do not fit, the development-selected pipeline for Step 13."""
-    if selection.get('step') != 12 or selection.get('threshold') != .5:
+    """Construct, but do not fit, the development-selected pipeline for evaluation."""
+    if selection.get('analysis') != 'tuning' or selection.get('threshold') != .5:
         raise ValueError('Unknown selection version or changed threshold.')
     family = selection['family']
     if family not in GRIDS or selection.get('representation') != 'selected':
@@ -133,8 +133,8 @@ def plot_tuning(root, comparison):
     labels = ['Logistic regression', 'Random forest']
     x = np.arange(2)
     fig, ax = plt.subplots(figsize=(8.4, 4.8))
-    for shift, column, label, color in [(-.18, 'untuned_mean_f1', 'Step 11 untuned', '#9aa8b2'),
-                                      (.18, 'tuned_mean_f1', 'Step 12 best grid setting', '#267f9c')]:
+    for shift, column, label, color in [(-.18, 'untuned_mean_f1', 'model comparison untuned', '#9aa8b2'),
+                                      (.18, 'tuned_mean_f1', 'tuning best grid setting', '#267f9c')]:
         bars = ax.bar(x + shift, comparison[column], .34, label=label, color=color)
         ax.bar_label(bars, fmt='%.3f', padding=4)
     ax.set_xticks(x, labels); ax.set_ylim(0, 1)
@@ -151,14 +151,14 @@ def plot_tuning(root, comparison):
 
 
 def run_tuning(root):
-    root = Path(root); output = root / 'data/results/step12'
+    root = Path(root); output = root / 'data/processed/results/tuning'
     write_protocol(output / 'search_protocol.json')  # freeze before inspecting new scores
-    previous = json.loads((root / 'data/results/step11/model_summary.json').read_text())
+    previous = json.loads((root / 'data/processed/results/model_comparison/model_summary.json').read_text())
     for path, expected in previous['output_sha256'].items():
         if sha256(root / path) != expected:
-            raise ValueError('Step 11 evidence changed: ' + path)
+            raise ValueError('model comparison evidence changed: ' + path)
     X, assignments, hashes = load_development(root)
-    target_path = root / 'data/processed/step5_target.csv.gz'
+    target_path = root / 'data/processed/eligibility_target.csv.gz'
     hashes[target_path.name] = sha256(target_path)
     if hashes[target_path.name] != previous['input_sha256'][target_path.name]:
         raise ValueError('Frozen target changed.')
@@ -181,7 +181,7 @@ def run_tuning(root):
     rows, candidates, all_params = [], [], {}
     order = 0
     for family in GRIDS:
-        print(f'\nStep 12: {family}, {len(list(ParameterGrid(GRIDS[family])))} settings × 3 frozen folds', flush=True)
+        print(f'\ntuning: {family}, {len(list(ParameterGrid(GRIDS[family])))} settings × 3 frozen folds', flush=True)
         search = run_search(family, X, y, cv, verbose=2)
         raw = pd.DataFrame(search.cv_results_)
         raw['params'] = raw.params.map(lambda p: json.dumps(p, sort_keys=True))
@@ -215,8 +215,8 @@ def run_tuning(root):
     scores = pd.DataFrame(candidates); folds = pd.DataFrame(rows)
     if len(scores) != 20 or len(folds) != 60:
         raise AssertionError('Search did not complete all declared fits.')
-    old_folds = pd.read_csv(root / 'data/results/step11/fold_results.csv')
-    old_means = pd.read_csv(root / 'data/results/step11/model_comparison.csv').set_index('candidate')
+    old_folds = pd.read_csv(root / 'data/processed/results/model_comparison/fold_results.csv')
+    old_means = pd.read_csv(root / 'data/processed/results/model_comparison/model_comparison.csv').set_index('candidate')
     comparisons = []; best_by_family = {}; parity_checks = []
     for family, old_key, baseline_params in [
         ('logistic_regression', 'lr_selected', {'model__C': 1.0, 'model__class_weight': None}),
@@ -239,16 +239,16 @@ def run_tuning(root):
                             'f1_change': float(best.mean_f1 - old_means.loc[old_key, 'mean_f1'])})
     comparison = pd.DataFrame(comparisons)
     winner = rank_candidates(scores).iloc[0]
-    selection = {'step': 12, 'candidate': str(winner.candidate), **all_params[winner.candidate],
+    selection = {'analysis': 'tuning', 'candidate': str(winner.candidate), **all_params[winner.candidate],
                  'threshold': .5, 'threshold_rule': PROTOCOL['threshold_rule'],
                  'mean_development_f1': float(winner.mean_f1),
                  'best_by_family': best_by_family,
                  'input_sha256': hashes, 'search_protocol_sha256': sha256(output / 'search_protocol.json'),
                  'scope': 'frozen development-selected settings; no fitted estimator or final test result',
-                 'step13_policy': 'Refit the selected pipeline on development only, then evaluate held-out data once; never reselect from test scores.'}
+                 'evaluation_policy': 'Refit the selected pipeline on development only, then evaluate held-out data once; never reselect from test scores.'}
     frozen = build_frozen_pipeline(selection)
     if hasattr(frozen.named_steps['representation'], 'preprocessor_'):
-        raise AssertionError('Handoff must be unfitted.')
+        raise AssertionError('The selected pipeline must be unfitted.')
     scores.to_csv(output / 'candidate_results.csv', index=False)
     folds.to_csv(output / 'fold_results.csv', index=False)
     comparison.to_csv(output / 'tuning_comparison.csv', index=False)
@@ -256,11 +256,10 @@ def run_tuning(root):
     (output / 'candidate_parameters.json').write_text(json.dumps(all_params, indent=2) + '\n')
     (output / 'final_selection.json').write_text(json.dumps(selection, indent=2) + '\n')
     figure = plot_tuning(root, comparison)
-    summary = {'step': 12, 'status': 'completed', 'responsible_member': 'Sadat',
-               'next_step': 13, 'next_owner': 'Sadat', 'development_rows': len(X),
+    summary = {'analysis': 'tuning', 'status': 'completed', 'development_rows': len(X),
                'candidates': len(scores), 'model_fits': len(folds), 'folds': 3,
                'preferred_candidate': str(winner.candidate), 'preferred_family': str(winner.family),
-               'mean_f1': float(winner.mean_f1), 'untuned_controls_match_step11': True,
+               'mean_f1': float(winner.mean_f1), 'untuned_controls_match_model_comparison': True,
                'control_parity_policy': {'threshold_metrics_and_logistic_auc_atol': 1e-12,
                                         'forest_auc_atol': 1e-7,
                                         'note': 'First strict audit detected forest AUC drift up to 1.14e-8; only the numerical check was relaxed, not scoring or selection.'},

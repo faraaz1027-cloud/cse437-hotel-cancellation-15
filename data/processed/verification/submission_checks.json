@@ -1,0 +1,55 @@
+{
+  "analysis": "test_comparison",
+  "status": "report_checks_passed_submission_signoff_pending",
+  "python": "3.12.13",
+  "report_pages": 10,
+  "summary_words": 168,
+  "report_markdown_sha256": "e6f438ebfef426a167bcea6a88801c6df9db2a797618f337e61701b11a85a815",
+  "report_pdf_sha256": "3fba13482487fafb0d3535e92d0883d3b423a64dbdf758981c25ba2f15e7726f",
+  "required_sections_and_unchanged_questions": "passed",
+  "internal_report_links": "passed",
+  "test_table_matches_frozen_metrics": true,
+  "frozen_artifact_hashes_checked": 26,
+  "selection_sha256": "68c4072f5c95e3a9f927a8b70a9e96aea8adbd4f7509f4d1c30ba6f7889f3b1b",
+  "notebooks": [
+    {
+      "path": "notebooks/01_data_audit_and_eda.ipynb",
+      "sha256": "0b09ac27d5af672eb769440bfe0154ef53258f3d7c9ac0250f21be9ba716d760",
+      "canonical_format": "passed",
+      "code_cells": 16
+    },
+    {
+      "path": "notebooks/02_preprocessing.ipynb",
+      "sha256": "7bf8a1e9e39bc5edee259cc2029dd03e34b18074535604a7df7f613e1cf3b371",
+      "canonical_format": "passed",
+      "code_cells": 14
+    },
+    {
+      "path": "notebooks/03_feature_engineering.ipynb",
+      "sha256": "7a67f99b28c2d73ed0c9038c03af99c4b0058c9da2936a5a4b866cad7d2fb60a",
+      "canonical_format": "passed",
+      "code_cells": 11
+    },
+    {
+      "path": "notebooks/04_modeling_and_tuning.ipynb",
+      "sha256": "4df7ae3379c34d16ffe6ab8905df7ce94105922d41e0ed4e9c3941568ab3ed66",
+      "canonical_format": "passed",
+      "code_cells": 13
+    },
+    {
+      "path": "notebooks/05_evaluation_and_error_analysis.ipynb",
+      "sha256": "34486776fd64d2cc7cf14d098eb7da3217afff6a0637604b3f25ed29142a9d8a",
+      "canonical_format": "passed",
+      "code_cells": 8
+    }
+  ],
+  "unit_tests_passed": 84,
+  "dependency_consistency": "No broken requirements found.",
+  "private_original_docx_hash_checked": true,
+  "raw_dataset_present_locally": true,
+  "fresh_kernel_status": "Prior Windows run passed with numerical differences; reorganized notebooks require a new exact-source run.",
+  "raw_publication_status": "Original CSV publication verified by Git blob identity; local checksum checked again.",
+  "member_contributions": "User-confirmed responsibilities; both accounts appear in Git history; joint final review remains open.",
+  "visual_review": "All 10 rendered pages separately reviewed",
+  "submission_ready": false
+}

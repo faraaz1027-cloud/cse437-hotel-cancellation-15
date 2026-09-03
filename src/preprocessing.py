@@ -1,4 +1,4 @@
-"""Step 7: deterministic domain rules and train-fitted preprocessing factories.
+"""preprocessing: deterministic domain rules and train-fitted preprocessing factories.
 
 Never fit these components on the full cohort before cross-validation. Put a
 new preprocessor inside the estimator Pipeline passed to development CV.
@@ -20,7 +20,7 @@ METADATA_COLUMNS = ("source_row_id", "cohort_row", "arrival_date", "duplicate_gr
     "unknown_guest_total", "zero_adults_positive_guests", "zero_total_nights",
     "negative_adr", "zero_adr", "adr_above_1000_review_only")
 POLICY_EXCLUSIONS = {
-    "company": "Sparse company identifier; possible presence feature deferred to Step 9.",
+    "company": "Sparse company identifier; possible presence feature deferred to feature engineering.",
     "assigned_room_type": "Assignment can change after reservation; exclude from primary inputs.",
     "booking_changes": "Accumulated post-reservation changes; timing is uncertain.",
     "days_in_waiting_list": "Accumulated waiting time; timing is uncertain.",
@@ -39,13 +39,13 @@ class BookingDomainCleaner(TransformerMixin, BaseEstimator):
     """Preserve rows, select the 25 declared fields, and apply fixed domain rules.
 
     This transformer learns no medians, thresholds, or category vocabularies.
-    Other Step 5 fields are excluded by policy. Unexpected extra columns raise
+    Other eligibility fields are excluded by policy. Unexpected extra columns raise
     an error so later feature engineering cannot be silently discarded.
     """
 
     def _clean(self, X):
         if not isinstance(X, pd.DataFrame):
-            raise TypeError("Pass a DataFrame with named Step 5 candidate columns.")
+            raise TypeError("Pass a DataFrame with named eligibility candidate columns.")
         if not X.columns.is_unique:
             raise ValueError("Duplicate input column names are not permitted.")
         forbidden = set(X.columns).intersection(LEAKAGE_COLUMNS + METADATA_COLUMNS)
@@ -56,7 +56,7 @@ class BookingDomainCleaner(TransformerMixin, BaseEstimator):
             raise ValueError(f"Required model fields missing: {sorted(missing)}")
         extras = set(X.columns).difference(MODEL_COLUMNS).difference(POLICY_EXCLUSIONS)
         if extras:
-            raise ValueError(f"Undeclared features: {sorted(extras)}. Extend the schema explicitly in Step 9.")
+            raise ValueError(f"Undeclared features: {sorted(extras)}. Extend the schema explicitly in feature engineering.")
         out = X.loc[:, list(MODEL_COLUMNS)].copy(deep=True)
         for column in LOG_COLUMNS + NUMERIC_COLUMNS:
             values = pd.to_numeric(out[column], errors="raise").astype(float)

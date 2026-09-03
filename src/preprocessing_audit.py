@@ -1,4 +1,4 @@
-"""Execute Step 7 preprocessing on the fixed DEVELOPMENT folds only.
+"""Execute preprocessing on the fixed DEVELOPMENT folds only.
 
 Exports aggregate evidence and feature schemas, not globally fitted matrices.
 Run: python -m src.preprocessing_audit
@@ -50,24 +50,24 @@ def checked_matrix(matrix, expected_rows):
 
 
 def run_preprocessing_audit(root: Path):
-    processed, splits = root / "data/processed", root / "data/splits"
-    plan_path = splits / "step6_split_plan.json"
+    processed, splits = root / "data/processed", root / "data/processed/splits"
+    plan_path = splits / "validation_split_plan.json"
     plan = json.loads(plan_path.read_text(encoding="utf-8"))
     path = splits / plan["assignment_file"]
     if hashlib.sha256(path.read_bytes()).hexdigest() != plan["assignment_sha256"]:
         raise ValueError("Assignment checksum changed.")
     input_hashes = {}
-    for filename in ["step5_candidates.csv.gz", "step5_metadata.csv.gz"]:
+    for filename in ["eligibility_candidates.csv.gz", "eligibility_metadata.csv.gz"]:
         sha = hashlib.sha256((processed / filename).read_bytes()).hexdigest()
         if sha != plan["upstream_output_sha256"][filename]:
             raise ValueError(f"Upstream input changed: {filename}")
         input_hashes[filename] = sha
     assignments = pd.read_csv(path)
     check_assignments(assignments)
-    metadata = pd.read_csv(processed / "step5_metadata.csv.gz")
-    candidates = pd.read_csv(processed / "step5_candidates.csv.gz")
+    metadata = pd.read_csv(processed / "eligibility_metadata.csv.gz")
+    candidates = pd.read_csv(processed / "eligibility_candidates.csv.gz")
     if assignments.source_row_id.tolist() != metadata.source_row_id.tolist():
-        raise ValueError("Split metadata is misaligned with Step 5 row order.")
+        raise ValueError("Split metadata is misaligned with eligibility row order.")
     if len(candidates) != len(assignments):
         raise ValueError("Candidate and assignment lengths differ.")
     dev_rows = np.flatnonzero(assignments.partition.eq("development"))
@@ -146,8 +146,7 @@ def run_preprocessing_audit(root: Path):
             "unscaled_tree_variant_verified": True,
         })
     summary = {
-        "step": 7, "status": "completed", "responsible_member": "Faraaz", "next_step": 8,
-        "scope": "preprocessing of frozen development train/validation folds only",
+        'analysis': 'preprocessing', "status": "completed", "scope": "preprocessing of frozen development train/validation folds only",
         "development_rows": len(X_dev), "test_rows_fitted_or_transformed": 0,
         "target_file_read_by_audit": False, "predictive_models_trained": 0,
         "rows_removed": 0, "input_candidate_columns": 29,
@@ -165,17 +164,17 @@ def run_preprocessing_audit(root: Path):
                   "scaled_variant": "training-fold StandardScaler after imputation/log1p",
                   "tree_variant": "same rules without numeric StandardScaler"},
         "folds": folds,
-        "input_sha256": {**input_hashes, "step6_assignments.csv.gz": plan["assignment_sha256"],
-            "step6_split_plan.json": hashlib.sha256(plan_path.read_bytes()).hexdigest()},
+        "input_sha256": {**input_hashes, "validation_assignments.csv.gz": plan["assignment_sha256"],
+            "validation_split_plan.json": hashlib.sha256(plan_path.read_bytes()).hexdigest()},
         "runtime": {"python": platform.python_version(), "numpy": np.__version__, "pandas": pd.__version__,
                     "scipy": scipy.__version__, "scikit_learn": sklearn.__version__},
         "limitations": ["Candidate-field timing is not guaranteed by source snapshots; this remains retrospective evaluation.",
             "Medians/log transforms are fixed preprocessing choices, not proven best by predictive performance.",
             "Unseen categories map to zeros, so category-specific information can be lost.",
-            "Feature engineering, statistical feature selection, and dimensionality reduction remain later steps.",
+            "Feature engineering, statistical feature selection, and dimensionality reduction remain additional analyses.",
             "Do not reuse these fold diagnostics as a preprocessed full-cohort matrix for model selection."],
     }
-    output = processed / "step7"
+    output = processed / "preprocessing"
     output.mkdir(parents=True, exist_ok=True)
     (output / "preprocessing_summary.json").write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
     (output / "feature_schemas.json").write_text(json.dumps(schemas, indent=2) + "\n", encoding="utf-8")

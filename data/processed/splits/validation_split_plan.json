@@ -1,0 +1,155 @@
+{
+  "analysis": "validation",
+  "status": "completed",
+  "policy_version": "1.0",
+  "design": "retrospective_arrival_cohort_holdout_with_expanding_forward_validation",
+  "boundary_rule": "nearest prefix row count at whole dates; earlier date wins ties",
+  "development_fraction_requested": 0.8,
+  "development_fraction_actual": 0.8003942622263233,
+  "cv_development_prefix_fractions_requested": [
+    0.25,
+    0.5,
+    0.75
+  ],
+  "rows": 119210,
+  "test_start": "2017-04-23",
+  "cv_validation_start_dates": [
+    "2016-01-27",
+    "2016-06-22",
+    "2016-11-07"
+  ],
+  "partitions": [
+    {
+      "partition": "development",
+      "rows": 95415,
+      "start": "2015-07-01",
+      "end": "2017-04-22",
+      "duplicate_groups": 67961
+    },
+    {
+      "partition": "test",
+      "rows": 23795,
+      "start": "2017-04-23",
+      "end": "2017-08-31",
+      "duplicate_groups": 18746
+    }
+  ],
+  "folds": [
+    {
+      "fold": 1,
+      "train": {
+        "partition": "train",
+        "rows": 23797,
+        "start": "2015-07-01",
+        "end": "2016-01-26",
+        "duplicate_groups": 14696
+      },
+      "validation": {
+        "partition": "validation",
+        "rows": 23893,
+        "start": "2016-01-27",
+        "end": "2016-06-21",
+        "duplicate_groups": 16847
+      },
+      "unused_development_rows": 47725,
+      "excluded_test_rows": 23795
+    },
+    {
+      "fold": 2,
+      "train": {
+        "partition": "train",
+        "rows": 47690,
+        "start": "2015-07-01",
+        "end": "2016-06-21",
+        "duplicate_groups": 31543
+      },
+      "validation": {
+        "partition": "validation",
+        "rows": 23776,
+        "start": "2016-06-22",
+        "end": "2016-11-06",
+        "duplicate_groups": 17974
+      },
+      "unused_development_rows": 23949,
+      "excluded_test_rows": 23795
+    },
+    {
+      "fold": 3,
+      "train": {
+        "partition": "train",
+        "rows": 71466,
+        "start": "2015-07-01",
+        "end": "2016-11-06",
+        "duplicate_groups": 49517
+      },
+      "validation": {
+        "partition": "validation",
+        "rows": 23949,
+        "start": "2016-11-07",
+        "end": "2017-04-22",
+        "duplicate_groups": 18444
+      },
+      "unused_development_rows": 0,
+      "excluded_test_rows": 23795
+    }
+  ],
+  "checks": {
+    "complete_row_accounting": true,
+    "source_row_ids_unique": true,
+    "whole_date_boundaries": true,
+    "strict_temporal_order": true,
+    "duplicate_group_overlap": 0,
+    "test_rows_in_cv": 0,
+    "overlapping_validation_rows": 0,
+    "expanding_training_windows": true
+  },
+  "shuffle": false,
+  "split_random_seed": null,
+  "future_model_random_seed": 42,
+  "target_used_to_choose_boundaries": false,
+  "test_label_distribution_computed": false,
+  "test_model_evaluation_performed": false,
+  "primary_metric": {
+    "name": "F1",
+    "positive_label": 1,
+    "sklearn_scoring": "f1",
+    "aggregation": "unweighted arithmetic mean across three validation folds",
+    "default_probability_threshold": 0.5,
+    "zero_division": 0
+  },
+  "secondary_metrics": [
+    "accuracy",
+    "precision",
+    "recall",
+    "ROC-AUC"
+  ],
+  "planned_models": [
+    "DummyClassifier(strategy=most_frequent)",
+    "LogisticRegression",
+    "RandomForestClassifier"
+  ],
+  "selection_policy": "Select features, transformations, hyperparameters and any threshold using development folds only; freeze choices, refit on all development rows, evaluate test once in evaluation.",
+  "limitations": [
+    "Arrival-date cohorts are not booking-creation snapshots or verified real-time label availability.",
+    "All source rows and basic quality summaries were available before holdout construction.",
+    "No temporal embargo is applied; this is retrospective evaluation, not simulated live retraining.",
+    "Later-season holdout performance may reflect seasonality and distribution changes.",
+    "Previously inspected candidate feature availability must be reviewed before modeling.",
+    "Duplicate protection covers the recorded eligibility candidate groups; no guest or real booking ID is available."
+  ],
+  "assignment_file": "validation_assignments.csv.gz",
+  "assignment_sha256": "57b4e8bcf947059dbb3ae34e39c49306b96aa86a4ad74898966e931b63a998e1",
+  "assignment_csv_sha256": "da427db64862c527cd8710470e5332313d2cb1e840419e33c3ada86352761bf3",
+  "upstream_output_sha256": {
+    "eligibility_candidates.csv.gz": "1721717023e4f27371e37c8e05fefccda4fbf2ef89f1e60b3fc1a026ebb7bbb9",
+    "eligibility_target.csv.gz": "84fef5775f76c456fe531c6f262a70b16853f4bdafc6c83c42b5fa010694eabb",
+    "eligibility_metadata.csv.gz": "24655f99f16d70acde3295c270438bdc096d5d94f5b572d649a8a9bb1927e9db",
+    "eligibility_exclusions.csv": "83676fdb741d37f3fc2157f2b6b6a274b2f95f93c73c82e58ca59ab98d97061f"
+  },
+  "source_sha256": "7c2ae42a7353905ea136e5c2287f17c92c5435826598bfbb8491c6f0c7b1fc06",
+  "runtime": {
+    "python": "3.12.13",
+    "pandas": "2.2.3",
+    "numpy": "2.3.5"
+  }
+}

@@ -1,4 +1,4 @@
-"""Step 8: descriptive analysis of the frozen development cohort only.
+"""descriptive analysis: descriptive analysis of the frozen development cohort only.
 
 Run from the repository root: python -m src.development_eda
 """
@@ -50,7 +50,7 @@ def rates(frame: pd.DataFrame, keys):
 
 
 def weighted_rates(frame: pd.DataFrame, group_column: str):
-    """Each Step 5 duplicate-profile group gets total weight one.
+    """Each eligibility duplicate-profile group gets total weight one.
 
     Keep conflicting outcomes within groups: average them instead of choosing
     one label or arbitrarily retaining the first record. This is a sensitivity
@@ -148,8 +148,8 @@ def generate_figures(tables, summary, figures):
 
 
 def run_development_eda(root: Path):
-    processed=root/"data/processed"; splits=root/"data/splits"; output=root/"data/eda"
-    plan_path=splits/"step6_split_plan.json"
+    processed=root/"data/processed"; splits=root/"data/processed/splits"; output=root/"data/processed/eda"
+    plan_path=splits/"validation_split_plan.json"
     plan=json.loads(plan_path.read_text())
     assignment_path=splits/plan["assignment_file"]
     if hashlib.sha256(assignment_path.read_bytes()).hexdigest()!=plan["assignment_sha256"]:
@@ -157,14 +157,14 @@ def run_development_eda(root: Path):
     a=pd.read_csv(assignment_path); check_assignments(a)
     mask=a.partition.eq("development").to_numpy()
     inputs={}
-    for name in ["step5_candidates.csv.gz","step5_target.csv.gz","step5_metadata.csv.gz"]:
+    for name in ["eligibility_candidates.csv.gz","eligibility_target.csv.gz","eligibility_metadata.csv.gz"]:
         digest=hashlib.sha256((processed/name).read_bytes()).hexdigest()
         if digest!=plan["upstream_output_sha256"][name]:
             raise ValueError(f"Upstream file changed: {name}")
         inputs[name]=digest
-    X=read_selected_rows(processed/"step5_candidates.csv.gz",mask)
-    y=read_selected_rows(processed/"step5_target.csv.gz",mask).is_canceled
-    meta=read_selected_rows(processed/"step5_metadata.csv.gz",mask)
+    X=read_selected_rows(processed/"eligibility_candidates.csv.gz",mask)
+    y=read_selected_rows(processed/"eligibility_target.csv.gz",mask).is_canceled
+    meta=read_selected_rows(processed/"eligibility_metadata.csv.gz",mask)
     dev_assign=a.loc[mask].reset_index(drop=True)
     if meta.source_row_id.tolist()!=dev_assign.source_row_id.tolist() or len(X)!=len(y):
         raise ValueError("Development rows are not aligned.")
@@ -201,19 +201,18 @@ def run_development_eda(root: Path):
         if int(tables[name].bookings.sum())!=len(df) or int(tables[name].canceled.sum())!=int(y.sum()):
             raise AssertionError("EDA groups do not reconcile with the development total.")
     group_average=df.groupby("duplicate_group_id").is_canceled.mean()
-    summary={"step":8,"status":"completed","responsible_member":"Faraaz","next_step":9,"next_owner":"Sadat",
-        "rows":len(df),"date_start":str(df.arrival_date.min().date()),"date_end":str(df.arrival_date.max().date()),
+    summary={'analysis': 'eda',"status":"completed","rows":len(df),"date_start":str(df.arrival_date.min().date()),"date_end":str(df.arrival_date.max().date()),
         "canceled":int(y.sum()),"not_canceled":int(len(y)-y.sum()),"cancellation_percent":float(100*y.mean()),
         "duplicate_profile_groups":len(group_average),
         "equal_group_cancellation_percent":float(100*group_average.mean()),
         "test_rows_in_eda":0,"inferential_tests_performed":0,"predictive_models_trained":0,
-        "rows_removed":0,"preprocessing":"Fixed Step 7 domain rules only; no imputation/scaling or feature selection fitted.",
+        "rows_removed":0,"preprocessing":"Fixed preprocessing domain rules only; no imputation/scaling or feature selection fitted.",
         "negative_development_adr_marked_missing":int(X.adr.lt(0).sum()),
         "development_missing_children":int(X.children.isna().sum()),
         "table_rows":{k:len(t) for k,t in tables.items()},
         "membership_sha256":hashlib.sha256(dev_assign.source_row_id.to_csv(index=False).encode()).hexdigest(),
-        "input_sha256":{**inputs,"step6_assignments.csv.gz":plan["assignment_sha256"],
-            "step6_split_plan.json":hashlib.sha256(plan_path.read_bytes()).hexdigest()},
+        "input_sha256":{**inputs,"validation_assignments.csv.gz":plan["assignment_sha256"],
+            "validation_split_plan.json":hashlib.sha256(plan_path.read_bytes()).hexdigest()},
         "runtime":{"python":platform.python_version(),"pandas":pd.__version__,"numpy":np.__version__,"matplotlib":matplotlib.__version__},
         "limitations":["Observational associations are not causal effects or feature-importance estimates.",
             "Repeated records are not assumed independent; no p-values or naive row-independent confidence intervals are used.",

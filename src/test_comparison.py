@@ -1,4 +1,4 @@
-"""User-approved Step 15 reporting supplement; never selects a model from test."""
+"""User-approved verification reporting supplement; never selects a model from test."""
 from __future__ import annotations
 
 import argparse
@@ -20,13 +20,13 @@ from .modeling import cancellation_probability, classification_metrics, make_mod
 from .splitting import check_assignments
 from .tuning import build_frozen_pipeline
 
-SELECTION_SHA256 = 'e495222d6050492784b334110973b219dce2d3e9deaf516d311878462c6e47b6'
+SELECTION_SHA256 = '68c4072f5c95e3a9f927a8b70a9e96aea8adbd4f7509f4d1c30ba6f7889f3b1b'
 METRICS = ['f1', 'accuracy', 'precision', 'recall', 'roc_auc', 'tn', 'fp', 'fn', 'tp']
 
 
 def comparison_protocol(selection, selection_hash):
     if selection_hash != SELECTION_SHA256:
-        raise ValueError('The approved Step 12 selection changed.')
+        raise ValueError('The approved tuning selection changed.')
     forest = selection['best_by_family']['random_forest']
     if forest['candidate'] != 'rf_12' or forest['search_parameters'] != {
         'model__class_weight': 'balanced', 'model__max_depth': None,
@@ -34,9 +34,9 @@ def comparison_protocol(selection, selection_hash):
     }:
         raise ValueError('The development-selected Random Forest changed.')
     return {
-        'step': 15, 'scope': 'reporting-only late test comparison',
+        'analysis': 'test_comparison', 'scope': 'reporting-only late test comparison',
         'authorization': 'User approved adding the baseline and Random Forest test comparison.',
-        'timing_disclosure': 'Authorized after Step 13 Logistic Regression test results were known; not a preregistered simultaneous three-model test.',
+        'timing_disclosure': 'Authorized after evaluation Logistic Regression test results were known; not a preregistered simultaneous three-model test.',
         'selection_sha256': selection_hash,
         'selected_model_unchanged': 'logistic_regression',
         'threshold': 0.5, 'positive_class': 1,
@@ -45,7 +45,7 @@ def comparison_protocol(selection, selection_hash):
         'random_forest': forest,
         'development_rows': 95415, 'test_rows': 23795,
         'test_policy': 'Fit only on frozen development rows. No tuning, reselection, threshold changes, or test-driven feature changes.',
-        'logistic_policy': 'Reuse and verify saved Step 13 predictions; do not refit or overwrite that model.',
+        'logistic_policy': 'Reuse and verify saved evaluation predictions; do not refit or overwrite that model.',
         'undefined_precision_policy': 'Report zero when no cancellations are predicted.',
         'metrics': METRICS + ['brier_score'],
     }
@@ -64,14 +64,14 @@ def freeze_protocol(path, protocol):
 def assert_aligned(predictions, assignments, target):
     for column in ['cohort_row', 'source_row_id']:
         if not np.array_equal(predictions[column].to_numpy(), assignments[column].to_numpy()):
-            raise ValueError('Step 13 test row order changed: ' + column)
+            raise ValueError('evaluation test row order changed: ' + column)
     if not np.array_equal(predictions.actual.to_numpy(), np.asarray(target)):
-        raise ValueError('Step 13 labels differ from the frozen target.')
+        raise ValueError('evaluation labels differ from the frozen target.')
 
 
 def run_test_comparison(root, *, require_cached=False):
     root = Path(root)
-    out = root / 'data/results/step15'
+    out = root / 'data/processed/results/test_comparison'
     if require_cached:
         required = ('comparison_protocol.json', 'comparison_summary.json',
                     'test_comparison.csv', 'random_forest_test_probabilities.csv.gz')
@@ -81,11 +81,11 @@ def run_test_comparison(root, *, require_cached=False):
                                     'must not retrain: ' + ', '.join(missing))
     selection, _, selection_hash = checked_selection(root)
     protocol = comparison_protocol(selection, selection_hash)
-    step13_path = root / 'data/results/step13/evaluation_summary.json'
-    step13 = json.loads(step13_path.read_text())
-    protected = {**step13['output_sha256'],
-                 'data/results/step13/evaluation_summary.json': sha256(step13_path),
-                 'data/results/step12/final_selection.json': selection_hash}
+    evaluation_path = root / 'data/processed/results/evaluation/evaluation_summary.json'
+    evaluation = json.loads(evaluation_path.read_text())
+    protected = {**evaluation['output_sha256'],
+                 'data/processed/results/evaluation/evaluation_summary.json': sha256(evaluation_path),
+                 'data/processed/results/tuning/final_selection.json': selection_hash}
     for relative, expected in protected.items():
         if sha256(root / relative) != expected:
             raise ValueError('Frozen artifact changed: ' + relative)
@@ -104,11 +104,11 @@ def run_test_comparison(root, *, require_cached=False):
     test_mask = assignments.partition.eq('test').to_numpy()
     if (int(dev_mask.sum()), int(test_mask.sum())) != (95415, 23795):
         raise ValueError('Frozen partition sizes changed.')
-    target_path = root / 'data/processed/step5_target.csv.gz'
+    target_path = root / 'data/processed/eligibility_target.csv.gz'
     if sha256(target_path) != selection['input_sha256'][target_path.name]:
         raise ValueError('Frozen target changed.')
     y_dev = read_selected_rows(target_path, dev_mask).is_canceled.reset_index(drop=True)
-    forest_selection = {**protocol['random_forest'], 'step': 12, 'threshold': 0.5}
+    forest_selection = {**protocol['random_forest'], 'analysis': 'tuning', 'threshold': 0.5}
     forest = build_frozen_pipeline(forest_selection)
     baseline = make_model_pipeline('majority', 'none')
     # Both estimators and every learned transformation see development data only.
@@ -116,10 +116,10 @@ def run_test_comparison(root, *, require_cached=False):
         baseline.fit(X_dev, y_dev)
         forest.fit(X_dev, y_dev)
     forest_state = joblib.hash(forest)
-    X_test = read_selected_rows(root / 'data/processed/step5_candidates.csv.gz', test_mask).reset_index(drop=True)
+    X_test = read_selected_rows(root / 'data/processed/eligibility_candidates.csv.gz', test_mask).reset_index(drop=True)
     y_test = read_selected_rows(target_path, test_mask).is_canceled.reset_index(drop=True)
     test_assignments = assignments.loc[test_mask].reset_index(drop=True)
-    saved = pd.concat([pd.read_csv(root / f'data/results/step13/test_predictions_{part:02d}.csv.gz')
+    saved = pd.concat([pd.read_csv(root / f'data/processed/results/evaluation/test_predictions_{part:02d}.csv.gz')
                        for part in range(1, 5)], ignore_index=True)
     assert_aligned(saved, test_assignments, y_test)
     probabilities = {
@@ -134,7 +134,7 @@ def run_test_comparison(root, *, require_cached=False):
         metrics = classification_metrics(y_test, probability, 0.5)
         if family == 'logistic_regression':
             for name in METRICS:
-                if not np.isclose(metrics[name], step13['metrics'][name], rtol=0, atol=1e-12):
+                if not np.isclose(metrics[name], evaluation['metrics'][name], rtol=0, atol=1e-12):
                     raise AssertionError('Saved Logistic Regression metric changed: ' + name)
         rows.append({'model': family, 'selected_before_test': family == 'logistic_regression',
                      'test_rows': len(y_test), 'threshold': 0.5, **metrics,
@@ -152,11 +152,10 @@ def run_test_comparison(root, *, require_cached=False):
         if sha256(root / relative) != expected:
             raise AssertionError('Protected artifact was modified: ' + relative)
     summary = {
-        'step': 15, 'status': 'comparison supplement complete; overall Step 15 remains open',
-        'responsible_member': 'Sadat; both members review',
+        'analysis': 'test_comparison', 'status': 'comparison supplement complete; overall verification remains open',
         'development_rows_fitted': len(X_dev), 'test_rows_evaluated': len(y_test),
         'selected_model': 'logistic_regression', 'model_reselected_from_test': False,
-        'threshold_changed': False, 'frozen_step13_artifacts_unchanged': True,
+        'threshold_changed': False, 'frozen_evaluation_artifacts_unchanged': True,
         'forest_unchanged_after_prediction': True,
         'test_timing': protocol['timing_disclosure'],
         'baseline_rule': 'Development majority is class 0; every test cancellation probability is 0.',
