@@ -323,8 +323,8 @@ Future work should first verify predictor availability at the intended decision 
 
 ## References
 
-[1] Mostipak, J. Hotel booking demand. [Kaggle dataset](https://www.kaggle.com/datasets/jessemostipak/hotel-booking-demand). Original dataset authors: Antonio, N., de Almeida, A., and Nunes, L. Metadata credits earlier preparation by Thomas Mock and Antoine Bichat for TidyTuesday. Public dataset metadata was verified on 2 September 2026: CC BY 4.0; current version 1. Original acquired version/date unknown. Raw bytes are unchanged; project preprocessing is documented separately. No endorsement by the original authors or distributor is implied.
+[1] Mostipak, J. Hotel booking demand. [Kaggle dataset](https://www.kaggle.com/datasets/jessemostipak/hotel-booking-demand). Original dataset authors: Antonio, N., de Almeida, A., and Nunes, L. Metadata credits earlier preparation by Thomas Mock and Antoine Bichat for TidyTuesday. 
 
 ### AI assistance declaration
 
-ChatGPT assisted with project planning and work division. Antigravity assisted with diagnostic and verification runs.
+ChatGPT assisted with finding dataset, project planning and work division. Antigravity assisted with diagnostic and verification runs.
