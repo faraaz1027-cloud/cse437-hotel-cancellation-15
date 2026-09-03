@@ -69,9 +69,16 @@ def assert_aligned(predictions, assignments, target):
         raise ValueError('Step 13 labels differ from the frozen target.')
 
 
-def run_test_comparison(root):
+def run_test_comparison(root, *, require_cached=False):
     root = Path(root)
     out = root / 'data/results/step15'
+    if require_cached:
+        required = ('comparison_protocol.json', 'comparison_summary.json',
+                    'test_comparison.csv', 'random_forest_test_probabilities.csv.gz')
+        missing = [name for name in required if not (out / name).is_file()]
+        if missing:
+            raise FileNotFoundError('Frozen comparison evidence is missing; verification '
+                                    'must not retrain: ' + ', '.join(missing))
     selection, _, selection_hash = checked_selection(root)
     protocol = comparison_protocol(selection, selection_hash)
     step13_path = root / 'data/results/step13/evaluation_summary.json'

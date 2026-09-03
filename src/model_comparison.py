@@ -142,7 +142,11 @@ def run_model_comparison(root):
     old_path=root/'data/processed/step10/fold_results.csv'
     old_summary=json.loads((root/'data/processed/step10/representation_summary.json').read_text())
     old_digest=hashlib.sha256(old_path.read_bytes()).hexdigest()
-    if old_digest!=old_summary['output_sha256']['data/processed/step10/fold_results.csv']:
+    # Earlier run-local summaries may use Windows separators. Normalize keys only;
+    # keep the stored digest and strict numerical comparisons unchanged.
+    old_hashes={key.replace('\\', '/'): value
+                for key,value in old_summary['output_sha256'].items()}
+    if old_digest!=old_hashes['data/processed/step10/fold_results.csv']:
         raise ValueError('Step 10 reference evidence changed.')
     old=pd.read_csv(old_path)
     for mode in ['full','selected']:

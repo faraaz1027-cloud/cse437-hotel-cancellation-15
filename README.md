@@ -44,7 +44,7 @@ python -m pip install -r requirements.txt
 python -m jupyterlab
 ```
 
-Place the untouched source at `data/raw/hotel_bookings.csv`, following [data/README.md](data/README.md). The raw CSV is not yet published in this repository. Use repository-relative paths. The lock file records the original Linux/Python 3.12 environment.
+Place the untouched source at `data/raw/hotel_bookings.csv`, following [data/README.md](data/README.md). Raw-data publication is reported complete; its independent recheck is deferred. Use repository-relative paths. The lock file records the original Linux/Python 3.12 environment.
 
 ## Notebook order
 
@@ -56,7 +56,7 @@ Place the untouched source at `data/raw/hotel_bookings.csv`, following [data/REA
 | [04 — Modeling and tuning](notebooks/04_modeling_and_tuning.ipynb) | Model comparisons and hyperparameter search |
 | [05 — Evaluation and error analysis](notebooks/05_evaluation_and_error_analysis.ipynb) | Frozen test results, subgroup errors and supplementary comparison |
 
-Use an isolated copy for reproduction: some cells regenerate evidence. Do not overwrite frozen evidence or select settings from test outcomes.
+Use `python scripts/verify_notebooks.py` for isolated reproduction. Notebook 04 also creates its own external development workspace, so new comparison/tuning outputs cannot overwrite the original frozen selection. Notebook 05 verifies cached final evaluation only. Do not select settings from test outcomes.
 
 ## Recorded results
 
@@ -76,6 +76,6 @@ Random Forest achieves test F1 **0.723115**; the majority baseline has F1 **0**.
 
 The previous dependency check and 58-test suite passed. Existing notebook outputs retain their original execution provenance; presentation cleanup is not a new execution.
 
-A subsequent local audit completed notebooks 01–04 but failed notebook 05 with **`Frozen Step 12 model settings changed.`** The mismatch remains unresolved; full fresh-kernel reproduction is not certified. Historical verification records describe their original runs, not the currently edited files.
+A subsequent local audit completed notebooks 01–04 but failed notebook 05 with **`Frozen Step 12 model settings changed.`** The workflow now separates the new development selection from the published evaluation. It reports score/selection differences rather than bypassing model-integrity checks. The underlying numerical cause remains unconfirmed, and fresh-kernel verification of this repair is pending. See [repair notes](report/reproducibility_repair.md). Historical verification records describe their original runs, not the currently edited files.
 
-Final verification, raw-data publication, member-confirmed contributions and the required author declaration remain pending. See [FINAL_CHECKS.md](FINAL_CHECKS.md). This repository is not yet declared submission-ready.
+Final verification, the raw-publication recheck, member-confirmed contributions and the required author declaration remain pending. See [FINAL_CHECKS.md](FINAL_CHECKS.md). This repository is not yet declared submission-ready.

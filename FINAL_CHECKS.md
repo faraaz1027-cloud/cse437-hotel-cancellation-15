@@ -1,8 +1,8 @@
 # Reproducibility and submission requirements
 
-Final verification is deferred. Documentation cleanup does not resolve or certify the outstanding checks below.
+The Step 15.1 workflow repair is implemented; full fresh-kernel verification is the next check. Unit tests do not certify the complete notebook run.
 
-## Known execution issue
+## Diagnosed execution issue and repair
 
 The original host could not start a separate Jupyter kernel. A subsequent local audit passed dependency consistency and 58 unit tests, and completed notebooks 01–04. Notebook 05 failed in the supplementary comparison with:
 
@@ -10,7 +10,9 @@ The original host could not start a separate Jupyter kernel. A subsequent local 
 ValueError: Frozen Step 12 model settings changed.
 ```
 
-The audit reports different rerun settings from the frozen selection. The cause has not been established. Preserve the frozen model, threshold, scores and evidence; do not bypass the assertion or select settings using test performance.
+Notebook 04 regenerated tuning evidence and selected C=0.1, while notebook 05 expected the original C=1 model. Notebook 04 now creates a separate external development workspace. Its new comparison report records changed scores/settings without overwriting the original selection. Notebook 05 requires cached final-test evidence and retains the original settings/hash checks; missing evidence cannot trigger retraining.
+
+The numerical cause of the earlier score differences remains unconfirmed. The runner captures environment/build details for further investigation. See [repair notes](report/reproducibility_repair.md).
 
 Retain the failed verification record, rerun tuning tables, selected configuration, Python/package versions and any locally modified runner. Diagnose the mismatch separately. Unit tests and format checks are not substitutes for end-to-end execution.
 
@@ -20,11 +22,11 @@ Place the untouched `hotel_bookings.csv` at `data/raw/hotel_bookings.csv`. Expec
 
 `7c2ae42a7353905ea136e5c2287f17c92c5435826598bfbb8491c6f0c7b1fc06`
 
-The 16.86 MB raw file still requires publication under the faculty's under-50-MB rule. Preserve [source attribution](data/README.md) and CC BY 4.0 terms. The original acquisition date/version are unknown. Keep the original private CSE437 DOCX unchanged.
+Raw-data publication is reported complete by the group; its independent recheck is deferred. Preserve [source attribution](data/README.md) and CC BY 4.0 terms. The original acquisition date/version are unknown. Keep the original private CSE437 DOCX unchanged.
 
 ## Verification commands
 
-Use Python 3.12 and an isolated repository copy. After resolving the known mismatch:
+Use Python 3.12 and a new clone of the repair commit. Do not pull over an existing working directory or failed-run evidence. Committed bytes must be preserved; this repository supplies a `.gitattributes` rule for that purpose.
 
 ```bash
 python -m pip install -r requirements.txt
@@ -33,7 +35,17 @@ python -m unittest discover -s tests -q
 python scripts/verify_notebooks.py
 ```
 
-The runner creates a temporary copy and executes notebooks 01–05 in fresh kernels. A successful record must show five notebooks and zero errors. Save the record and executed copies; do not replace published outputs until reviewed. The runner has not yet completed a successful end-to-end run.
+The runner creates a temporary copy and executes notebooks 01–05 in fresh kernels. It also saves fresh tuning evidence separately. Save the printed verification directory, including `verification.json`, `reproduction_comparison.json`, `pip_freeze.txt`, `development_run/` and executed notebooks. If execution fails, preserve `traceback.txt` and the partial notebook outputs.
+
+Interpret the result explicitly:
+
+| Exit code | Meaning |
+| --- | --- |
+| 0 | All five notebooks executed and the recorded tuning comparison matched; not a claim of full-pipeline numerical reproduction or submission readiness. |
+| 2 | All five notebooks executed, but development evidence differs. `status` is `passed_with_reproduction_differences`; review is still required. |
+| 1 | Execution or integrity failed; retain diagnostics and do not mark verification complete. |
+
+Require five completed notebooks, zero cell errors, `original_repository_unchanged: true` and `frozen_evidence_unchanged: true`. A changed winner must be reported, never promoted to the original test evaluation. Do not change tolerances, settings or assertions merely to obtain exit code 0. Fresh-kernel validation of this repair remains pending until a real run is reviewed.
 
 `report/final_verification.json` is a historical snapshot. Its earlier hashes and execution status do not certify files edited during cleanup.
 
