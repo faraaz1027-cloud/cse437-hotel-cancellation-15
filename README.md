@@ -11,8 +11,6 @@
 | Faraaz Jamil Chowdhury | 24241205 | Planning, provenance, audit, preprocessing, validation design and descriptive analysis |
 | Ihfaz Rashid Sadat | 23301499 | Features, selection/PCA, modeling, tuning, evaluation, verification and report assembly |
 
-Assigned responsibilities are user-confirmed. Both members must review and explain the complete project; final joint sign-off remains open.
-
 ## Problem statement
 
 Hotel booking cancellations can cause loss of money and make room planning difficult for hotels. The goal of this project is to study the factors that affect booking cancellations and build a machine-learning model that can predict whether a hotel booking will be canceled.
@@ -42,27 +40,6 @@ Chronological, duplicate-profile-separated validation and training-fitted prepro
 | `figures/` | Report and notebook figures |
 | `report/` | `report.md` and the 10-page `report.pdf` |
 
-Tests and rendering tools remain under `src/` because they verify and reproduce the submission. Supporting documentation has been consolidated; previous versions remain recoverable from Git history.
-
-## Run locally
-
-Use Python 3.12. Preserve file bytes across platforms:
-
-```bash
-git -c core.autocrlf=false clone https://github.com/faraaz1027-cloud/cse437-hotel-cancellation-15.git
-cd cse437-hotel-cancellation-15
-python -m venv .venv
-```
-
-Activate with `source .venv/bin/activate` on macOS/Linux or `.venv\Scripts\Activate.ps1` in Windows PowerShell, then run:
-
-```bash
-python -m pip install -r requirements.txt
-python -m jupyterlab
-```
-
-Run notebooks from the repository or its `notebooks/` folder. The [reference environment](data/processed/reference_environment.txt) records the original resolved packages.
-
 ## Notebooks and Google Colab
 
 | Order | Notebook | Google Colab |
@@ -75,7 +52,7 @@ Run notebooks from the repository or its `notebooks/` folder. The [reference env
 
 In Colab choose a CPU runtime and **Runtime > Run all**. Setup downloads the full project, verifies protected inputs and installs pinned analysis packages. If it reports **SETUP PAUSED**, choose **Runtime > Restart session**, then **Run all** again; do not delete the runtime. No Drive mount or manual upload is needed. Setup supports Python 3.12/3.13; the recorded reference uses 3.12. Complete live Colab execution of the reorganized notebooks is not yet verified.
 
-Setup prints the exact source revision used and does not overwrite a different checkout. Each notebook can access committed inputs independently. Notebook 04 isolates new development results; notebook 05 verifies cached final-test evidence without retraining. Download executed notebooks to retain new outputs.
+Setup prints the exact source revision used and does not overwrite a different checkout. Each notebook can access committed inputs independently. Notebook 04 isolates new development results; notebook 05 verifies cached final-test evidence without retraining.
 
 ## Recorded results
 
@@ -86,23 +63,3 @@ Setup prints the exact source revision used and does not overwrite a different c
 | Random Forest | 0.723115 | 0.789325 | 0.781239 | 0.673041 | 0.878190 |
 
 Selected Logistic Regression uses C=1, balanced weights and threshold 0.5. The baseline/Random Forest test comparison was added after Logistic Regression test results were known. Its timing is disclosed and did not change model selection. See the report for all metrics and limitations.
-
-## Verification and report rendering
-
-```bash
-python -m pip check
-python -m unittest discover -s src/tests -q
-python -m src.tools.check_submission
-python -m src.tools.verify_notebooks
-python -m src.tools.build_report_pdf
-```
-
-The submission checker saves static checks separately from historical evidence. The notebook runner executes an isolated copy in fresh kernels and retains logs and executed notebooks. Exit code 0 means execution and the recorded tuning comparison matched; 2 means execution passed but development results differed; 1 means execution or integrity failed. None alone certifies submission readiness. Inspect every PDF page after rebuilding it.
-
-The prior Windows run completed all five notebooks but selected C=0.1 instead of C=1 in its development rerun. The numerical cause is unconfirmed; cached final results and the original model were preserved. Reorganized paths and metadata require renewed exact-source execution. Integrity manifests are rebased without changing numerical results; pre-cleanup digests remain in [layout_migration.json](data/processed/verification/layout_migration.json).
-
-Raw-data publication and both accounts' commit history have been checked. Final joint review, declaration finalization and saved-output verification for the reorganized notebooks remain open. The AI declaration in the report is retained exactly as supplied; it has not been certified as complete disclosure.
-
-Submit one public repository link through the faculty's designated channel after resolving these checks:
-
-https://github.com/faraaz1027-cloud/cse437-hotel-cancellation-15
