@@ -48,13 +48,25 @@ Place the untouched source at `data/raw/hotel_bookings.csv`, following [data/REA
 
 ## Notebook order
 
-| Notebook | Contents |
-| --- | --- |
-| [01 — Data audit and EDA](notebooks/01_data_audit_and_eda.ipynb) | Raw quality audit; development-only descriptive analysis |
-| [02 — Preprocessing](notebooks/02_preprocessing.ipynb) | Eligibility, frozen splits, fold-fitted preprocessing |
-| [03 — Feature engineering](notebooks/03_feature_engineering.ipynb) | Derived features, selection and PCA comparison |
-| [04 — Modeling and tuning](notebooks/04_modeling_and_tuning.ipynb) | Model comparisons and hyperparameter search |
-| [05 — Evaluation and error analysis](notebooks/05_evaluation_and_error_analysis.ipynb) | Frozen test results, subgroup errors and supplementary comparison |
+| Notebook | Contents | Google Colab |
+| --- | --- | --- |
+| [01 — Data audit and EDA](notebooks/01_data_audit_and_eda.ipynb) | Raw quality audit; development-only descriptive analysis | [Open in Colab](https://colab.research.google.com/github/faraaz1027-cloud/cse437-hotel-cancellation-15/blob/main/notebooks/01_data_audit_and_eda.ipynb) |
+| [02 — Preprocessing](notebooks/02_preprocessing.ipynb) | Eligibility, frozen splits, fold-fitted preprocessing | [Open in Colab](https://colab.research.google.com/github/faraaz1027-cloud/cse437-hotel-cancellation-15/blob/main/notebooks/02_preprocessing.ipynb) |
+| [03 — Feature engineering](notebooks/03_feature_engineering.ipynb) | Derived features, selection and PCA comparison | [Open in Colab](https://colab.research.google.com/github/faraaz1027-cloud/cse437-hotel-cancellation-15/blob/main/notebooks/03_feature_engineering.ipynb) |
+| [04 — Modeling and tuning](notebooks/04_modeling_and_tuning.ipynb) | Model comparisons and hyperparameter search | [Open in Colab](https://colab.research.google.com/github/faraaz1027-cloud/cse437-hotel-cancellation-15/blob/main/notebooks/04_modeling_and_tuning.ipynb) |
+| [05 — Evaluation and error analysis](notebooks/05_evaluation_and_error_analysis.ipynb) | Frozen test results, subgroup errors and supplementary comparison | [Open in Colab](https://colab.research.google.com/github/faraaz1027-cloud/cse437-hotel-cancellation-15/blob/main/notebooks/05_evaluation_and_error_analysis.ipynb) |
+
+### Run in Google Colab
+
+1. Open a link above, connect to a CPU runtime, and choose **Runtime > Run all**.
+2. The first code cell installs the seven pinned analysis packages, downloads the project with its data/model, verifies protected checksums and sets the working directory. No manual data upload or Google Drive mount is needed.
+3. If it reports **SETUP PAUSED**, choose **Runtime > Restart session**, then **Run all** again. This is needed only when incompatible packages were already loaded in memory. Do not delete the runtime. Installation failures stop execution; do not skip the setup cell.
+4. Use Python 3.12 or 3.13; the recorded reference environment is Python 3.12. If Colab offers neither, use the local Python 3.12 setup above. GPU is unnecessary. Notebook 04 may take several minutes.
+5. Use **File > Download > Download .ipynb** to retain your executed outputs. Opening the public notebook does not automatically publish any changes to GitHub.
+
+The automatic download is pinned to analysis snapshot `e01e785b78f2849b423c5be4a3fe5221a96f3e66`, not whatever happens to be on main later. The setup wrapper was added after that snapshot; the original analysis cells are unchanged. Each notebook can access its committed inputs independently. Setup reuses an existing project directory without resetting it and is a no-op outside Colab. It does not install or replace Colab's Jupyter/IPython software.
+
+Bootstrap logic has local regression tests; a live Colab run of these updated notebooks remains to be verified. Setup does not guarantee identical numerical scores or remove the documented reproduction warning. Existing outputs retain historical provenance; new setup cells have no fabricated execution results. The shared bootstrap source is [scripts/colab_setup.py](scripts/colab_setup.py), embedded identically in all five notebooks.
 
 Use `python scripts/verify_notebooks.py` for isolated reproduction. Notebook 04 also creates its own external development workspace, so new comparison/tuning outputs cannot overwrite the original frozen selection. Notebook 05 verifies cached final evaluation only. Do not select settings from test outcomes.
 
