@@ -27,7 +27,7 @@ Hotel booking cancellations can cause loss of money and make room planning diffi
 
 ### 1.2 Dataset
 
-The supplied Hotel Booking Demand CSV has 119,390 rows, 32 columns and 16,855,599 bytes, covering arrivals from 1 July 2015 to 31 August 2017. It contains 79,330 City Hotel and 40,060 Resort Hotel records. The Kaggle distribution by Jesse Mostipak acknowledges earlier preparation by Thomas Mock and Antoine Bichat [1]. This project uses that supplied combined CSV; it does not scrape or merge another dataset.
+The supplied Hotel Booking Demand CSV has 119,390 rows, 32 columns and 16,855,599 bytes, covering arrivals from 1 July 2015 to 31 August 2017. It contains 79,330 City Hotel and 40,060 Resort Hotel records. Collection Method - The data were collected from the property management systems (PMS) of a city hotel and a resort hotel in Portugal. The Kaggle distribution by Jesse Mostipak acknowledges earlier preparation by Thomas Mock and Antoine Bichat [1]. This project uses that supplied combined CSV; it does not scrape or merge another dataset.
 
 ### 1.3 Target variable
 
