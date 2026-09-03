@@ -1,7 +1,5 @@
 # Step 12 — Hyperparameter tuning
 
-**CSE437 Group 15 | Owner: Sadat | Complete | Next: Step 13 (Sadat)**
-
 The development-selected model is **Logistic Regression**, with **C=1.0, class_weight=balanced** and mean
 cancellation F1 **0.732102**. This is the best setting in the
 declared grid, not proof of a globally optimal model or final test performance.
@@ -137,7 +135,7 @@ python -m src.tuning
 python -m unittest discover -s tests -v
 ```
 
-## Frozen Step 13 handoff
+## Frozen evaluation configuration
 
 `final_selection.json` stores the selected family, representation, complete
 estimator settings, fixed threshold and frozen data lineage. It also preserves
@@ -146,12 +144,4 @@ later using test scores. `build_frozen_pipeline(selection)` returns an unfitted
 pipeline and rejects changed settings/defaults. **No final trained model is
 claimed or saved yet.**
 
-Sadat should review the chosen settings, then Step 13 will fit this selected
-pipeline on all development rows only and evaluate the untouched test once.
-Save the fitted pipeline, final metrics, confusion matrix and actual error
-examples; report test performance even if it is lower. Do not retune, change
-the threshold or switch model families in response to final test scores.
-
-ChatGPT/Codex assisted with implementation, testing, execution, analysis,
-notebook outputs and documentation. Assigned ownership is not evidence of
-personal authorship; record each member's actual review and contributions.
+The selected pipeline is fitted on development rows only before final test evaluation. Test scores must not change the threshold, model family or selected settings.

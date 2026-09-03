@@ -1,7 +1,5 @@
 # Step 9 — Derived features
 
-**CSE437 Group 15 | Assigned owner: Sadat | Status: complete | Next: Step 10 (Sadat)**
-
 Step 9 adds a reusable deterministic feature transformer and a preprocessing
 factory for the unchanged hotel-cancellation project. The target, approved
 questions, original document, eligible cohort, and frozen evaluation split are
@@ -98,14 +96,3 @@ These commands use the committed processed data and frozen assignments.
 Evidence is in `data/processed/step9/`: summary, complete schemas, and development
 feature descriptive statistics. Only aggregate evidence is exported; no fitted
 full-development matrix or model is published.
-
-**Next: Step 10, Sadat.** Extend Notebook 03 with both feature selection and
-dimensionality reduction. Fit selectors/reducers only within training folds;
-justify candidate spaces, quantify retained information, and use the frozen
-development evaluation policy for later predictive comparisons. Retain the test
-set for Step 13. Correlated totals and components may be redundant; the final
-feature set has not been selected. Model families and tuning remain Steps 11–12.
-
-ChatGPT/Codex assisted with implementation, execution, tests and documentation.
-Assigned ownership does not claim personal authorship of AI-prepared code;
-Sadat should review/explain the work and record actual contributions.

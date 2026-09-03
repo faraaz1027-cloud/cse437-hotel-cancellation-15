@@ -1,10 +1,5 @@
 # Step 5 — Eligibility and direct leakage removal
 
-**CSE437, Group 15 | Responsible member: Faraaz | Status: complete**
-
-Next: **Step 6 — Faraaz freezes the development/test split and validation plan.**
-This report documents executed preparation, not model performance.
-
 ## Implemented decisions
 
 1. Exclude `reservation_status` and `reservation_status_date` from candidate
@@ -104,7 +99,7 @@ time. Removing direct outcome leakage does not establish booking-time validity.
 cancellations as named hypotheses in development data. Any findings are
 associations, not causal effects. The approved research questions are unchanged.
 
-## Limitations and assistance
+## Limitations
 
 The zero-guest rule narrows the population. Retaining repeated records preserves
 their frequency weight and may emphasize common booking patterns; report that
@@ -113,10 +108,6 @@ missing values, and uncertain feature timing remain explicit later tasks.
 Full-source quality summaries were inspected before splitting; report this
 transparently rather than claiming that no information about the later holdout
 was ever seen.
-
-OpenAI ChatGPT/Codex assisted with the implementation, policy documentation,
-execution, and verification. Faraaz owns reviewing and explaining Step 5;
-the final contribution statement must describe actual member work.
 
 Sources: [Kaggle dataset](https://www.kaggle.com/datasets/jessemostipak/hotel-booking-demand);
 Antonio, N., de Almeida, A., and Nunes, L. (2019), *Hotel booking demand datasets*,

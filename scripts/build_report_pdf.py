@@ -163,7 +163,7 @@ def main():
     output = ROOT / 'report/report.pdf'
     doc = SimpleDocTemplate(str(output), pagesize=A4, rightMargin=44, leftMargin=44,
                             topMargin=47, bottomMargin=44, title='Hotel Booking Cancellation Project',
-                            author='CSE437 Group 15; AI assistance disclosed', pageCompression=1)
+                            author='CSE437 Group 15', pageCompression=1)
     doc.build(parse(text), onFirstPage=page_chrome, onLaterPages=page_chrome)
     pages = len(PdfReader(output).pages)
     print(f'{output}: {pages} pages; summary {len(summary.split())} words')

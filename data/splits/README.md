@@ -1,7 +1,5 @@
 # Step 6 — Frozen evaluation partitions
 
-**Responsible: Faraaz. Completed: Step 6. Next: Step 7, fitted preprocessing.**
-
 **Publication:** the verified row-level assignment file is committed here with
 the code, aggregate plan, and hashes. Load it directly using the example below.
 To reproduce and check the same assignments from the committed Step 5 data,

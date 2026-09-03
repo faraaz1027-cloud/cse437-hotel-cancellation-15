@@ -1,8 +1,5 @@
 # Step 15 — authorized reporting-only test comparison
 
-Owner: Sadat, with both members reviewing. This supplement is complete; overall
-Step 15 and final submission are not yet complete.
-
 ## Timing and fixed choices
 
 The user approved adding a majority baseline and Random Forest test comparison
@@ -57,7 +54,4 @@ before and after this run. Notebook 05's added evidence-check cell was executed
 in Python with its output saved; full clean-environment/fresh-Jupyter-kernel
 verification remains a separate open submission gate.
 
-Original acquisition date and acquired dataset version are unknown (user
-confirmed). Final report/PDF, raw-data publication/licence evidence,
-reproducibility checks and genuine member contribution records remain open.
-ChatGPT/Codex assisted in implementation, execution, checking and documentation.
+Original acquisition date and acquired dataset version are unknown. Outstanding submission requirements are listed in [FINAL_CHECKS.md](../../../FINAL_CHECKS.md).

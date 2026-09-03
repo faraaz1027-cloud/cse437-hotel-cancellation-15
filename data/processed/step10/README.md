@@ -1,7 +1,5 @@
 # Step 10 selection and reduction evidence
 
-**Owner: Sadat. Step 10 complete; Step 11 is next.**
-
 | File | Contents |
 | --- | --- |
 | `comparison_protocol.json` | Choices fixed before local comparison: four modes, 75% F ranking, 95% numeric PCA, fixed reference classifier and decision rule |

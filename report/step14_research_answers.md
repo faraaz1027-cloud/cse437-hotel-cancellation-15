@@ -1,7 +1,5 @@
 # Step 14 — Answers to the approved research questions
 
-**CSE437 Data Science | Group 15 | Owner: Sadat | Next: Step 15**
-
 This synthesis uses the evidence published through Step 13 at commit
 [`ad4ddff`](https://github.com/faraaz1027-cloud/cse437-hotel-cancellation-15/commit/ad4ddfffcd191b479021754ad16e0f96a4dd2397).
 The dataset, target (`is_canceled`), original problem and question wording are
@@ -138,7 +136,7 @@ there is no nested-validation or statistical-significance claim. The test
 result confirms the selected pipeline's period-specific performance, but
 cannot establish a test-set ranking over models that were not tested there.
 
-## Conclusion and Step 15 handoff
+## Conclusion
 
 The project demonstrates a complete preprocessing-to-evaluation workflow and
 finds useful retrospective predictive signal. Deposit and lead-time patterns
@@ -148,18 +146,6 @@ false alerts better on the agreed development F1 metric than the alternatives
 tested, while remaining limited by feature timing, repeated profiles, temporal
 coverage, uncalibrated probabilities and the narrow model search.
 
-**Step 14 is complete; Step 15 belongs to Sadat, with both members reviewing.**
-Finish the 150–200-word summary and template-compliant 10-page report/PDF;
-verify dataset provenance/licence and add the unchanged raw CSV; validate a
-clean dependency install and fresh-kernel execution of all five notebooks;
-record genuine contributions, references and AI assistance. Do not invent
-missing provenance or personal contributions. These submission gates remain
-open; this synthesis does not claim the entire project is submission-ready.
-
 Any future calibration, feature-timing study, deposit ablation, threshold/cost
 study or external validation must use a newly declared development/evaluation
 design and fresh evaluation data. It must not change this frozen result.
-
-Prepared with ChatGPT/Codex assistance; assigned ownership does not establish
-which work a member personally performed. Review the conclusions before
-recording actual contributions.

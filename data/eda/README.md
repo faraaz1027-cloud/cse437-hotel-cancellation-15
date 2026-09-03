@@ -1,7 +1,5 @@
 # Step 8 — Development-data EDA
 
-**Complete: Step 8 (Faraaz). Next: Step 9, feature engineering (Sadat).**
-
 All tables use the frozen **95,415 development bookings**, covering 2015-07-01
 through 2017-04-22. They contain 34,473 cancellations: **36.13%**. No test
 relationships or model results are included. Source/split hashes and artifact
@@ -46,5 +44,4 @@ the earlier ten executed audit outputs were preserved. A full fresh Jupyter
 kernel run and canonical notebook validation remain pending.
 
 See [Notebook 01](../../notebooks/01_data_audit_and_eda.ipynb),
-[report Sections 1–3](../../report/report.md), and
-[Sadat's handoff](../../HANDOFF_TO_SADAT.md).
+[report Sections 1–3](../../report/report.md).

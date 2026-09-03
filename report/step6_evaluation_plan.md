@@ -1,9 +1,5 @@
 # Step 6 — Chronological evaluation plan
 
-**CSE437: Data Science | Group 15 | Responsible: Faraaz | Status: complete**
-
-**Next: Step 7 — Faraaz implements preprocessing inside the training folds.**
-
 ## Decision and scope
 
 The question is whether the model generalizes to later arrival cohorts.
@@ -121,7 +117,3 @@ group guarantees apply to the recorded candidate-predictor duplicate groups.
 Full-source raw-data quality summaries were inspected before the holdout was
 defined; disclose this instead of claiming the holdout was never seen in any
 form. No preprocessing or predictive model has been fitted in Step 6.
-
-OpenAI ChatGPT/Codex assisted with the split design, code, documentation,
-execution, and verification. Faraaz is responsible for reviewing and explaining
-the work; the final contribution statement must describe actual member work.

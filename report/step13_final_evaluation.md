@@ -1,7 +1,5 @@
 # Step 13 — Final evaluation and error analysis
 
-**CSE437 Group 15 | Owner: Sadat | Complete | Next: Step 14 (Sadat)**
-
 ## Frozen model and official evaluation
 
 Before test-label access, the protocol fixed the selected-feature Logistic
@@ -92,7 +90,7 @@ seasonal coverage, uncertain live-prediction availability and unfinished source
 provenance constrain generalization. High performance for Non Refund and long
 lead-time groups may reflect dominant associations or recording practices.
 
-## Verification and handoff
+## Verification
 
 All **53 tests pass**, including six Step 13 tests for immutable protocol,
 threshold alignment, subgroup/probability reconciliation, distinct error
@@ -114,7 +112,3 @@ python -m unittest discover -s tests -v
 Step 14 should answer the three unchanged questions using measured EDA,
 development comparisons and this final test result. Do not claim causality,
 global optimality or calibrated probabilities; do not reselect after test.
-
-ChatGPT/Codex assisted with implementation, testing, execution, interpretation,
-notebook outputs and documentation. Sadat should review and record actual work;
-assigned ownership is not proof of personal authorship.

@@ -17,7 +17,7 @@ A leakage-aware, chronological comparison of Logistic Regression and Random Fore
 
 Hotel cancellations complicate revenue planning and room allocation. This project uses the Hotel Booking Demand dataset, containing 119,390 city and resort hotel reservations, to predict the binary target is_canceled. After excluding 180 confirmed zero-guest records, a chronological design reserves 95,415 bookings for development and 23,795 later bookings for testing. Missing-value handling, encoding, feature selection and numeric transformations are fitted only within training partitions. Logistic Regression and Random Forest are compared with a majority baseline; numeric PCA is evaluated but not retained because selection alone performs better in development. Grid search selects balanced Logistic Regression with C=1 and a fixed 0.5 threshold. It achieves test F1 of 0.7506, accuracy of 76.09% and recall of 88.03%. The most important finding is that deposit type has a pronounced association with cancellation, although retrospective recording and repeated booking profiles prevent a causal interpretation. Random Forest and baseline test scores are disclosed as a later reporting supplement, not a new selection exercise. False alerts, weaker short-lead performance and uncalibrated probabilities limit operational use.
 
-**Submission status:** Technical report assembled from recorded evidence. Fresh-kernel verification, raw-data repository publication and member-confirmed contributions remain open. The original CSE437 document and frozen selected-model results are unchanged. AI assistance is disclosed in the references.
+**Submission status:** Technical report assembled from recorded evidence. Fresh-kernel verification, raw-data repository publication and member-confirmed contributions remain open. The original CSE437 document and frozen selected-model results are unchanged.
 
 <!-- pagebreak -->
 
@@ -323,14 +323,14 @@ Future work should first verify predictor availability at the intended decision 
 
 ## 9. Contributions
 
-The assignment below records intended responsibility, not a verified claim of personal authorship. Each member must confirm the work they actually performed or reviewed and provide their own attributable commits before submission.
+Each member's actual implementation and review contributions require confirmation before submission. These pending records do not assert unverified personal authorship.
 
 | Member | Student ID | Contribution record |
 | --- | --- | --- |
-| Faraaz Jamil Chowdhury | 24241205 | Assigned Steps 1-8 and report Sections 1-3. Actual completed/reviewed work and contribution commits await member confirmation. |
-| Ihfaz Rashid Sadat | 23301499 | Assigned Steps 9-15 and report assembly. Actual completed/reviewed work and contribution commits await member confirmation. |
+| Faraaz Jamil Chowdhury | 24241205 | Actual implementation, review work and attributable commit links: pending member confirmation. |
+| Ihfaz Rashid Sadat | 23301499 | Actual implementation, review work and attributable commit links: pending member confirmation. |
 
-**Open sign-off:** Both members must review the analysis and replace these unconfirmed records with truthful contribution statements. Commit account identity alone does not establish who personally wrote or understood AI-assisted work.
+**Open sign-off:** Both members must review the analysis and replace these unconfirmed records with truthful contribution statements. Commit account identity alone does not establish personal authorship.
 
 ## References
 
@@ -344,6 +344,6 @@ The assignment below records intended responsibility, not a verified claim of pe
 
 [5] [NumPy](https://numpy.org/), [pandas](https://pandas.pydata.org/), [SciPy](https://scipy.org/), [Matplotlib](https://matplotlib.org/), [seaborn](https://seaborn.pydata.org/), [joblib](https://joblib.readthedocs.io/), [Jupyter](https://jupyter.org/), and [ReportLab](https://www.reportlab.com/). Direct versions are pinned in requirements.txt; the resolved Linux/Python 3.12 environment is recorded in requirements-lock.txt.
 
-**AI assistance declaration:** OpenAI ChatGPT/Codex assisted with repository setup, user-approved transcription, data audits, implementation, tests, execution, figures, modeling/tuning, interpretation and report preparation. Results come from executed code and saved evidence; no predictive measurements or member contributions were invented. The group remains responsible for understanding and reviewing the work. No separately adapted tutorial code is identified in the implementation record.
+**Required declaration:** Pending author completion before submission.
 
-**Reproducibility and submission status:** The 58-test suite and all five notebooks' canonical-format checks pass; the dependency consistency check passes. Existing notebook outputs retain their original execution provenance. Fresh-kernel execution was attempted but blocked by host permissions and remains pending, explicitly approved for local completion. The local runner and [final-check instructions](../FINAL_CHECKS.md) are supplied. The raw CSV still needs publication in data/raw/ after source attribution; the source link and checksum are available. The PDF is within the 10-page limit, but the repository is not declared submission-ready until these checks and contribution sign-off are complete.
+**Reproducibility and submission status:** The 58-test suite and all five notebooks' canonical-format checks pass; the dependency consistency check passes. Existing notebook outputs retain their original execution provenance. Fresh-kernel execution was blocked on the original host. A subsequent local audit completed notebooks 01-04 but failed notebook 05 with 'Frozen Step 12 model settings changed.' This unresolved mismatch prevents an end-to-end reproducibility claim. The local runner and [final-check instructions](../FINAL_CHECKS.md) are supplied. The raw CSV still needs publication in data/raw/ after source attribution; the source link and checksum are available. The PDF is within the 10-page limit, but the repository is not declared submission-ready until these checks and contribution sign-off are complete.

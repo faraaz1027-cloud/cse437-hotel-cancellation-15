@@ -1,7 +1,5 @@
 # Step 12 tuning evidence
 
-**Owner: Sadat | Step 12 complete | Next: Step 13**
-
 | File | Evidence |
 | --- | --- |
 | `search_protocol.json` | Predeclared grids, scoring, threshold, budget, tie rule and no-refit policy |
@@ -12,7 +10,7 @@
 | `random_forest_cv_results.csv` | Complete sklearn CV results for twelve forest settings |
 | `tuning_comparison.csv` | Best setting per family versus its Step 11 untuned control |
 | `control_parity.csv` | Exact Step 11/control differences and numerical-check tolerances |
-| `final_selection.json` | Development-selected settings and unfitted Step 13 handoff |
+| `final_selection.json` | Development-selected settings and unfitted evaluation configuration |
 | `tuning_summary.json` | Scope, checks, runtime, source/input/output checksums and limitations |
 
 Selected: **Logistic Regression**, `C=1.0, class_weight=balanced`, mean development F1 **0.732102**.

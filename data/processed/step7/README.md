@@ -1,7 +1,5 @@
 # Step 7 — Preprocessing evidence
 
-**Completed: Step 7 | Responsible: Faraaz | Next: Step 8, development-data EDA.**
-
 | File | Purpose |
 | --- | --- |
 | `preprocessing_summary.json` | Per-fold shapes, missingness before/after, domain decisions, medians, unseen-category counts, runtime versions, and source hashes |

@@ -1,7 +1,5 @@
 # Step 11 model-comparison evidence
 
-**Owner: Sadat. Step 11 complete; Step 12 is next.**
-
 | File | Contents |
 | --- | --- |
 | `comparison_protocol.json` | Five candidates, fixed settings, representations, metrics, threshold and decision rule |

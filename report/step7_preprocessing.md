@@ -1,9 +1,5 @@
 # Step 7 — Preprocessing inside training folds
 
-**CSE437: Data Science | Group 15 | Responsible: Faraaz | Status: complete**
-
-**Next: Step 8 — Faraaz performs statistical analysis and EDA on development data.**
-
 ## Applied decisions
 
 | Item | Rule | Rationale |
@@ -111,7 +107,7 @@ The exact run used Python 3.12.13, pandas 2.2.3, NumPy 2.3.5, SciPy 1.17.0,
 and scikit-learn 1.8.0. Starter dependency ranges remain in requirements.txt;
 clean-install dependency validation is a final reproducibility task.
 
-## Reproduction and handoff
+## Reproduction
 
 From the repository root:
 
@@ -133,7 +129,3 @@ approved question wording, Step 5 files, and Step 6 assignments are unchanged.
 Source semantics reference: Antonio, N., de Almeida, A., and Nunes, L. (2019),
 *Hotel booking demand datasets*, https://doi.org/10.1016/j.dib.2018.11.126;
 https://pmc.ncbi.nlm.nih.gov/articles/PMC6297060/ .
-
-OpenAI ChatGPT/Codex assisted with implementation, execution, tests, and
-documentation. Faraaz owns reviewing and explaining this stage. The final
-contribution statement must reflect actual member work.

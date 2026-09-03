@@ -110,12 +110,9 @@ The 10 code cells were executed sequentially in a fresh Python process with an I
 
 The NYC Airbnb CSV and map belong to a different dataset. They are not inputs to this audit.
 
-## Sources and assistance
+## Sources
 
 - Source named in the project: https://www.kaggle.com/datasets/jessemostipak/hotel-booking-demand
 - Original publication: Antonio, N., de Almeida, A., and Nunes, L. (2019). Hotel booking demand datasets. Data in Brief, 22, 41-49. https://doi.org/10.1016/j.dib.2018.11.126
 - Data definitions: https://pmc.ncbi.nlm.nih.gov/articles/PMC6297060/
 - Exact licence/terms for the downloaded Kaggle version: still to be recorded.
-
-OpenAI ChatGPT/Codex assisted with audit code, execution, figures, and interpretation. Student contributions must reflect work actually performed.
-

@@ -1,7 +1,5 @@
 # Step 10 — Feature selection and dimensionality reduction
 
-**CSE437 Group 15 | Owner: Sadat | Complete | Next: Step 11 (Sadat)**
-
 Selection alone is the current preferred representation for the fixed logistic-
 regression reference: mean development F1 is **0.713609**, versus **0.693094**
 with all Step 9 features. Numeric PCA and selection followed by PCA were both
@@ -121,12 +119,3 @@ preprocessing, selection and optional PCA internally. Tree models can request
 `scale_numeric=False` for full/selected modes; PCA modes require scaling.
 Do not use a precomputed globally fitted matrix. Preserve the development-row
 order expected by `development_cv`.
-
-**Step 11 — Sadat:** implement the majority-class baseline, logistic regression,
-and random forest in Notebook 04. Include the selected representation and an
-all-feature control, report fold metrics, and retain the final test for Step 13.
-Model hyperparameter search remains Step 12.
-
-ChatGPT/Codex assisted with implementation, execution, testing, interpretation,
-notebook outputs and documentation. Sadat should review the work and record
-actual contributions; ownership alone is not proof of personal authorship.

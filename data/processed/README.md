@@ -1,6 +1,6 @@
 # Step 5 outputs
 
-Steps 5–7 are complete. The original Step 5 files below are preserved. Frozen splits are in [../splits/](../splits/README.md); Step 7 preprocessing evidence and reuse instructions are in [step7/](step7/README.md). Next: Step 8, development-data statistical analysis and EDA (Faraaz).
+Steps 5–7 are complete. The original Step 5 files below are preserved. Frozen splits are in [../splits/](../splits/README.md); Step 7 preprocessing evidence and reuse instructions are in [step7/](step7/README.md).
 
 **Publication status:** all four verified row-level data files are committed
 in this repository, with the aggregate summary, hashes, code, and notebook

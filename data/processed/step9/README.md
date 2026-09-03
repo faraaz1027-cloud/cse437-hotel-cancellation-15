@@ -1,7 +1,5 @@
 # Step 9 feature evidence
 
-**Owner: Sadat. Step 9 complete; Step 10 is next.**
-
 - `feature_summary.json`: measured development-only diagnostics, fold checks,
   input/output SHA-256 hashes, runtime, and limitations.
 - `feature_schemas.json`: full encoded feature names for each frozen fold.

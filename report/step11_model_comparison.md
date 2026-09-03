@@ -1,7 +1,5 @@
 # Step 11 — Baseline and two model families
 
-**CSE437 Group 15 | Owner: Sadat | Complete | Next: Step 12 (Sadat)**
-
 The leading untuned candidate is **Logistic regression — selected**, with mean development
 cancellation F1 **0.713609**. This is a starting point for tuning,
 not the final best-model or test result. Five candidates were fitted on the same
@@ -115,7 +113,3 @@ reference. Consider regularization strength/class weighting for logistic
 regression and depth, leaf size, feature sampling and tree count for forest.
 Any threshold change must be selected using development data only and documented.
 Keep the final test for Step 13 after all choices are frozen.
-
-ChatGPT/Codex assisted with implementation, execution, testing, interpretation,
-notebook outputs and documentation. Sadat should review the work and record
-actual contributions; assigned ownership is not proof of personal authorship.

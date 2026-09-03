@@ -1,7 +1,5 @@
 # Step 13 final-evaluation evidence
 
-**Owner: Sadat | Step 13 complete | Next: Step 14**
-
 The Step 12 selected-feature Logistic Regression pipeline (`C=1`, balanced
 class weights, threshold 0.5) was fitted on 95,415 development rows and
 evaluated once on 23,795 later-arrival test rows. No test result changed the
