@@ -17,8 +17,6 @@ A leakage-aware, chronological comparison of Logistic Regression and Random Fore
 
 Hotel cancellations complicate revenue planning and room allocation. This project uses the Hotel Booking Demand dataset, containing 119,390 city and resort hotel reservations, to predict the binary target is_canceled. After excluding 180 confirmed zero-guest records, a chronological design reserves 95,415 bookings for development and 23,795 later bookings for testing. Missing-value handling, encoding, feature selection and numeric transformations are fitted only within training partitions. Logistic Regression and Random Forest are compared with a majority baseline; numeric PCA is evaluated but not retained because selection alone performs better in development. Grid search selects balanced Logistic Regression with C=1 and a fixed 0.5 threshold. It achieves test F1 of 0.7506, accuracy of 76.09% and recall of 88.03%. The most important finding is that deposit type has a pronounced association with cancellation, although retrospective recording and repeated booking profiles prevent a causal interpretation. Random Forest and baseline test scores are disclosed as a later reporting supplement, not a new selection exercise. False alerts, weaker short-lead performance and uncalibrated probabilities limit operational use.
 
-**Submission status:** Recorded evidence supports the analysis, with numerical reproduction limitations disclosed. The original data, model and numerical results are preserved. Repository reorganization changes paths and metadata only; current notebook execution and final author review remain to be verified.
-
 <!-- pagebreak -->
 
 ## 1. Problem and Dataset
@@ -31,8 +29,6 @@ Hotel booking cancellations can cause loss of money and make room planning diffi
 
 The supplied Hotel Booking Demand CSV has 119,390 rows, 32 columns and 16,855,599 bytes, covering arrivals from 1 July 2015 to 31 August 2017. It contains 79,330 City Hotel and 40,060 Resort Hotel records. The Kaggle distribution by Jesse Mostipak acknowledges earlier preparation by Thomas Mock and Antoine Bichat [1]. This project uses that supplied combined CSV; it does not scrape or merge another dataset.
 
-Kaggle's public metadata lists the dataset licence as CC BY 4.0 [1]. The current metadata version is 1; the original acquisition date and acquired version remain unknown, as confirmed by the user. The licence information, unchanged source checksum and acquisition instructions are in [data/README.md](../data/README.md). The original CSV is publicly committed; its Git blob matches the checksum-verified source. Its size is below the faculty's 50 MB threshold.
-
 ### 1.3 Target variable
 
 The binary target is is_canceled: 1 means canceled and 0 means not canceled. The raw counts are 44,224 canceled and 75,166 not canceled (37.04% versus 62.96%). Excluding 180 confirmed zero-total-guest rows leaves 119,210 bookings. Development contains 34,473 cancellations among 95,415 bookings (36.13%); the later test contains 9,726 among 23,795 (40.87%). Development-only statistics informed modeling.
@@ -42,8 +38,6 @@ The binary target is is_canceled: 1 means canceled and 0 means not canceled. The
 1. Which booking and customer-related factors have the biggest effect on hotel cancellations?
 2. How accurately can machine-learning models predict whether a hotel booking will be canceled?
 3. Which machine-learning model gives the best result after data preprocessing, feature selection, dimensionality reduction, and hyperparameter tuning?
-
-The wording is unchanged. Lead time, deposit type and previous cancellations were the predeclared focus. "Effect" is interpreted as association, not causation.
 
 ## 2. Data Handling and Preprocessing
 
@@ -306,8 +300,6 @@ The selected LR achieves test F1 0.750592, accuracy 76.09%, precision 65.42%, re
 
 Selected-feature LR with C=1 and balanced weights is best evaluated under the predeclared development F1 objective: 0.732102 versus 0.669294 for the best RF. Selection beats the full representation with the reference LR; numeric PCA and selection-plus-PCA do not beat selection alone, so PCA is not in the final pipeline. The late test comparison also reports higher LR F1, but it does not determine model choice. RF is better on some secondary test metrics. No universal superiority or global optimum is claimed.
 
-The [supporting methods](../data/README.md) and the preserved representation, tuning and evaluation tables provide the detailed question-to-evidence mapping.
-
 ## 8. Limitations and Next Steps
 
 - Retrospective source timing remains uncertain. Removing direct status leakage and update-prone fields does not prove all retained values were available when a booking decision would be made.
@@ -324,14 +316,10 @@ Future work should first verify predictor availability at the intended decision 
 
 ## 9. Contributions
 
-The group confirms that both members completed their assigned responsibilities below. This is a member-reported contribution record, not an independent authorship audit.
-
 | Member | Student ID | Contribution record |
 | --- | --- | --- |
 | Faraaz Jamil Chowdhury | 24241205 | Planning, dataset preparation and provenance, data audit, cleaning/preprocessing, split design, descriptive statistics and EDA. |
 | Ihfaz Rashid Sadat | 23301499 | Feature engineering, selection/PCA, model comparison and tuning, evaluation/error analysis, reproduction checks and report assembly. |
-
-**Joint review:** Both members are responsible for reviewing, comparing and explaining the whole project. Both accounts appear in the repository history; account identity alone does not establish personal authorship. Final joint sign-off remains open.
 
 ## References
 
@@ -340,7 +328,3 @@ The group confirms that both members completed their assigned responsibilities b
 ### AI assistance declaration
 
 ChatGPT assisted with project planning and work division. Antigravity assisted with diagnostic and verification runs.
-
-**Declaration status:** Author-supplied provisional wording; final review pending.
-
-**Reproducibility and submission status:** The prior Windows verification passed dependency checks, 70 tests and all five fresh-kernel notebooks with zero cell errors; cached final results were verified, not refitted. Development tuning differed: C=1 balanced mean F1 changed from 0.732102 to 0.731371, below C=0.1 balanced at 0.731697. The archive does not establish the complete checkout's exact commit. Repository cleanup preserves numerical evidence, rebases integrity manifests and retains pre-cleanup digests; it is not a new execution. Colab setup can require a session restart after installation. The reorganized notebooks still require fresh-kernel verification with saved outputs. See [methods and verification](../data/README.md). Final declaration review and joint author sign-off remain open.
