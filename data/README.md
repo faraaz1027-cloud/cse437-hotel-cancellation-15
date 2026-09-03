@@ -40,20 +40,11 @@ eligibility, leakage exclusions, grouping and training-fitted transformations.
 Retain these attribution and change notices when sharing. The current public
 version/date must not be substituted for unknown original acquisition facts.
 
-## Audit evidence
-
-- [Human-readable audit](README.md)
-- [Executed audit notebook](../notebooks/01_data_audit_and_eda.ipynb)
-- [Machine-readable audit record](processed/audit_summary.json)
-- [Quality figure](../figures/01_data_quality_audit.png)
-
-The original audit is unchanged. eligibility now produces a separate cohort of **119,210 rows**, removes the two reservation-status fields from predictors, and exports 29 candidate predictors separately from the target and metadata. No retained values are imputed or otherwise changed. See [processed outputs](README.md), [eligibility summary](processed/eligibility_summary.json), and [the decision report](README.md).
-
 ## Source documentation
 
 Antonio, N., de Almeida, A., and Nunes, L. (2019). *Hotel booking demand datasets*. Data in Brief, 22, 41-49. https://doi.org/10.1016/j.dib.2018.11.126
 
-The publication describes extraction from hotel Property Management System SQL databases. It explains agency/company NULL semantics and observation timing. See https://pmc.ncbi.nlm.nih.gov/articles/PMC6297060/ . Document any differences between the publication and the combined Kaggle CSV.
+The publication describes extraction from hotel Property Management System SQL databases. It explains agency/company NULL semantics and observation timing. See https://pmc.ncbi.nlm.nih.gov/articles/PMC6297060/ 
 
 ## Handling rules
 
@@ -63,8 +54,8 @@ The publication describes extraction from hotel Property Management System SQL d
 - Exclude both reservation-status fields from model inputs.
 - Prevent overlap between retained duplicate groups in evaluation partitions.
 - Fit learned preprocessing only inside training folds.
-- Only the hotel dataset is used. Unrelated candidate-dataset files have been removed from the current tree and remain recoverable from Git history.
-
+- Only the hotel dataset is used.
+  
 ## How to Obtain the Data
 
 1. Open the Kaggle dataset link above.
