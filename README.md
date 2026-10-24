@@ -4,6 +4,12 @@
 
 [Report PDF](report/report.pdf) · [Report Markdown](report/report.md) · [Data and detailed methods](data/README.md)
 
+## Interactive portfolio demo
+
+**[Try the Hotel Booking Cancellation demo](https://cse437-hotel-cancellation-15-tbps3rptce7gx2xnyemwqt.streamlit.app/)** · [Demo source](demo/app.py)
+
+The free Streamlit app loads the project's saved Logistic Regression pipeline, displays the original held-out evaluation metrics, and lets visitors estimate cancellation scores for **hypothetical historical booking scenarios**. It does not retrain or change the model or its recorded results. It is an educational demonstration, **not** a validated live hotel-decision system. The project is collaborative; see the team contribution details below. To run locally with Python 3.12, see [demo instructions](demo/README.md).
+
 ## Group members
 
 | Member | Student ID | Contribution |
